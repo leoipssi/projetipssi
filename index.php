@@ -61,16 +61,25 @@ switch ($route) {
 
     case 'vehicles':
         $controller = new VehicleController();
-        $controller->index();
+        $action = $_GET['action'] ?? 'index';
+        if ($action === 'show' && isset($_GET['id'])) {
+            $controller->show($_GET['id']);
+        } else {
+            $controller->index();
+        }
         break;
 
     case 'rentals':
-        $controller = new RentalController();
-        if (isLoggedIn()) {
-            $controller->index();
-        } else {
+        if (!isLoggedIn()) {
             header('Location: index.php?route=login');
             exit;
+        }
+        $controller = new RentalController();
+        $action = $_GET['action'] ?? 'index';
+        if ($action === 'create' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+            $controller->create($_POST);
+        } else {
+            $controller->index();
         }
         break;
 
@@ -80,9 +89,8 @@ switch ($route) {
             exit;
         }
         $controller = new AdminController();
-        $subRoute = $_GET['sub_route'] ?? 'dashboard';
-        
-        switch ($subRoute) {
+        $action = $_GET['action'] ?? 'dashboard';
+        switch ($action) {
             case 'dashboard':
                 $controller->dashboard();
                 break;
@@ -101,6 +109,7 @@ switch ($route) {
         break;
 
     default:
+        header("HTTP/1.0 404 Not Found");
         include 'views/404.php';
         break;
 }
