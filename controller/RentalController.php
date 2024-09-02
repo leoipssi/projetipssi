@@ -11,13 +11,13 @@ class RentalController {
         $this->renderLayout($content);
     }
 
-    public function create($vehicleId, $startDate, $endDate) {
+    public function create($vehiculeId, $startDate, $endDate) {
         if (!isLoggedIn()) {
             header('Location: index.php?route=login');
             exit;
         }
         $userId = $_SESSION['user_id'];
-        $rental = Rental::create($userId, $vehicleId, $startDate, $endDate);
+        $rental = Rental::create($userId, $vehiculeId, $startDate, $endDate);
         if ($rental) {
             header('Location: index.php?route=rentals');
         } else {
