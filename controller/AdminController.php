@@ -8,41 +8,41 @@ class AdminController {
     }
 
     public function dashboard() {
-        $totalVehicles = Vehicle::count();
+        $totalVehicules = Vehicule::count();
         $totalUsers = User::count();
         $totalRentals = Rental::count();
         $recentRentals = Rental::getRecent(5);
-        $topVehicles = Vehicle::getMostRented(5);
+        $topVehicules = Vehicule::getMostRented(5);
 
         $content = $this->render('admin/dashboard', [
-            'totalVehicles' => $totalVehicles,
+            'totalVehicules' => $totalVehicules,
             'totalUsers' => $totalUsers,
             'totalRentals' => $totalRentals,
             'recentRentals' => $recentRentals,
-            'topVehicles' => $topVehicles
+            'topVehicules' => $topVehicules
         ]);
         $this->renderLayout($content);
     }
 
-    public function manageVehicles() {
+    public function manageVehicules() {
         $action = $_GET['action'] ?? '';
 
         if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
-            $this->addVehicle($_POST);
+            $this->addVehicule($_POST);
         } elseif ($action === 'edit' && isset($_GET['id'])) {
-            $this->editVehicle($_GET['id']);
+            $this->editVehicule($_GET['id']);
         } elseif ($action === 'delete' && isset($_GET['id'])) {
-            $this->deleteVehicle($_GET['id']);
+            $this->deleteVehicule($_GET['id']);
         }
 
-        $vehicles = Vehicle::findAll();
-        $content = $this->render('admin/vehicles', ['vehicles' => $vehicles]);
+        $vehicules = Vehicule::findAll();
+        $content = $this->render('admin/vehicules', ['vehicules' => $vehicules]);
         $this->renderLayout($content);
     }
 
-    private function addVehicle($data) {
+    private function addVehicule($data) {
         // Logique pour ajouter un véhicule
-        $result = Vehicle::create($data);
+        $result = Vehicule::create($data);
         if ($result) {
             $_SESSION['flash'] = "Véhicule ajouté avec succès.";
         } else {
@@ -50,24 +50,24 @@ class AdminController {
         }
     }
 
-    private function editVehicle($id) {
+    private function editVehicule($id) {
         // Logique pour éditer un véhicule
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $result = Vehicle::update($id, $_POST);
+            $result = Vehicule::update($id, $_POST);
             if ($result) {
                 $_SESSION['flash'] = "Véhicule mis à jour avec succès.";
             } else {
                 $_SESSION['flash'] = "Erreur lors de la mise à jour du véhicule.";
             }
         }
-        $vehicle = Vehicle::findById($id);
-        $content = $this->render('admin/edit_vehicle', ['vehicle' => $vehicle]);
+        $vehicule = Vehicule::findById($id);
+        $content = $this->render('admin/edit_vehicule', ['vehicule' => $vehicule]);
         $this->renderLayout($content);
     }
 
-    private function deleteVehicle($id) {
+    private function deleteVehicule($id) {
         // Logique pour supprimer un véhicule
-        $result = Vehicle::delete($id);
+        $result = Vehicule::delete($id);
         if ($result) {
             $_SESSION['flash'] = "Véhicule supprimé avec succès.";
         } else {
