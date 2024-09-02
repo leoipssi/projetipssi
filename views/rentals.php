@@ -6,7 +6,7 @@
     <?php foreach ($rentals as $rental): ?>
         <div class="rental-card">
             <h2>Location #<?= $rental->getId() ?></h2>
-            <p>Véhicule: <?= htmlspecialchars(Vehicle::findById($rental->getVehicleId())->getMarque() . ' ' . Vehicle::findById($rental->getVehicleId())->getModele()) ?></p>
+            <p>Véhicule: <?= htmlspecialchars(Vehicule::findById($rental->getVehiculeId())->getMarque() . ' ' . Vehicule::findById($rental->getVehiculeId())->getModele()) ?></p>
             <p>Date de début: <?= htmlspecialchars($rental->getDateDebut()) ?></p>
             <p>Date de fin: <?= htmlspecialchars($rental->getDateFin()) ?></p>
             <p>Statut: <?= htmlspecialchars($rental->getStatus()) ?></p>
