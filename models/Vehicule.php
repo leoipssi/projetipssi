@@ -36,6 +36,14 @@ class Vehicule {
     public function getDateAchat() { return $this->date_achat; }
     public function getPrixAchat() { return $this->prix_achat; }
 
+    public function getType() {
+        global $conn;
+        $stmt = $conn->prepare("SELECT nom FROM vehicle_types WHERE id = ?");
+        $stmt->execute([$this->type_id]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $result['nom'] : 'Type inconnu';
+    }
+
     public static function create($data) {
         global $conn;
         $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -99,5 +107,16 @@ class Vehicule {
         global $conn;
         $stmt = $conn->query("SELECT COUNT(*) FROM vehicules");
         return $stmt->fetchColumn();
+    }
+
+    public static function getRecentVehicules($limit = 5) {
+        global $conn;
+        $stmt = $conn->prepare("SELECT * FROM vehicules ORDER BY date_achat DESC LIMIT ?");
+        $stmt->execute([$limit]);
+        $vehicules = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
+        }
+        return $vehicules;
     }
 }
