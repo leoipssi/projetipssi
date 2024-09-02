@@ -1,5 +1,5 @@
 <?php
-class Vehicle {
+class Vehicule {
     private $id;
     private $type_id;
     private $marque;
@@ -38,7 +38,7 @@ class Vehicle {
 
     public static function create($data) {
         global $conn;
-        $stmt = $conn->prepare("INSERT INTO vehicles (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['type_id'],
             $data['marque'],
@@ -51,35 +51,35 @@ class Vehicle {
             $data['prix_achat']
         ]);
         if ($stmt->rowCount() > 0) {
-            return new Vehicle($conn->lastInsertId(), $data['type_id'], $data['marque'], $data['modele'], $data['numero_serie'], $data['couleur'], $data['immatriculation'], $data['kilometres'], $data['date_achat'], $data['prix_achat']);
+            return new Vehicule($conn->lastInsertId(), $data['type_id'], $data['marque'], $data['modele'], $data['numero_serie'], $data['couleur'], $data['immatriculation'], $data['kilometres'], $data['date_achat'], $data['prix_achat']);
         }
         return null;
     }
 
     public static function findAll() {
         global $conn;
-        $stmt = $conn->query("SELECT * FROM vehicles");
-        $vehicles = [];
+        $stmt = $conn->query("SELECT * FROM vehicules");
+        $vehicules = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicles[] = new Vehicle($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
+            $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
         }
-        return $vehicles;
+        return $vehicules;
     }
 
     public static function findById($id) {
         global $conn;
-        $stmt = $conn->prepare("SELECT * FROM vehicles WHERE id = ?");
+        $stmt = $conn->prepare("SELECT * FROM vehicules WHERE id = ?");
         $stmt->execute([$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
-            return new Vehicle($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
+            return new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
         }
         return null;
     }
 
     public function update($data) {
         global $conn;
-        $stmt = $conn->prepare("UPDATE vehicles SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ? WHERE id = ?");
         $stmt->execute([
             $data['type_id'],
             $data['marque'],
@@ -97,7 +97,7 @@ class Vehicle {
 
     public static function count() {
         global $conn;
-        $stmt = $conn->query("SELECT COUNT(*) FROM vehicles");
+        $stmt = $conn->query("SELECT COUNT(*) FROM vehicules");
         return $stmt->fetchColumn();
     }
 }
