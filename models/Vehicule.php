@@ -1,4 +1,4 @@
-// e-motion/models/Vehicle.php
+<?php
 class Vehicle {
     private $id;
     private $type_id;
@@ -24,73 +24,53 @@ class Vehicle {
         $this->prix_achat = $prix_achat;
     }
 
-    // Getters et setters existants...
+    // Getters
+    public function getId() { return $this->id; }
+    public function getTypeId() { return $this->type_id; }
+    public function getMarque() { return $this->marque; }
+    public function getModele() { return $this->modele; }
+    public function getNumeroSerie() { return $this->numero_serie; }
+    public function getCouleur() { return $this->couleur; }
+    public function getImmatriculation() { return $this->immatriculation; }
+    public function getKilometres() { return $this->kilometres; }
+    public function getDateAchat() { return $this->date_achat; }
+    public function getPrixAchat() { return $this->prix_achat; }
 
-    public function save() {
+    public static function findAll() {
         global $conn;
-        if ($this->id) {
-            // Update existing record
-            $sql = "UPDATE vehicles SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ? WHERE id = ?";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute([$this->type_id, $this->marque, $this->modele, $this->numero_serie, $this->couleur, $this->immatriculation, $this->kilometres, $this->date_achat, $this->prix_achat, $this->id]);
-        } else {
-            // Insert new record
-            $sql = "INSERT INTO vehicles (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute([$this->type_id, $this->marque, $this->modele, $this->numero_serie, $this->couleur, $this->immatriculation, $this->kilometres, $this->date_achat, $this->prix_achat]);
-            $this->id = $conn->lastInsertId();
+        $stmt = $conn->query("SELECT * FROM vehicles");
+        $vehicles = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $vehicles[] = new Vehicle($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
         }
-    }
-
-    public function delete() {
-        global $conn;
-        $sql = "DELETE FROM vehicles WHERE id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute([$this->id]);
+        return $vehicles;
     }
 
     public static function findById($id) {
         global $conn;
-        $sql = "SELECT * FROM vehicles WHERE id = ?";
-        $stmt = $conn->prepare($sql);
+        $stmt = $conn->prepare("SELECT * FROM vehicles WHERE id = ?");
         $stmt->execute([$id]);
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($result) {
-            return new Vehicle(
-                $result['id'],
-                $result['type_id'],
-                $result['marque'],
-                $result['modele'],
-                $result['numero_serie'],
-                $result['couleur'],
-                $result['immatriculation'],
-                $result['kilometres'],
-                $result['date_achat'],
-                $result['prix_achat']
-            );
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new Vehicle($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
         }
         return null;
     }
 
-    public static function findAll() {
+    public static function getRecentVehicles($limit) {
         global $conn;
-        $sql = "SELECT * FROM vehicles";
-        $stmt = $conn->query($sql);
+        $stmt = $conn->prepare("SELECT * FROM vehicles ORDER BY date_achat DESC LIMIT ?");
+        $stmt->execute([$limit]);
         $vehicles = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicles[] = new Vehicle(
-                $row['id'],
-                $row['type_id'],
-                $row['marque'],
-                $row['modele'],
-                $row['numero_serie'],
-                $row['couleur'],
-                $row['immatriculation'],
-                $row['kilometres'],
-                $row['date_achat'],
-                $row['prix_achat']
-            );
+            $vehicles[] = new Vehicle($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
         }
         return $vehicles;
+    }
+
+    public static function count() {
+        global $conn;
+        $stmt = $conn->query("SELECT COUNT(*) FROM vehicles");
+        return $stmt->fetchColumn();
     }
 }
