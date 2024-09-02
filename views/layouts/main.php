@@ -11,7 +11,7 @@
         <nav>
             <ul>
                 <li><a href="index.php">Accueil</a></li>
-                <li><a href="index.php?route=vehicles">Véhicules</a></li>
+                <li><a href="index.php?route=vehicules">Véhicules</a></li>
                 <?php if (isLoggedIn()): ?>
                     <li><a href="index.php?route=rentals">Mes locations</a></li>
                     <?php if (isAdmin()): ?>
