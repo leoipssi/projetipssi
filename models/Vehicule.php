@@ -36,6 +36,26 @@ class Vehicle {
     public function getDateAchat() { return $this->date_achat; }
     public function getPrixAchat() { return $this->prix_achat; }
 
+    public static function create($data) {
+        global $conn;
+        $stmt = $conn->prepare("INSERT INTO vehicles (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->execute([
+            $data['type_id'],
+            $data['marque'],
+            $data['modele'],
+            $data['numero_serie'],
+            $data['couleur'],
+            $data['immatriculation'],
+            $data['kilometres'],
+            $data['date_achat'],
+            $data['prix_achat']
+        ]);
+        if ($stmt->rowCount() > 0) {
+            return new Vehicle($conn->lastInsertId(), $data['type_id'], $data['marque'], $data['modele'], $data['numero_serie'], $data['couleur'], $data['immatriculation'], $data['kilometres'], $data['date_achat'], $data['prix_achat']);
+        }
+        return null;
+    }
+
     public static function findAll() {
         global $conn;
         $stmt = $conn->query("SELECT * FROM vehicles");
@@ -57,15 +77,22 @@ class Vehicle {
         return null;
     }
 
-    public static function getRecentVehicles($limit) {
+    public function update($data) {
         global $conn;
-        $stmt = $conn->prepare("SELECT * FROM vehicles ORDER BY date_achat DESC LIMIT ?");
-        $stmt->execute([$limit]);
-        $vehicles = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicles[] = new Vehicle($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
-        }
-        return $vehicles;
+        $stmt = $conn->prepare("UPDATE vehicles SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ? WHERE id = ?");
+        $stmt->execute([
+            $data['type_id'],
+            $data['marque'],
+            $data['modele'],
+            $data['numero_serie'],
+            $data['couleur'],
+            $data['immatriculation'],
+            $data['kilometres'],
+            $data['date_achat'],
+            $data['prix_achat'],
+            $this->id
+        ]);
+        return $stmt->rowCount() > 0;
     }
 
     public static function count() {
