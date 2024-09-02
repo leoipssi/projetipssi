@@ -1,10 +1,8 @@
-<!-- views/admin/dashboard.php -->
-
 <h1>Tableau de bord administrateur</h1>
 
 <div class="dashboard-stats">
     <div class="stat-card">
-        <h2>Total des véhicules</h2>
+        <h2>Total des vehicules</h2>
         <p class="stat-number"><?= $totalVehicles ?></p>
     </div>
     <div class="stat-card">
@@ -19,7 +17,7 @@
 
 <h2>Actions rapides</h2>
 <div class="quick-actions">
-    <a href="index.php?route=admin&action=addVehicle" class="button">Ajouter un véhicule</a>
+    <a href="index.php?route=admin&action=addVehicule" class="button">Ajouter un vehicule</a>
     <a href="index.php?route=admin&action=createOffer" class="button">Créer une offre</a>
     <a href="index.php?route=admin&action=manageUsers" class="button">Gérer les utilisateurs</a>
 </div>
