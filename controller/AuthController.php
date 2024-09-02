@@ -1,68 +1,49 @@
 <?php
 class AuthController {
-    public function showLoginForm() {
-        $content = $this->render('login');
-        $this->renderLayout($content);
-    }
-
-    public function login($username, $password) {
-        $user = User::authenticate($username, $password);
-        if ($user) {
-            $_SESSION['user_id'] = $user->getId();
-            $_SESSION['user_role'] = $user->getRole();
-            header('Location: index.php');
-        } else {
-            $error = "Identifiants incorrects";
-            $content = $this->render('login', ['error' => $error]);
-            $this->renderLayout($content);
-        }
-    }
-
-    public function showRegisterForm() {
-        $content = $this->render('register');
-        $this->renderLayout($content);
-    }
-
-    public function register($data) {
-        $errors = $this->validateRegistrationData($data);
-        if (empty($errors)) {
-            $user = User::create($data);
-            if ($user) {
-                $_SESSION['user_id'] = $user->getId();
-                $_SESSION['user_role'] = $user->getRole();
-                header('Location: index.php');
+    public function register() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['username'];
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+            
+            if (User::findByUsername($username)) {
+                $errors[] = "Ce nom d'utilisateur est déjà pris.";
             } else {
-                $errors[] = "Erreur lors de la création du compte";
+                $user = User::create($username, $password, $email);
+                if ($user) {
+                    $_SESSION['user_id'] = $user->getId();
+                    header('Location: index.php');
+                    exit;
+                } else {
+                    $errors[] = "Erreur lors de l'inscription.";
+                }
             }
         }
-        if (!empty($errors)) {
-            $content = $this->render('register', ['errors' => $errors, 'data' => $data]);
-            $this->renderLayout($content);
+        $content = $this->render('register', ['errors' => $errors ?? null]);
+        $this->renderLayout($content);
+    }
+
+    public function login() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $username = $_POST['username'];
+            $password = $_POST['password'];
+            $user = User::authenticate($username, $password);
+            if ($user) {
+                $_SESSION['user_id'] = $user->getId();
+                header('Location: index.php');
+                exit;
+            } else {
+                $error = "Nom d'utilisateur ou mot de passe incorrect.";
+            }
         }
+        $content = $this->render('login', ['error' => $error ?? null]);
+        $this->renderLayout($content);
     }
 
     public function logout() {
-        session_destroy();
+        unset($_SESSION['user_id']);
         header('Location: index.php');
         exit;
-    }
-
-    private function validateRegistrationData($data) {
-        $errors = [];
-        if (empty($data['username'])) {
-            $errors[] = "Le nom d'utilisateur est requis";
-        }
-        if (empty($data['email'])) {
-            $errors[] = "L'email est requis";
-        } elseif (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            $errors[] = "L'email n'est pas valide";
-        }
-        if (empty($data['password'])) {
-            $errors[] = "Le mot de passe est requis";
-        } elseif (strlen($data['password']) < 8) {
-            $errors[] = "Le mot de passe doit faire au moins 8 caractères";
-        }
-        return $errors;
     }
 
     private function render($view, $data = []) {
