@@ -69,5 +69,15 @@ class User {
         $stmt = $conn->query("SELECT COUNT(*) FROM users");
         return $stmt->fetchColumn();
     }
-}
 
+    public function hasPermission($action) {
+        switch ($this->role) {
+            case 'Administrateur':
+                return true;
+            case 'Utilisateur':
+                return in_array($action, ['view', 'rent']);
+            default:
+                return $action === 'view';
+        }
+    }
+}
