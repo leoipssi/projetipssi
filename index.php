@@ -32,85 +32,71 @@ $route = $_GET['route'] ?? 'home';
 // Gestion des routes
 switch ($route) {
     case 'home':
-        include 'views/home.php';
+        $controller = new HomeController();
+        $controller->index();
         break;
 
     case 'login':
+        $controller = new AuthController();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Logique de connexion
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            // Vérifier les identifiants et définir la session si correct
+            $controller->login($_POST['username'], $_POST['password']);
+        } else {
+            $controller->showLoginForm();
         }
-        include 'views/login.php';
         break;
 
     case 'register':
+        $controller = new AuthController();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // Logique d'inscription
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $email = $_POST['email'];
-            // Créer un nouvel utilisateur
+            $controller->register($_POST);
+        } else {
+            $controller->showRegisterForm();
         }
-        include 'views/register.php';
         break;
 
     case 'logout':
-        // Logique de déconnexion
-        session_destroy();
-        header('Location: index.php');
-        exit;
+        $controller = new AuthController();
+        $controller->logout();
+        break;
+
+    case 'vehicles':
+        $controller = new VehicleController();
+        $controller->index();
+        break;
+
+    case 'rentals':
+        $controller = new RentalController();
+        if (isLoggedIn()) {
+            $controller->index();
+        } else {
+            header('Location: index.php?route=login');
+            exit;
+        }
+        break;
 
     case 'admin':
         if (!isAdmin()) {
             header('Location: index.php?route=login');
             exit;
         }
-        $adminController = new AdminController();
+        $controller = new AdminController();
         $subRoute = $_GET['sub_route'] ?? 'dashboard';
         
         switch ($subRoute) {
             case 'dashboard':
-                $adminController->dashboard();
+                $controller->dashboard();
                 break;
             case 'vehicles':
-                $adminController->manageVehicles();
+                $controller->manageVehicles();
                 break;
             case 'clients':
-                $adminController->manageClients();
+                $controller->manageClients();
                 break;
             case 'offers':
-                $adminController->manageOffers();
+                $controller->manageOffers();
                 break;
             default:
-                include 'views/admin/dashboard.php';
-        }
-        break;
-
-    case 'client':
-        if (!isLoggedIn()) {
-            header('Location: index.php?route=login');
-            exit;
-        }
-        $clientController = new ClientController();
-        $subRoute = $_GET['sub_route'] ?? 'offers';
-        
-        switch ($subRoute) {
-            case 'offers':
-                $clientController->displayAvailableOffers();
-                break;
-            case 'rentals':
-                $clientController->displayClientRentals();
-                break;
-            case 'subscribe':
-                if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $offerId = $_POST['offer_id'];
-                    $clientController->subscribeToRental($_SESSION['user_id'], $offerId);
-                }
-                break;
-            default:
-                include 'views/client/offers.php';
+                $controller->dashboard();
         }
         break;
 
