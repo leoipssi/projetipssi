@@ -117,6 +117,7 @@ class Vehicule {
         $vehicules = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
-       }
-       return $vehicules;
+        }
+        return $vehicules;
+    }
 }
