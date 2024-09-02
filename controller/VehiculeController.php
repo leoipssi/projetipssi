@@ -9,7 +9,7 @@ class VehiculeController {
     public function show($id) {
         $vehicule = Vehicule::findById($id);
         if ($vehicule) {
-            $content = $this->render('vehicule_details', ['vehicule' => $vehicule]);
+            $content = $this->render('vehicules', ['vehicule' => $vehicule]);
             $this->renderLayout($content);
         } else {
             header('HTTP/1.0 404 Not Found');
