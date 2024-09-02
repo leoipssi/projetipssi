@@ -1,10 +1,10 @@
 <?php
 class HomeController {
     public function index() {
-        $recentVehicles = Vehicle::getRecentVehicles(5);
+        $recentVehicules = Vehicule::getRecentVehicules(5);
         $activeOffers = RentalOffer::getActiveOffers(3);
         
-        $content = $this->render('home', ['recentVehicles' => $recentVehicles, 'activeOffers' => $activeOffers]);
+        $content = $this->render('home', ['recentVehicules' => $recentVehicules, 'activeOffers' => $activeOffers]);
         $this->renderLayout($content);
     }
 
