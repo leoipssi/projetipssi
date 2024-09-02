@@ -1,15 +1,15 @@
 <?php
-class VehicleController {
+class VehiculeController {
     public function index() {
-        $vehicles = Vehicle::findAll();
-        $content = $this->render('vehicles', ['vehicles' => $vehicles]);
+        $vehicules = Vehicule::findAll();
+        $content = $this->render('vehicules', ['vehicules' => $vehicules]);
         $this->renderLayout($content);
     }
 
     public function show($id) {
-        $vehicle = Vehicle::findById($id);
-        if ($vehicle) {
-            $content = $this->render('vehicle_details', ['vehicle' => $vehicle]);
+        $vehicule = Vehicule::findById($id);
+        if ($vehicule) {
+            $content = $this->render('vehicule_details', ['vehicule' => $vehicule]);
             $this->renderLayout($content);
         } else {
             header('HTTP/1.0 404 Not Found');
