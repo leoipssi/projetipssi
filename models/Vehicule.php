@@ -111,12 +111,12 @@ class Vehicule {
 
     public static function getRecentVehicules($limit = 5) {
         global $conn;
-        $stmt = $conn->prepare("SELECT * FROM vehicules ORDER BY date_achat DESC LIMIT ?");
-        $stmt->execute([$limit]);
+        $stmt = $conn->prepare("SELECT * FROM vehicules ORDER BY date_achat DESC LIMIT :limit");
+        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
         $vehicules = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
-        }
-        return $vehicules;
-    }
+       }
+       return $vehicules;
 }
