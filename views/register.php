@@ -11,11 +11,11 @@
 <form action="index.php?route=register" method="post">
     <div>
         <label for="username">Nom d'utilisateur :</label>
-        <input type="text" id="username" name="username" value="<?= htmlspecialchars($data['username'] ?? '') ?>" required>
+        <input type="text" id="username" name="username" value="<?= htmlspecialchars($_POST['username'] ?? '') ?>" required>
     </div>
     <div>
         <label for="email">Email :</label>
-        <input type="email" id="email" name="email" value="<?= htmlspecialchars($data['email'] ?? '') ?>" required>
+        <input type="email" id="email" name="email" value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required>
     </div>
     <div>
         <label for="password">Mot de passe :</label>
