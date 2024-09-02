@@ -86,9 +86,9 @@ try {
             }
             break;
 
-        case 'vehicles':
-            if (class_exists('VehicleController')) {
-                $controller = new VehicleController();
+        case 'vehicules':
+            if (class_exists('VehiculeController')) {
+                $controller = new VehiculeController();
                 $action = $_GET['action'] ?? 'index';
                 if ($action === 'show' && isset($_GET['id'])) {
                     $controller->show($_GET['id']);
@@ -96,7 +96,7 @@ try {
                     $controller->index();
                 }
             } else {
-                throw new Exception("Le contrôleur Vehicle n'existe pas.");
+                throw new Exception("Le contrôleur Vehicule n'existe pas.");
             }
             break;
 
@@ -130,8 +130,8 @@ try {
                     case 'dashboard':
                         $controller->dashboard();
                         break;
-                    case 'vehicles':
-                        $controller->manageVehicles();
+                    case 'vehicules':
+                        $controller->manageVehicules();
                         break;
                     case 'clients':
                         $controller->manageClients();
