@@ -1,9 +1,11 @@
+<!-- views/admin/dashboard.php -->
+
 <h1>Tableau de bord administrateur</h1>
 
 <div class="dashboard-stats">
     <div class="stat-card">
         <h2>Total des vehicules</h2>
-        <p class="stat-number"><?= $totalVehicles ?></p>
+        <p class="stat-number"><?= $totalVehicules ?></p>
     </div>
     <div class="stat-card">
         <h2>Total des utilisateurs</h2>
@@ -28,7 +30,7 @@
         <tr>
             <th>ID</th>
             <th>Client</th>
-            <th>Véhicule</th>
+            <th>Vehicule</th>
             <th>Date de début</th>
             <th>Date de fin</th>
             <th>Statut</th>
@@ -39,7 +41,7 @@
             <tr>
                 <td><?= $rental->getId() ?></td>
                 <td><?= htmlspecialchars(User::findById($rental->getClientId())->getUsername()) ?></td>
-                <td><?= htmlspecialchars(Vehicle::findById($rental->getVehicleId())->getMarque() . ' ' . Vehicle::findById($rental->getVehicleId())->getModele()) ?></td>
+                <td><?= htmlspecialchars(Vehicule::findById($rental->getVehiculeId())->getMarque() . ' ' . Vehicule::findById($rental->getVehiculeId())->getModele()) ?></td>
                 <td><?= $rental->getDateDebut() ?></td>
                 <td><?= $rental->getDateFin() ?></td>
                 <td><?= $rental->getStatus() ?></td>
@@ -48,19 +50,19 @@
     </tbody>
 </table>
 
-<h2>Véhicules les plus loués</h2>
+<h2>Vehicules les plus loués</h2>
 <table class="admin-table">
     <thead>
         <tr>
-            <th>Véhicule</th>
+            <th>Vehicule</th>
             <th>Nombre de locations</th>
         </tr>
     </thead>
     <tbody>
-        <?php foreach ($topVehicles as $vehicle): ?>
+        <?php foreach ($topVehicules as $vehicule): ?>
             <tr>
-                <td><?= htmlspecialchars($vehicle['marque'] . ' ' . $vehicle['modele']) ?></td>
-                <td><?= $vehicle['rental_count'] ?></td>
+                <td><?= htmlspecialchars($vehicule['marque'] . ' ' . $vehicule['modele']) ?></td>
+                <td><?= $vehicule['rental_count'] ?></td>
             </tr>
         <?php endforeach; ?>
     </tbody>
