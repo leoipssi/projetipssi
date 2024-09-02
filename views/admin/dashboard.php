@@ -1,5 +1,3 @@
-<!-- views/admin/dashboard.php -->
-
 <h1>Tableau de bord administrateur</h1>
 
 <div class="dashboard-stats">
