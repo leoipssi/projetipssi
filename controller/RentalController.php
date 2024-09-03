@@ -32,17 +32,18 @@ class RentalController extends BaseController {
             $data['vehicule_id'] = $vehiculeId;
             $data['status'] = 'En cours';
             
-            // Vérification des dates
             if (!$this->validateDates($data['date_debut'], $data['date_fin'])) {
                 $this->render('rentals/create', ['vehicule' => $vehicule, 'error' => 'Dates invalides']);
                 return;
             }
 
-            // Calcul de la durée et du tarif
-            $duree = $this->calculerDuree($data['date_debut'], $data['date_fin']);
-            $tarif = $vehicule->calculerTarif($duree);
-            $data['duree'] = $duree;
-            $data['tarif'] = $tarif;
+            $offer = RentalOffer::findById($data['offer_id']);
+            if (!$offer || $offer->getVehiculeTypeId() != $vehicule->getTypeId()) {
+                $this->render('rentals/create', ['vehicule' => $vehicule, 'error' => 'Offre de location invalide']);
+                return;
+            }
+
+            $data['prix_total'] = $this->calculateTotalPrice($data['date_debut'], $data['date_fin'], $offer);
 
             $rental = Rental::create($data);
             if ($rental) {
@@ -52,7 +53,8 @@ class RentalController extends BaseController {
                 $this->render('rentals/create', ['vehicule' => $vehicule, 'error' => 'Erreur lors de la création de la location']);
             }
         } else {
-            $this->render('rentals/create', ['vehicule' => $vehicule]);
+            $offers = RentalOffer::findActiveByVehiculeType($vehicule->getTypeId());
+            $this->render('rentals/create', ['vehicule' => $vehicule, 'offers' => $offers]);
         }
     }
 
@@ -61,7 +63,8 @@ class RentalController extends BaseController {
         $rental = Rental::findById($id);
         if ($rental && $rental->getClientId() == $this->getCurrentUser()->getId()) {
             $vehicule = Vehicule::findById($rental->getVehiculeId());
-            $this->render('rentals/show', ['rental' => $rental, 'vehicule' => $vehicule]);
+            $offer = RentalOffer::findById($rental->getOfferId());
+            $this->render('rentals/show', ['rental' => $rental, 'vehicule' => $vehicule, 'offer' => $offer]);
         } else {
             $this->renderError(404);
         }
@@ -98,14 +101,19 @@ class RentalController extends BaseController {
     }
 
     private function generateInvoice($rental) {
-        $vehicule = Vehicule::findById($rental->getVehiculeId());
-        $amount = $rental->getTarif();
+        $offer = RentalOffer::findById($rental->getOfferId());
+        $amount = $this->calculateTotalPrice($rental->getDateDebut(), $rental->getDateFin(), $offer);
         
         return Invoice::create([
             'rental_id' => $rental->getId(),
             'montant' => $amount,
             'date_emission' => date('Y-m-d')
         ]);
+    }
+
+    private function calculateTotalPrice($dateDebut, $dateFin, $offer) {
+        $duree = $this->calculerDuree($dateDebut, $dateFin);
+        return $offer->getPrix() * ceil($duree / $offer->getDuree());
     }
 
     private function calculerDuree($dateDebut, $dateFin) {
