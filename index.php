@@ -6,9 +6,6 @@ require_once 'helpers.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Démarrer la session
-session_start();
-
 // Charger la configuration de la base de données
 if (file_exists('database.php')) {
     require_once 'database.php';
