@@ -7,7 +7,12 @@
     <p><strong>Date de fin:</strong> <?= htmlspecialchars($rental->getDateFin()) ?></p>
     <p><strong>Durée:</strong> <?= htmlspecialchars($offer->getDuree()) ?> jours</p>
     <p><strong>Kilométrage inclus:</strong> <?= htmlspecialchars($offer->getKilometres()) ?> km</p>
-    <p><strong>Prix:</strong> <?= htmlspecialchars($offer->getPrix()) ?> €</p>
+    <p><strong>Prix par jour:</strong> <?= htmlspecialchars($offer->getPrix()) ?> €</p>
+    <?php
+    $days = (strtotime($rental->getDateFin()) - strtotime($rental->getDateDebut())) / (60 * 60 * 24);
+    $totalPrice = $offer->getPrix() * $days;
+    ?>
+    <p><strong>Prix total:</strong> <?= htmlspecialchars(number_format($totalPrice, 2)) ?> €</p>
     <p><strong>Statut:</strong> <span class="status-<?= strtolower($rental->getStatus()) ?>"><?= htmlspecialchars($rental->getStatus()) ?></span></p>
 </div>
 
