@@ -1,6 +1,10 @@
 <?php
 class AdminController {
     public function __construct() {
+        $this->requireAdmin();
+    }
+
+    private function requireAdmin() {
         if (!isAdmin()) {
             header('Location: index.php?route=login');
             exit;
@@ -20,6 +24,42 @@ class AdminController {
             'totalRentals' => $totalRentals,
             'recentRentals' => $recentRentals,
             'topVehicules' => $topVehicules
+        ]);
+        $this->renderLayout($content);
+    }
+
+    public function manageUsers() {
+        $page = $this->getQueryParam('page', 1);
+        $perPage = 20; // Nombre d'utilisateurs par page
+        $search = $this->getQueryParam('search', '');
+        $role = $this->getQueryParam('role', '');
+        $sortBy = $this->getQueryParam('sort', 'id');
+        $sortOrder = $this->getQueryParam('order', 'asc');
+
+        // Validation des paramètres de tri
+        $allowedSortFields = ['id', 'username', 'email', 'role', 'created_at'];
+        if (!in_array($sortBy, $allowedSortFields)) {
+            $sortBy = 'id';
+        }
+        $sortOrder = strtolower($sortOrder) === 'desc' ? 'DESC' : 'ASC';
+
+        // Récupération des utilisateurs avec recherche, filtrage et tri
+        $users = User::findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage);
+        $totalUsers = User::countFiltered($search, $role);
+        $totalPages = ceil($totalUsers / $perPage);
+
+        // Récupération des rôles disponibles pour le filtre
+        $availableRoles = User::getAvailableRoles();
+
+        $content = $this->render('admin/manageUsers', [
+            'users' => $users,
+            'page' => $page,
+            'totalPages' => $totalPages,
+            'search' => $search,
+            'role' => $role,
+            'sortBy' => $sortBy,
+            'sortOrder' => $sortOrder,
+            'availableRoles' => $availableRoles
         ]);
         $this->renderLayout($content);
     }
@@ -130,6 +170,10 @@ class AdminController {
         } else {
             $_SESSION['flash'] = "Erreur lors de la suppression de l'offre.";
         }
+    }
+
+    private function getQueryParam($key, $default = null) {
+        return $_GET[$key] ?? $default;
     }
 
     private function render($view, $data = []) {
