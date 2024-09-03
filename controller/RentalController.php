@@ -1,40 +1,75 @@
 <?php
 class RentalController {
     public function index() {
-        if (!isLoggedIn()) {
-            header('Location: index.php?route=login');
-            exit;
-        }
         $userId = $_SESSION['user_id'];
-        $rentals = Rental::findByUserId($userId);
-        $content = $this->render('rentals', ['rentals' => $rentals]);
-        $this->renderLayout($content);
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $perPage = 10; // Nombre de locations par page
+
+        $rentals = Rental::findByUserId($userId, $page, $perPage);
+        $totalRentals = Rental::countByUserId($userId);
+        $totalPages = ceil($totalRentals / $perPage);
+
+        include 'views/rentals.php';
     }
 
-    public function create($vehiculeId, $startDate, $endDate) {
-        if (!isLoggedIn()) {
-            header('Location: index.php?route=login');
-            exit;
-        }
-        $userId = $_SESSION['user_id'];
-        $rental = Rental::create($userId, $vehiculeId, $startDate, $endDate);
-        if ($rental) {
-            header('Location: index.php?route=rentals');
+    public function details($id) {
+        $rental = Rental::findById($id);
+        if ($rental && $rental->getClientId() == $_SESSION['user_id']) {
+            $vehicule = Vehicule::findById($rental->getVehiculeId());
+            $offer = RentalOffer::findById($rental->getOfferId());
+            include 'views/rental_details.php';
         } else {
-            $error = "Erreur lors de la création de la location";
-            $content = $this->render('rental_form', ['error' => $error]);
-            $this->renderLayout($content);
+            // Gérer l'erreur
+            include 'views/error.php';
         }
     }
 
-    private function render($view, $data = []) {
-        extract($data);
-        ob_start();
-        include "views/{$view}.php";
-        return ob_get_clean();
+    public function returnVehicle($id) {
+        $rental = Rental::findById($id);
+        if ($rental && $rental->getClientId() == $_SESSION['user_id'] && $rental->getStatus() == 'En cours') {
+            // Logique pour retourner le véhicule
+            $rental->update(['status' => 'Terminée']);
+            $vehicule = Vehicule::findById($rental->getVehiculeId());
+            $vehicule->update(['disponible' => true]);
+            
+            // Générer la facture
+            $this->generateInvoice($rental);
+
+            header('Location: index.php?route=rentals');
+            exit;
+        } else {
+            // Gérer l'erreur
+            include 'views/error.php';
+        }
     }
 
-    private function renderLayout($content) {
-        include 'views/layouts/main.php';
+    public function invoice($id) {
+        $rental = Rental::findById($id);
+        if ($rental && $rental->getClientId() == $_SESSION['user_id'] && $rental->getStatus() == 'Terminée') {
+            $invoice = Invoice::findByRentalId($rental->getId());
+            if ($invoice) {
+                include 'views/invoice.php';
+            } else {
+                // Gérer l'erreur
+                include 'views/error.php';
+            }
+        } else {
+            // Gérer l'erreur
+            include 'views/error.php';
+        }
+    }
+
+    private function generateInvoice($rental) {
+        // Logique pour générer la facture
+        $offer = RentalOffer::findById($rental->getOfferId());
+        $amount = $offer->getPrix();
+        
+        $invoice = Invoice::create([
+            'rental_id' => $rental->getId(),
+            'montant' => $amount,
+            'date_emission' => date('Y-m-d')
+        ]);
+
+        return $invoice;
     }
 }
