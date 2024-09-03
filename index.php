@@ -6,9 +6,6 @@ require_once 'helpers.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Définir BASE_URL ici
-define('BASE_URL', 'https://extranet.emotionipssi.com'); // Remplacez par l'URL appropriée
-
 // Charger la configuration de la base de données
 if (file_exists('database.php')) {
     require_once 'database.php';
@@ -16,20 +13,9 @@ if (file_exists('database.php')) {
     die("Le fichier de configuration de la base de données est manquant.");
 }
 
-// Inclure Monolog pour la journalisation
-$autoloadPath = __DIR__ . '/vendor/autoload.php';
-if (file_exists($autoloadPath)) {
-    require_once $autoloadPath;
-} else {
-    die("Le fichier de chargement automatique de Composer est manquant. Assurez-vous d'avoir exécuté 'composer install'.");
-}
-
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
-// Créer une instance de Logger
-$logger = new Logger('app');
-$logger->pushHandler(new StreamHandler(__DIR__ . '/logs/app.log', Logger::DEBUG));
+// Inclusion de l'autoloader de Composer
+// Assurez-vous que le fichier vendor/autoload.php existe et que Composer a été exécuté
+require_once __DIR__ . '/vendor/autoload.php';
 
 // Fonction d'autoloading pour charger automatiquement les classes
 spl_autoload_register(function($class) {
@@ -43,6 +29,11 @@ spl_autoload_register(function($class) {
     }
     die("La classe {$class} n'a pas été trouvée.");
 });
+
+// Initialiser le logger (ou toute autre dépendance nécessaire)
+// Vous devrez peut-être ajuster cette partie en fonction de votre configuration
+$logger = new \Monolog\Logger('app');
+$logger->pushHandler(new \Monolog\Handler\StreamHandler('path/to/your.log', \Monolog\Logger::DEBUG));
 
 // Routage simple
 $route = $_GET['route'] ?? 'home';
@@ -61,11 +52,11 @@ try {
 
         case 'login':
             if (class_exists('AuthController')) {
-                $controller = new AuthController($logger); // Passer le logger ici
+                $controller = new AuthController($logger); // Passer le logger au constructeur
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $controller->login($_POST['username'], $_POST['password']);
+                    $controller->login();
                 } else {
-                    $controller->showLoginForm();
+                    $controller->login(); // Afficher le formulaire de connexion
                 }
             } else {
                 throw new Exception("Le contrôleur Auth n'existe pas.");
@@ -74,11 +65,11 @@ try {
 
         case 'register':
             if (class_exists('AuthController')) {
-                $controller = new AuthController($logger); // Passer le logger ici
+                $controller = new AuthController($logger); // Passer le logger au constructeur
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-                    $controller->register($_POST);
+                    $controller->register();
                 } else {
-                    $controller->showRegisterForm();
+                    $controller->register(); // Afficher le formulaire d'inscription
                 }
             } else {
                 throw new Exception("Le contrôleur Auth n'existe pas.");
@@ -87,7 +78,7 @@ try {
 
         case 'logout':
             if (class_exists('AuthController')) {
-                $controller = new AuthController($logger); // Passer le logger ici
+                $controller = new AuthController($logger); // Passer le logger au constructeur
                 $controller->logout();
             } else {
                 throw new Exception("Le contrôleur Auth n'existe pas.");
