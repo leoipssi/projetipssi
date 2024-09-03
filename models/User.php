@@ -1,4 +1,5 @@
 <?php
+
 class User {
     private $id;
     private $username;
@@ -161,5 +162,10 @@ class User {
             throw new Exception("Erreur lors du changement de mot de passe.");
         }
         return false;
+    }
+
+    // Ajoutez la méthode isAdmin()
+    public function isAdmin() {
+        return $this->role === 'Administrateur';
     }
 }
