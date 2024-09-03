@@ -10,8 +10,10 @@ class Vehicule {
     private $kilometres;
     private $date_achat;
     private $prix_achat;
+    private $categorie; // 'scooter' ou 'voiture'
+    private $tarif_journalier;
 
-    public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat) {
+    public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie, $tarif_journalier) {
         $this->id = $id;
         $this->type_id = $type_id;
         $this->marque = $marque;
@@ -22,6 +24,8 @@ class Vehicule {
         $this->kilometres = $kilometres;
         $this->date_achat = $date_achat;
         $this->prix_achat = $prix_achat;
+        $this->categorie = $categorie;
+        $this->tarif_journalier = $tarif_journalier;
     }
 
     // Getters
@@ -35,6 +39,8 @@ class Vehicule {
     public function getKilometres() { return $this->kilometres; }
     public function getDateAchat() { return $this->date_achat; }
     public function getPrixAchat() { return $this->prix_achat; }
+    public function getCategorie() { return $this->categorie; }
+    public function getTarifJournalier() { return $this->tarif_journalier; }
 
     public function getType() {
         global $conn;
@@ -44,50 +50,13 @@ class Vehicule {
         return $result ? $result['nom'] : 'Type inconnu';
     }
 
+    public function calculerTarif($duree) {
+        return $this->tarif_journalier * $duree;
+    }
+
     public static function create($data) {
         global $conn;
-        $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $data['type_id'],
-            $data['marque'],
-            $data['modele'],
-            $data['numero_serie'],
-            $data['couleur'],
-            $data['immatriculation'],
-            $data['kilometres'],
-            $data['date_achat'],
-            $data['prix_achat']
-        ]);
-        if ($stmt->rowCount() > 0) {
-            return new Vehicule($conn->lastInsertId(), $data['type_id'], $data['marque'], $data['modele'], $data['numero_serie'], $data['couleur'], $data['immatriculation'], $data['kilometres'], $data['date_achat'], $data['prix_achat']);
-        }
-        return null;
-    }
-
-    public static function findAll() {
-        global $conn;
-        $stmt = $conn->query("SELECT * FROM vehicules");
-        $vehicules = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
-        }
-        return $vehicules;
-    }
-
-    public static function findById($id) {
-        global $conn;
-        $stmt = $conn->prepare("SELECT * FROM vehicules WHERE id = ?");
-        $stmt->execute([$id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row) {
-            return new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
-        }
-        return null;
-    }
-
-    public function update($data) {
-        global $conn;
-        $stmt = $conn->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ? WHERE id = ?");
+        $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat, categorie, tarif_journalier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['type_id'],
             $data['marque'],
@@ -98,6 +67,51 @@ class Vehicule {
             $data['kilometres'],
             $data['date_achat'],
             $data['prix_achat'],
+            $data['categorie'],
+            $data['tarif_journalier']
+        ]);
+        if ($stmt->rowCount() > 0) {
+            return new Vehicule($conn->lastInsertId(), $data['type_id'], $data['marque'], $data['modele'], $data['numero_serie'], $data['couleur'], $data['immatriculation'], $data['kilometres'], $data['date_achat'], $data['prix_achat'], $data['categorie'], $data['tarif_journalier']);
+        }
+        return null;
+    }
+
+    public static function findAll() {
+        global $conn;
+        $stmt = $conn->query("SELECT * FROM vehicules");
+        $vehicules = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat'], $row['categorie'], $row['tarif_journalier']);
+        }
+        return $vehicules;
+    }
+
+    public static function findById($id) {
+        global $conn;
+        $stmt = $conn->prepare("SELECT * FROM vehicules WHERE id = ?");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat'], $row['categorie'], $row['tarif_journalier']);
+        }
+        return null;
+    }
+
+    public function update($data) {
+        global $conn;
+        $stmt = $conn->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ?, categorie = ?, tarif_journalier = ? WHERE id = ?");
+        $stmt->execute([
+            $data['type_id'],
+            $data['marque'],
+            $data['modele'],
+            $data['numero_serie'],
+            $data['couleur'],
+            $data['immatriculation'],
+            $data['kilometres'],
+            $data['date_achat'],
+            $data['prix_achat'],
+            $data['categorie'],
+            $data['tarif_journalier'],
             $this->id
         ]);
         return $stmt->rowCount() > 0;
@@ -116,7 +130,7 @@ class Vehicule {
         $stmt->execute();
         $vehicules = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat']);
+            $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat'], $row['categorie'], $row['tarif_journalier']);
         }
         return $vehicules;
     }
