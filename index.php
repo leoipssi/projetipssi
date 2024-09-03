@@ -1,6 +1,10 @@
 <?php
 session_start();
+require_once 'config.php'; // Inclure le fichier de configuration
+
+// Autres inclusions et initialisations
 require_once 'helpers.php';
+require_once 'vendor/autoload.php';
 
 // Activer l'affichage des erreurs pour le débogage
 error_reporting(E_ALL);
