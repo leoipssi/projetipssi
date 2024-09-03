@@ -1,5 +1,5 @@
 <h1>Louer un véhicule</h1>
-<h2><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?> (<?= htmlspecialchars($vehicule->getCategorie()) ?>)</h2>
+<h2><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?> (<?= htmlspecialchars($vehicule->getType()) ?>)</h2>
 
 <?php if (isset($error)): ?>
     <div class="alert alert-danger"><?= $error ?></div>
@@ -16,9 +16,19 @@
         <input type="date" id="date_fin" name="date_fin" required class="form-control">
     </div>
     
-    <div id="tarif-estimation" style="display: none;">
-        <p>Durée estimée: <span id="duree-estimee"></span> jours</p>
-        <p>Tarif estimé: <span id="tarif-estime"></span> €</p>
+    <div class="form-group">
+        <label for="offer_id">Offre de location:</label>
+        <select id="offer_id" name="offer_id" required class="form-control">
+            <?php foreach ($offers as $offer): ?>
+                <option value="<?= $offer->getId() ?>" data-prix="<?= $offer->getPrix() ?>" data-duree="<?= $offer->getDuree() ?>">
+                    <?= htmlspecialchars($offer->getDuree() . ' jours / ' . $offer->getKilometres() . ' km - ' . $offer->getPrix() . ' €') ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+
+    <div id="price-estimation" style="display: none;">
+        <p>Prix estimé: <span id="estimated-price"></span> €</p>
     </div>
     
     <button type="submit" class="btn btn-primary">Confirmer la location</button>
@@ -27,42 +37,54 @@
 <a href="<?= $this->url('vehicules') ?>" class="btn btn-secondary">Retour aux véhicules</a>
 
 <script>
-document.getElementById('rental-form').addEventListener('submit', function(e) {
-    var dateDebut = new Date(document.getElementById('date_debut').value);
-    var dateFin = new Date(document.getElementById('date_fin').value);
-    var today = new Date();
-    today.setHours(0, 0, 0, 0);
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('rental-form');
+    const dateDebut = document.getElementById('date_debut');
+    const dateFin = document.getElementById('date_fin');
+    const offerSelect = document.getElementById('offer_id');
+    const priceEstimation = document.getElementById('price-estimation');
+    const estimatedPrice = document.getElementById('estimated-price');
 
-    if (dateDebut < today) {
-        alert('La date de début doit être aujourd\'hui ou ultérieure.');
-        e.preventDefault();
-    } else if (dateFin <= dateDebut) {
-        alert('La date de fin doit être postérieure à la date de début.');
-        e.preventDefault();
-    }
-});
+    form.addEventListener('submit', function(e) {
+        const start = new Date(dateDebut.value);
+        const end = new Date(dateFin.value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
 
-document.getElementById('date_debut').addEventListener('change', function() {
-    document.getElementById('date_fin').min = this.value;
-    updateTarifEstimation();
-});
+        if (start < today) {
+            alert('La date de début doit être aujourd\'hui ou ultérieure.');
+            e.preventDefault();
+        } else if (end <= start) {
+            alert('La date de fin doit être postérieure à la date de début.');
+            e.preventDefault();
+        }
+    });
 
-document.getElementById('date_fin').addEventListener('change', updateTarifEstimation);
+    dateDebut.addEventListener('change', updatePriceEstimation);
+    dateFin.addEventListener('change', updatePriceEstimation);
+    offerSelect.addEventListener('change', updatePriceEstimation);
 
-function updateTarifEstimation() {
-    var dateDebut = new Date(document.getElementById('date_debut').value);
-    var dateFin = new Date(document.getElementById('date_fin').value);
-    
-    if (dateDebut && dateFin && dateFin > dateDebut) {
-        var duree = Math.ceil((dateFin - dateDebut) / (1000 * 60 * 60 * 24)) + 1;
-        var tarifJournalier = <?= $vehicule->getTarifJournalier() ?>;
-        var tarifTotal = duree * tarifJournalier;
+    function updatePriceEstimation() {
+        const start = new Date(dateDebut.value);
+        const end = new Date(dateFin.value);
         
-        document.getElementById('duree-estimee').textContent = duree;
-        document.getElementById('tarif-estime').textContent = tarifTotal.toFixed(2);
-        document.getElementById('tarif-estimation').style.display = 'block';
-    } else {
-        document.getElementById('tarif-estimation').style.display = 'none';
+        if (start && end && end > start) {
+            const selectedOffer = offerSelect.options[offerSelect.selectedIndex];
+            const offerPrice = parseFloat(selectedOffer.dataset.prix);
+            const offerDuration = parseInt(selectedOffer.dataset.duree);
+
+            const durationInDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) + 1;
+            const totalPrice = offerPrice * Math.ceil(durationInDays / offerDuration);
+
+            estimatedPrice.textContent = totalPrice.toFixed(2);
+            priceEstimation.style.display = 'block';
+        } else {
+            priceEstimation.style.display = 'none';
+        }
     }
-}
+
+    dateDebut.addEventListener('change', function() {
+        dateFin.min = this.value;
+    });
+});
 </script>
