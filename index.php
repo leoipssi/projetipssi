@@ -10,8 +10,8 @@ ini_set('display_errors', 1);
 session_start();
 
 // Charger la configuration de la base de données
-if (file_exists('config/database.php')) {
-    require_once 'config/database.php';
+if (file_exists('database.php')) {
+    require_once 'database.php';
 } else {
     die("Le fichier de configuration de la base de données est manquant.");
 }
