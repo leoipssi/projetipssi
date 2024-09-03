@@ -17,7 +17,12 @@ if (file_exists('database.php')) {
 }
 
 // Inclure Monolog pour la journalisation
-require_once 'vendor/autoload.php';
+$autoloadPath = __DIR__ . '/vendor/autoload.php';
+if (file_exists($autoloadPath)) {
+    require_once $autoloadPath;
+} else {
+    die("Le fichier de chargement automatique de Composer est manquant. Assurez-vous d'avoir exécuté 'composer install'.");
+}
 
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
