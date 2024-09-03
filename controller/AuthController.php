@@ -1,5 +1,5 @@
 <?php
-class AuthController {
+class AuthController extends BaseController {
     private $logger;
 
     public function __construct($logger) {
@@ -7,11 +7,11 @@ class AuthController {
     }
 
     public function register() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = trim($_POST['username']);
-            $email = trim($_POST['email']);
-            $password = $_POST['password'];
-            $csrfToken = $_POST['csrf_token'] ?? '';
+        if ($this->isPost()) {
+            $username = trim($this->getPostData()['username']);
+            $email = trim($this->getPostData()['email']);
+            $password = $this->getPostData()['password'];
+            $csrfToken = $this->getPostData()['csrf_token'] ?? '';
             
             if (!$this->validateCsrfToken($csrfToken)) {
                 $errors[] = "Jeton CSRF invalide.";
@@ -30,8 +30,7 @@ class AuthController {
                                 session_regenerate_id(true);
                                 $_SESSION['user_id'] = $user->getId();
                                 $this->logger->info("Nouvel utilisateur enregistré: {$username}");
-                                header('Location: index.php');
-                                exit;
+                                $this->redirect('home');
                             } else {
                                 $errors[] = "Erreur lors de l'inscription.";
                             }
@@ -44,15 +43,14 @@ class AuthController {
             }
         }
         $csrfToken = $this->generateCsrfToken();
-        $content = $this->render('register', ['errors' => $errors ?? null, 'csrfToken' => $csrfToken]);
-        $this->renderLayout($content);
+        $this->render('register', ['errors' => $errors ?? null, 'csrfToken' => $csrfToken]);
     }
 
     public function login() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $username = $_POST['username'];
-            $password = $_POST['password'];
-            $csrfToken = $_POST['csrf_token'] ?? '';
+        if ($this->isPost()) {
+            $username = $this->getPostData()['username'];
+            $password = $this->getPostData()['password'];
+            $csrfToken = $this->getPostData()['csrf_token'] ?? '';
             
             if (!$this->validateCsrfToken($csrfToken)) {
                 $error = "Jeton CSRF invalide.";
@@ -63,8 +61,7 @@ class AuthController {
                         session_regenerate_id(true);
                         $_SESSION['user_id'] = $user->getId();
                         $this->logger->info("Connexion réussie: {$username}");
-                        header('Location: index.php');
-                        exit;
+                        $this->redirect('home');
                     } else {
                         $this->logger->warning("Tentative de connexion échouée pour l'utilisateur: {$username}");
                         $error = "Nom d'utilisateur ou mot de passe incorrect.";
@@ -76,8 +73,7 @@ class AuthController {
             }
         }
         $csrfToken = $this->generateCsrfToken();
-        $content = $this->render('login', ['error' => $error ?? null, 'csrfToken' => $csrfToken]);
-        $this->renderLayout($content);
+        $this->render('login', ['error' => $error ?? null, 'csrfToken' => $csrfToken]);
     }
 
     public function logout() {
@@ -87,8 +83,7 @@ class AuthController {
         if ($userId) {
             $this->logger->info("Utilisateur déconnecté: ID {$userId}");
         }
-        header('Location: index.php');
-        exit;
+        $this->redirect('home');
     }
 
     private function validateRegistrationInput($username, $email, $password) {
@@ -113,16 +108,5 @@ class AuthController {
 
     private function validateCsrfToken($token) {
         return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
-    }
-
-    private function render($view, $data = []) {
-        extract($data);
-        ob_start();
-        include "views/{$view}.php";
-        return ob_get_clean();
-    }
-
-    private function renderLayout($content) {
-        include 'views/layouts/main.php';
     }
 }
