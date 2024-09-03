@@ -6,6 +6,9 @@ require_once 'helpers.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+// Définir BASE_URL ici
+define('BASE_URL', 'https://extranet.emotionipssi.com'); // Remplacez par l'URL appropriée
+
 // Charger la configuration de la base de données
 if (file_exists('database.php')) {
     require_once 'database.php';
