@@ -16,6 +16,16 @@ if (file_exists('database.php')) {
     die("Le fichier de configuration de la base de données est manquant.");
 }
 
+// Inclure Monolog pour la journalisation
+require_once 'vendor/autoload.php';
+
+use Monolog\Logger;
+use Monolog\Handler\StreamHandler;
+
+// Créer une instance de Logger
+$logger = new Logger('app');
+$logger->pushHandler(new StreamHandler(__DIR__ . '/logs/app.log', Logger::DEBUG));
+
 // Fonction d'autoloading pour charger automatiquement les classes
 spl_autoload_register(function($class) {
     $directories = ['models', 'controllers'];
@@ -46,7 +56,7 @@ try {
 
         case 'login':
             if (class_exists('AuthController')) {
-                $controller = new AuthController();
+                $controller = new AuthController($logger); // Passer le logger ici
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $controller->login($_POST['username'], $_POST['password']);
                 } else {
@@ -59,7 +69,7 @@ try {
 
         case 'register':
             if (class_exists('AuthController')) {
-                $controller = new AuthController();
+                $controller = new AuthController($logger); // Passer le logger ici
                 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $controller->register($_POST);
                 } else {
@@ -72,7 +82,7 @@ try {
 
         case 'logout':
             if (class_exists('AuthController')) {
-                $controller = new AuthController();
+                $controller = new AuthController($logger); // Passer le logger ici
                 $controller->logout();
             } else {
                 throw new Exception("Le contrôleur Auth n'existe pas.");
