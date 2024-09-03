@@ -8,14 +8,15 @@ class HomeController extends BaseController {
         $this->renderLayout($content);
     }
 
-    private function render($view, $data = []) {
+    // Changez la visibilité de cette méthode en 'protected' ou 'public'
+    protected function render($view, $data = []) {
         extract($data);
         ob_start();
         include "views/{$view}.php";
         return ob_get_clean();
     }
 
-    private function renderLayout($content) {
+    protected function renderLayout($content) {
         include 'views/layouts/main.php';
     }
 }
