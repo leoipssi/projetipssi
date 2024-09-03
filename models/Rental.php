@@ -1,88 +1,86 @@
 <?php
-class Rental {
-    private $id;
-    private $client_id;
-    private $vehicule_id;
-    private $offer_id;
-    private $date_debut;
-    private $date_fin;
-    private $status;
-
-    public function __construct($id, $client_id, $vehicule_id, $offer_id, $date_debut, $date_fin, $status) {
-        $this->id = $id;
-        $this->client_id = $client_id;
-        $this->vehicule_id = $vehicule_id;
-        $this->offer_id = $offer_id;
-        $this->date_debut = $date_debut;
-        $this->date_fin = $date_fin;
-        $this->status = $status;
-    }
-
-    // Getters
-    public function getId() { return $this->id; }
-    public function getClientId() { return $this->client_id; }
-    public function getVehiculeId() { return $this->vehicule_id; }
-    public function getOfferId() { return $this->offer_id; }
-    public function getDateDebut() { return $this->date_debut; }
-    public function getDateFin() { return $this->date_fin; }
-    public function getStatus() { return $this->status; }
-
-    public static function create($data) {
-        global $conn;
-        $stmt = $conn->prepare("INSERT INTO rentals (client_id, vehicule_id, offer_id, date_debut, date_fin, status) VALUES (?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $data['client_id'],
-            $data['vehicule_id'],
-            $data['offer_id'],
-            $data['date_debut'],
-            $data['date_fin'],
-            $data['status'] ?? 'En cours'
-        ]);
-        if ($stmt->rowCount() > 0) {
-            return new Rental($conn->lastInsertId(), $data['client_id'], $data['vehicule_id'], $data['offer_id'], $data['date_debut'], $data['date_fin'], $data['status'] ?? 'En cours');
-        }
-        return null;
-    }
-
-    public static function findAll() {
-        global $conn;
-        $stmt = $conn->query("SELECT * FROM rentals");
-        $rentals = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $rentals[] = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['status']);
-        }
-        return $rentals;
-    }
-
-    public static function findById($id) {
-        global $conn;
-        $stmt = $conn->prepare("SELECT * FROM rentals WHERE id = ?");
-        $stmt->execute([$id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row) {
-            return new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['status']);
-        }
-        return null;
-    }
-
-    public function update($data) {
-        global $conn;
-        $stmt = $conn->prepare("UPDATE rentals SET client_id = ?, vehicule_id = ?, offer_id = ?, date_debut = ?, date_fin = ?, status = ? WHERE id = ?");
-        $stmt->execute([
-            $data['client_id'],
-            $data['vehicule_id'],
-            $data['offer_id'],
-            $data['date_debut'],
-            $data['date_fin'],
-            $data['status'],
-            $this->id
-        ]);
-        return $stmt->rowCount() > 0;
-    }
-
-    public static function count() {
-        global $conn;
-        $stmt = $conn->query("SELECT COUNT(*) FROM rentals");
-        return $stmt->fetchColumn();
-    }
+// Assurez-vous que l'utilisateur est connecté
+if (!isset($_SESSION['user_id'])) {
+    header('Location: index.php?route=login');
+    exit;
 }
+?>
+
+<h1>Mes locations</h1>
+
+<?php if (empty($rental)): ?>
+    <p>Vous n'avez pas encore de location.</p>
+    <a href="index.php?route=vehicules" class="btn btn-primary">Voir les véhicules disponibles</a>
+<?php else: ?>
+    <div class="rental-container">
+        <?php foreach ($rental as $rental): ?>
+            <?php
+            $vehicule = Vehicule::findById($rental->getVehiculeId());
+            $offer = RentalOffer::findById($rental->getOfferId());
+            ?>
+            <div class="rental-card">
+                <h2>Location #<?= $rental->getId() ?></h2>
+                <p><strong>Véhicule:</strong> <?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></p>
+                <p><strong>Type:</strong> <?= htmlspecialchars($vehicule->getType()) ?></p>
+                <p><strong>Date de début:</strong> <?= htmlspecialchars($rental->getDateDebut()) ?></p>
+                <p><strong>Date de fin:</strong> <?= htmlspecialchars($rental->getDateFin()) ?></p>
+                <p><strong>Durée:</strong> <?= htmlspecialchars($offer->getDuree()) ?> jours</p>
+                <p><strong>Kilométrage inclus:</strong> <?= htmlspecialchars($offer->getKilometres()) ?> km</p>
+                <p><strong>Prix:</strong> <?= htmlspecialchars($offer->getPrix()) ?> €</p>
+                <p><strong>Statut:</strong> <span class="status-<?= strtolower($rental->getStatus()) ?>"><?= htmlspecialchars($rental->getStatus()) ?></span></p>
+                
+                <?php if ($rental->getStatus() === 'En cours'): ?>
+                    <a href="index.php?route=rental&action=return&id=<?= $rental->getId() ?>" class="btn btn-warning">Retourner le véhicule</a>
+                <?php elseif ($rental->getStatus() === 'Terminée'): ?>
+                    <a href="index.php?route=rental&action=invoice&id=<?= $rental->getId() ?>" class="btn btn-info">Voir la facture</a>
+                <?php endif; ?>
+                
+                <a href="index.php?route=rental&action=details&id=<?= $rental->getId() ?>" class="btn btn-secondary">Détails</a>
+            </div>
+        <?php endforeach; ?>
+    </div>
+    
+    <div class="pagination">
+        <?php if ($page > 1): ?>
+            <a href="index.php?route=rental&page=<?= $page - 1 ?>" class="btn btn-primary">&laquo; Précédent</a>
+        <?php endif; ?>
+        
+        <?php if ($page < $totalPages): ?>
+            <a href="index.php?route=rental&page=<?= $page + 1 ?>" class="btn btn-primary">Suivant &raquo;</a>
+        <?php endif; ?>
+    </div>
+<?php endif; ?>
+
+<style>
+    .rental-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+    .rental-card {
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        width: calc(33% - 20px);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .status-encours { color: #ffa500; }
+    .status-terminée { color: #008000; }
+    .status-annulée { color: #ff0000; }
+    .btn {
+        display: inline-block;
+        padding: 5px 10px;
+        margin-top: 10px;
+        text-decoration: none;
+        color: #fff;
+        border-radius: 3px;
+    }
+    .btn-primary { background-color: #007bff; }
+    .btn-warning { background-color: #ffc107; }
+    .btn-info { background-color: #17a2b8; }
+    .btn-secondary { background-color: #6c757d; }
+    .pagination {
+        margin-top: 20px;
+        text-align: center;
+    }
+</style>
