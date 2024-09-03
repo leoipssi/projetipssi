@@ -14,9 +14,19 @@ if (!$this->isAdmin()) {
     <div class="alert alert-danger"><?= $error ?></div>
 <?php endif; ?>
 
-<div class="search-bar">
+<div class="search-filter-bar">
     <form action="<?= $this->url('admin', ['action' => 'manageUsers']) ?>" method="get">
-        <input type="text" name="search" placeholder="Rechercher un utilisateur" value="<?= htmlspecialchars($search ?? '') ?>">
+        <input type="text" name="search" placeholder="Rechercher un utilisateur" value="<?= htmlspecialchars($search) ?>">
+        
+        <select name="role">
+            <option value="">Tous les rôles</option>
+            <?php foreach ($availableRoles as $availableRole): ?>
+                <option value="<?= $availableRole ?>" <?= $role === $availableRole ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($availableRole) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        
         <button type="submit" class="btn btn-primary">Rechercher</button>
     </form>
 </div>
@@ -24,11 +34,31 @@ if (!$this->isAdmin()) {
 <table class="admin-table">
     <thead>
         <tr>
-            <th>ID</th>
-            <th>Nom d'utilisateur</th>
-            <th>Email</th>
-            <th>Rôle</th>
-            <th>Date d'inscription</th>
+            <th>
+                <a href="<?= $this->url('admin', ['action' => 'manageUsers', 'sort' => 'id', 'order' => $sortBy === 'id' && $sortOrder === 'ASC' ? 'desc' : 'asc', 'search' => $search, 'role' => $role]) ?>">
+                    ID <?= $sortBy === 'id' ? ($sortOrder === 'ASC' ? '▲' : '▼') : '' ?>
+                </a>
+            </th>
+            <th>
+                <a href="<?= $this->url('admin', ['action' => 'manageUsers', 'sort' => 'username', 'order' => $sortBy === 'username' && $sortOrder === 'ASC' ? 'desc' : 'asc', 'search' => $search, 'role' => $role]) ?>">
+                    Nom d'utilisateur <?= $sortBy === 'username' ? ($sortOrder === 'ASC' ? '▲' : '▼') : '' ?>
+                </a>
+            </th>
+            <th>
+                <a href="<?= $this->url('admin', ['action' => 'manageUsers', 'sort' => 'email', 'order' => $sortBy === 'email' && $sortOrder === 'ASC' ? 'desc' : 'asc', 'search' => $search, 'role' => $role]) ?>">
+                    Email <?= $sortBy === 'email' ? ($sortOrder === 'ASC' ? '▲' : '▼') : '' ?>
+                </a>
+            </th>
+            <th>
+                <a href="<?= $this->url('admin', ['action' => 'manageUsers', 'sort' => 'role', 'order' => $sortBy === 'role' && $sortOrder === 'ASC' ? 'desc' : 'asc', 'search' => $search, 'role' => $role]) ?>">
+                    Rôle <?= $sortBy === 'role' ? ($sortOrder === 'ASC' ? '▲' : '▼') : '' ?>
+                </a>
+            </th>
+            <th>
+                <a href="<?= $this->url('admin', ['action' => 'manageUsers', 'sort' => 'created_at', 'order' => $sortBy === 'created_at' && $sortOrder === 'ASC' ? 'desc' : 'asc', 'search' => $search, 'role' => $role]) ?>">
+                    Date d'inscription <?= $sortBy === 'created_at' ? ($sortOrder === 'ASC' ? '▲' : '▼') : '' ?>
+                </a>
+            </th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -51,17 +81,24 @@ if (!$this->isAdmin()) {
 
 <div class="pagination">
     <?php if ($page > 1): ?>
-        <a href="<?= $this->url('admin', ['action' => 'manageUsers', 'page' => $page - 1, 'search' => $search ?? '']) ?>" class="btn btn-secondary">&laquo; Précédent</a>
+        <a href="<?= $this->url('admin', ['action' => 'manageUsers', 'page' => $page - 1, 'search' => $search, 'role' => $role, 'sort' => $sortBy, 'order' => $sortOrder]) ?>" class="btn btn-secondary">&laquo; Précédent</a>
     <?php endif; ?>
     
     <?php if ($page < $totalPages): ?>
-        <a href="<?= $this->url('admin', ['action' => 'manageUsers', 'page' => $page + 1, 'search' => $search ?? '']) ?>" class="btn btn-secondary">Suivant &raquo;</a>
+        <a href="<?= $this->url('admin', ['action' => 'manageUsers', 'page' => $page + 1, 'search' => $search, 'role' => $role, 'sort' => $sortBy, 'order' => $sortOrder]) ?>" class="btn btn-secondary">Suivant &raquo;</a>
     <?php endif; ?>
 </div>
 
 <a href="<?= $this->url('admin', ['action' => 'dashboard']) ?>" class="btn btn-secondary">Retour au tableau de bord</a>
 
 <style>
+    .search-filter-bar {
+        margin-bottom: 20px;
+    }
+    .search-filter-bar input, .search-filter-bar select {
+        padding: 8px;
+        margin-right: 10px;
+    }
     .admin-table {
         width: 100%;
         border-collapse: collapse;
@@ -74,6 +111,10 @@ if (!$this->isAdmin()) {
     }
     .admin-table th {
         background-color: #f8f9fa;
+    }
+    .admin-table th a {
+        color: #333;
+        text-decoration: none;
     }
     .btn {
         display: inline-block;
@@ -91,13 +132,6 @@ if (!$this->isAdmin()) {
     .btn-sm {
         padding: 5px 10px;
         font-size: 0.875rem;
-    }
-    .search-bar {
-        margin-bottom: 20px;
-    }
-    .search-bar input {
-        padding: 8px;
-        width: 300px;
     }
     .pagination {
         margin-top: 20px;
