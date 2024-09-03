@@ -2,11 +2,14 @@
 class AuthController extends BaseController {
     private $logger;
 
+    // Constructeur avec le logger en paramètre
     public function __construct($logger) {
         $this->logger = $logger;
     }
 
+    // Méthode pour l'inscription des utilisateurs
     public function register() {
+        $errors = [];
         if ($this->isPost()) {
             $username = trim($this->getPostData()['username']);
             $email = trim($this->getPostData()['email']);
@@ -46,7 +49,9 @@ class AuthController extends BaseController {
         $this->render('register', ['errors' => $errors ?? null, 'csrfToken' => $csrfToken]);
     }
 
+    // Méthode pour la connexion des utilisateurs
     public function login() {
+        $error = null;
         if ($this->isPost()) {
             $username = $this->getPostData()['username'];
             $password = $this->getPostData()['password'];
@@ -76,6 +81,7 @@ class AuthController extends BaseController {
         $this->render('login', ['error' => $error ?? null, 'csrfToken' => $csrfToken]);
     }
 
+    // Méthode pour la déconnexion des utilisateurs
     public function logout() {
         $userId = $_SESSION['user_id'] ?? null;
         session_unset();
@@ -86,6 +92,7 @@ class AuthController extends BaseController {
         $this->redirect('home');
     }
 
+    // Validation des données d'inscription
     private function validateRegistrationInput($username, $email, $password) {
         $errors = [];
         if (strlen($username) < 3 || strlen($username) > 50) {
@@ -100,12 +107,14 @@ class AuthController extends BaseController {
         return $errors;
     }
 
+    // Génération du jeton CSRF
     private function generateCsrfToken() {
         $token = bin2hex(random_bytes(32));
         $_SESSION['csrf_token'] = $token;
         return $token;
     }
 
+    // Validation du jeton CSRF
     private function validateCsrfToken($token) {
         return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
     }
