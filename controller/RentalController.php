@@ -38,6 +38,12 @@ class RentalController extends BaseController {
                 return;
             }
 
+            // Calcul de la durée et du tarif
+            $duree = $this->calculerDuree($data['date_debut'], $data['date_fin']);
+            $tarif = $vehicule->calculerTarif($duree);
+            $data['duree'] = $duree;
+            $data['tarif'] = $tarif;
+
             $rental = Rental::create($data);
             if ($rental) {
                 $vehicule->setAvailable(false);
@@ -46,8 +52,7 @@ class RentalController extends BaseController {
                 $this->render('rentals/create', ['vehicule' => $vehicule, 'error' => 'Erreur lors de la création de la location']);
             }
         } else {
-            $offers = RentalOffer::findByVehiculeType($vehicule->getTypeId());
-            $this->render('rentals/create', ['vehicule' => $vehicule, 'offers' => $offers]);
+            $this->render('rentals/create', ['vehicule' => $vehicule]);
         }
     }
 
@@ -56,8 +61,7 @@ class RentalController extends BaseController {
         $rental = Rental::findById($id);
         if ($rental && $rental->getClientId() == $this->getCurrentUser()->getId()) {
             $vehicule = Vehicule::findById($rental->getVehiculeId());
-            $offer = RentalOffer::findById($rental->getOfferId());
-            $this->render('rentals/show', ['rental' => $rental, 'vehicule' => $vehicule, 'offer' => $offer]);
+            $this->render('rentals/show', ['rental' => $rental, 'vehicule' => $vehicule]);
         } else {
             $this->renderError(404);
         }
@@ -94,8 +98,8 @@ class RentalController extends BaseController {
     }
 
     private function generateInvoice($rental) {
-        $offer = RentalOffer::findById($rental->getOfferId());
-        $amount = $this->calculateTotalAmount($rental, $offer);
+        $vehicule = Vehicule::findById($rental->getVehiculeId());
+        $amount = $rental->getTarif();
         
         return Invoice::create([
             'rental_id' => $rental->getId(),
@@ -104,9 +108,11 @@ class RentalController extends BaseController {
         ]);
     }
 
-    private function calculateTotalAmount($rental, $offer) {
-        $days = (strtotime($rental->getDateFin()) - strtotime($rental->getDateDebut())) / (60 * 60 * 24);
-        return $offer->getPrix() * $days;
+    private function calculerDuree($dateDebut, $dateFin) {
+        $debut = new DateTime($dateDebut);
+        $fin = new DateTime($dateFin);
+        $interval = $debut->diff($fin);
+        return $interval->days + 1; // +1 car on compte le jour de début
     }
 
     private function validateDates($startDate, $endDate) {
