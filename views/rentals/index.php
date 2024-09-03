@@ -35,17 +35,15 @@ if (!$this->isLoggedIn()) {
         <?php foreach ($rentals as $rental): ?>
             <?php
             $vehicule = Vehicule::findById($rental->getVehiculeId());
-            $offer = RentalOffer::findById($rental->getOfferId());
             ?>
             <div class="rental-card">
                 <h2>Location #<?= $rental->getId() ?></h2>
                 <p><strong>Véhicule:</strong> <?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></p>
-                <p><strong>Type:</strong> <?= htmlspecialchars($vehicule->getType()) ?></p>
+                <p><strong>Catégorie:</strong> <?= htmlspecialchars($vehicule->getCategorie()) ?></p>
                 <p><strong>Date de début:</strong> <?= htmlspecialchars($rental->getDateDebut()) ?></p>
                 <p><strong>Date de fin:</strong> <?= htmlspecialchars($rental->getDateFin()) ?></p>
-                <p><strong>Durée:</strong> <?= htmlspecialchars($offer->getDuree()) ?> jours</p>
-                <p><strong>Kilométrage inclus:</strong> <?= htmlspecialchars($offer->getKilometres()) ?> km</p>
-                <p><strong>Prix:</strong> <?= htmlspecialchars($offer->getPrix()) ?> €</p>
+                <p><strong>Durée:</strong> <?= htmlspecialchars($rental->getDuree()) ?> jours</p>
+                <p><strong>Tarif total:</strong> <?= htmlspecialchars($rental->getTarif()) ?> €</p>
                 <p><strong>Statut:</strong> <span class="status-<?= strtolower($rental->getStatus()) ?>"><?= htmlspecialchars($rental->getStatus()) ?></span></p>
                 
                 <?php if ($rental->getStatus() === 'En cours'): ?>
