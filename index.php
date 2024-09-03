@@ -26,16 +26,6 @@ spl_autoload_register(function($class) {
     die("La classe {$class} n'a pas été trouvée.");
 });
 
-// Fonction pour vérifier si l'utilisateur est connecté
-function isLoggedIn() {
-    return isset($_SESSION['user_id']);
-}
-
-// Fonction pour vérifier si l'utilisateur est un administrateur
-function isAdmin() {
-    return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Administrateur';
-}
-
 // Routage simple
 $route = $_GET['route'] ?? 'home';
 
