@@ -1,14 +1,14 @@
 <h1>Nos véhicules</h1>
 
 <?php if (isset($success)): ?>
-    <div class="alert alert-success"><?= $success ?></div>
+    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
 <?php endif; ?>
 
 <?php if (isset($error)): ?>
-    <div class="alert alert-danger"><?= $error ?></div>
+    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 
-<?php if ($this->isAdmin()): ?>
+<?php if ($this->getCurrentUser() && $this->getCurrentUser()->isAdmin()): ?>
     <a href="<?= $this->url('vehicules', ['action' => 'create']) ?>" class="btn btn-primary">Ajouter un véhicule</a>
 <?php endif; ?>
 
@@ -21,7 +21,7 @@
                 <p>Immatriculation: <?= htmlspecialchars($vehicule->getImmatriculation()) ?></p>
                 <p>Kilométrage: <?= htmlspecialchars($vehicule->getKilometres()) ?> km</p>
                 <a href="<?= $this->url('vehicules', ['action' => 'show', 'id' => $vehicule->getId()]) ?>" class="btn btn-info">Voir détails</a>
-                <?php if ($this->isAdmin()): ?>
+                <?php if ($this->getCurrentUser() && $this->getCurrentUser()->isAdmin()): ?>
                     <a href="<?= $this->url('vehicules', ['action' => 'edit', 'id' => $vehicule->getId()]) ?>" class="btn btn-warning">Modifier</a>
                     <a href="<?= $this->url('vehicules', ['action' => 'delete', 'id' => $vehicule->getId()]) ?>" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?');">Supprimer</a>
                 <?php endif; ?>
