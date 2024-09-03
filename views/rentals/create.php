@@ -1,5 +1,5 @@
 <h1>Louer un véhicule</h1>
-<h2><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h2>
+<h2><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?> (<?= htmlspecialchars($vehicule->getCategorie()) ?>)</h2>
 
 <?php if (isset($error)): ?>
     <div class="alert alert-danger"><?= $error ?></div>
@@ -16,15 +16,9 @@
         <input type="date" id="date_fin" name="date_fin" required class="form-control">
     </div>
     
-    <div class="form-group">
-        <label for="offer_id">Offre de location:</label>
-        <select id="offer_id" name="offer_id" required class="form-control">
-            <?php foreach (RentalOffer::findActiveByVehicleType($vehicule->getTypeId()) as $offer): ?>
-                <option value="<?= $offer->getId() ?>">
-                    <?= htmlspecialchars($offer->getDuree() . ' jours / ' . $offer->getKilometres() . ' km - ' . $offer->getPrix() . ' €') ?>
-                </option>
-            <?php endforeach; ?>
-        </select>
+    <div id="tarif-estimation" style="display: none;">
+        <p>Durée estimée: <span id="duree-estimee"></span> jours</p>
+        <p>Tarif estimé: <span id="tarif-estime"></span> €</p>
     </div>
     
     <button type="submit" class="btn btn-primary">Confirmer la location</button>
@@ -50,5 +44,25 @@ document.getElementById('rental-form').addEventListener('submit', function(e) {
 
 document.getElementById('date_debut').addEventListener('change', function() {
     document.getElementById('date_fin').min = this.value;
+    updateTarifEstimation();
 });
+
+document.getElementById('date_fin').addEventListener('change', updateTarifEstimation);
+
+function updateTarifEstimation() {
+    var dateDebut = new Date(document.getElementById('date_debut').value);
+    var dateFin = new Date(document.getElementById('date_fin').value);
+    
+    if (dateDebut && dateFin && dateFin > dateDebut) {
+        var duree = Math.ceil((dateFin - dateDebut) / (1000 * 60 * 60 * 24)) + 1;
+        var tarifJournalier = <?= $vehicule->getTarifJournalier() ?>;
+        var tarifTotal = duree * tarifJournalier;
+        
+        document.getElementById('duree-estimee').textContent = duree;
+        document.getElementById('tarif-estime').textContent = tarifTotal.toFixed(2);
+        document.getElementById('tarif-estimation').style.display = 'block';
+    } else {
+        document.getElementById('tarif-estimation').style.display = 'none';
+    }
+}
 </script>
