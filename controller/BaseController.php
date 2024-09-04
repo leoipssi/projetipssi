@@ -1,5 +1,4 @@
 <?php
-
 class BaseController {
     protected function render($view, $data = []) {
         extract($data);
@@ -41,10 +40,6 @@ class BaseController {
     protected function json($data) {
         header('Content-Type: application/json');
         echo json_encode($data);
-    }
-
-    protected function isPost() {
-        return $_SERVER['REQUEST_METHOD'] === 'POST';
     }
 
     protected function getPostData() {
