@@ -4,6 +4,8 @@ ini_set('session.gc_maxlifetime', 3600);
 ini_set('session.cookie_lifetime', 3600);
 ini_set('session.use_only_cookies', 1);
 ini_set('session.use_strict_mode', 1);
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1); // Uniquement si HTTPS est utilisé
 
 // Démarrage de la session
 session_start();
@@ -26,10 +28,11 @@ if (!isset($_SESSION['init_time'])) {
 }
 
 // Vérification du jeton CSRF
-if (isset($_SESSION['csrf_token'])) {
-    custom_log('CSRF Token in session: ' . $_SESSION['csrf_token']);
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+    custom_log('Nouveau CSRF Token généré: ' . $_SESSION['csrf_token']);
 } else {
-    custom_log('CSRF Token not set in session');
+    custom_log('CSRF Token existant: ' . $_SESSION['csrf_token']);
 }
 
 require_once 'config.php';
@@ -105,8 +108,9 @@ try {
     $logger->error($e->getMessage());
     if ($e->getCode() === 404) {
         header("HTTP/1.0 404 Not Found");
-        include 'views/404.php';
+        echo "<h1>404 - Page non trouvée</h1>";
     } else {
-        include 'views/error.php';
+        echo "<h1>Une erreur est survenue</h1>";
+        echo "<p>" . htmlspecialchars($e->getMessage()) . "</p>";
     }
 }
