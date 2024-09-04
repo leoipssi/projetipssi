@@ -8,11 +8,17 @@ class AuthController extends BaseController {
 
     public function register() {
         $errors = [];
+        $csrfToken = $this->generateCsrfToken();
+
         if ($this->isPost()) {
-            $csrfToken = $this->getPostData()['csrf_token'] ?? '';
+            $postedToken = $this->getPostData()['csrf_token'] ?? '';
             
-            if (!$this->validateCsrfToken($csrfToken)) {
+            $this->logger->debug("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'not set'));
+            $this->logger->debug("Posted CSRF Token: " . $postedToken);
+
+            if (!$this->validateCsrfToken($postedToken)) {
                 $errors[] = "Jeton CSRF invalide.";
+                $this->logger->warning("Invalid CSRF token during registration attempt");
             } else {
                 $userData = [
                     'nom' => trim($this->getPostData()['nom']),
@@ -53,19 +59,22 @@ class AuthController extends BaseController {
                 }
             }
         }
-        $csrfToken = $this->generateCsrfToken();
+
         $this->render('register', ['errors' => $errors, 'csrfToken' => $csrfToken]);
     }
 
     public function login() {
         $error = null;
+        $csrfToken = $this->generateCsrfToken();
+
         if ($this->isPost()) {
             $username = $this->getPostData()['username'];
             $password = $this->getPostData()['password'];
-            $csrfToken = $this->getPostData()['csrf_token'] ?? '';
+            $postedToken = $this->getPostData()['csrf_token'] ?? '';
             
-            if (!$this->validateCsrfToken($csrfToken)) {
+            if (!$this->validateCsrfToken($postedToken)) {
                 $error = "Jeton CSRF invalide.";
+                $this->logger->warning("Invalid CSRF token during login attempt");
             } else {
                 try {
                     $user = User::authenticate($username, $password);
@@ -84,7 +93,7 @@ class AuthController extends BaseController {
                 }
             }
         }
-        $csrfToken = $this->generateCsrfToken();
+
         $this->render('login', ['error' => $error, 'csrfToken' => $csrfToken]);
     }
 
@@ -131,9 +140,10 @@ class AuthController extends BaseController {
     }
 
     private function generateCsrfToken() {
-        $token = bin2hex(random_bytes(32));
-        $_SESSION['csrf_token'] = $token;
-        return $token;
+        if (!isset($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['csrf_token'];
     }
 
     private function validateCsrfToken($token) {
