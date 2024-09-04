@@ -11,6 +11,7 @@ class AuthController extends BaseController {
         $csrfToken = $this->generateCsrfToken();
 
         if ($this->isPost()) {
+            $this->logger->debug("POST data received: " . json_encode($_POST));
             $postedToken = $this->getPostData()['csrf_token'] ?? '';
             
             $this->logger->debug("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'not set'));
@@ -21,16 +22,16 @@ class AuthController extends BaseController {
                 $this->logger->warning("Invalid CSRF token during registration attempt");
             } else {
                 $userData = [
-                    'nom' => trim($this->getPostData()['nom']),
-                    'prenom' => trim($this->getPostData()['prenom']),
-                    'username' => trim($this->getPostData()['username']),
-                    'email' => trim($this->getPostData()['email']),
-                    'password' => $this->getPostData()['password'],
-                    'password_confirm' => $this->getPostData()['password_confirm'],
-                    'adresse' => trim($this->getPostData()['adresse']),
-                    'code_postal' => trim($this->getPostData()['code_postal']),
-                    'ville' => trim($this->getPostData()['ville']),
-                    'telephone' => trim($this->getPostData()['telephone'])
+                    'nom' => trim($this->getPostData()['nom'] ?? ''),
+                    'prenom' => trim($this->getPostData()['prenom'] ?? ''),
+                    'username' => trim($this->getPostData()['username'] ?? ''),
+                    'email' => trim($this->getPostData()['email'] ?? ''),
+                    'password' => $this->getPostData()['password'] ?? '',
+                    'password_confirm' => $this->getPostData()['password_confirm'] ?? '',
+                    'adresse' => trim($this->getPostData()['adresse'] ?? ''),
+                    'code_postal' => trim($this->getPostData()['code_postal'] ?? ''),
+                    'ville' => trim($this->getPostData()['ville'] ?? ''),
+                    'telephone' => trim($this->getPostData()['telephone'] ?? '')
                 ];
                 
                 $errors = $this->validateRegistrationInput($userData);
@@ -68,8 +69,9 @@ class AuthController extends BaseController {
         $csrfToken = $this->generateCsrfToken();
 
         if ($this->isPost()) {
-            $username = $this->getPostData()['username'];
-            $password = $this->getPostData()['password'];
+            $this->logger->debug("POST data received: " . json_encode($_POST));
+            $username = $this->getPostData()['username'] ?? '';
+            $password = $this->getPostData()['password'] ?? '';
             $postedToken = $this->getPostData()['csrf_token'] ?? '';
             
             $this->logger->debug("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'not set'));
@@ -154,5 +156,24 @@ class AuthController extends BaseController {
         $isValid = isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
         $this->logger->debug("CSRF validation result: " . ($isValid ? "Valid" : "Invalid"));
         return $isValid;
+    }
+
+    protected function isPost() {
+        return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
+
+    protected function getPostData() {
+        return $_POST;
+    }
+
+    protected function redirect($route, $params = []) {
+        $url = "index.php?route=" . urlencode($route);
+        if (!empty($params)) {
+            foreach ($params as $key => $value) {
+                $url .= "&" . urlencode($key) . "=" . urlencode($value);
+            }
+        }
+        header("Location: $url");
+        exit;
     }
 }
