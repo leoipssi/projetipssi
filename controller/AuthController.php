@@ -72,6 +72,9 @@ class AuthController extends BaseController {
             $password = $this->getPostData()['password'];
             $postedToken = $this->getPostData()['csrf_token'] ?? '';
             
+            $this->logger->debug("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'not set'));
+            $this->logger->debug("Posted CSRF Token: " . $postedToken);
+
             if (!$this->validateCsrfToken($postedToken)) {
                 $error = "Jeton CSRF invalide.";
                 $this->logger->warning("Invalid CSRF token during login attempt");
@@ -142,11 +145,14 @@ class AuthController extends BaseController {
     private function generateCsrfToken() {
         if (!isset($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            $this->logger->debug("New CSRF token generated: " . $_SESSION['csrf_token']);
         }
         return $_SESSION['csrf_token'];
     }
 
     private function validateCsrfToken($token) {
-        return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+        $isValid = isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
+        $this->logger->debug("CSRF validation result: " . ($isValid ? "Valid" : "Invalid"));
+        return $isValid;
     }
 }
