@@ -21,10 +21,14 @@ class AuthController extends BaseController {
             $this->logger->debug("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'not set'));
             $this->logger->debug("Posted CSRF Token: " . $postedToken);
 
-            if (!$this->validateCsrfToken($postedToken)) {
+            try {
+                $this->verifyCsrfToken(); // Vérification du jeton CSRF
+            } catch (Exception $e) {
                 $errors[] = "Jeton CSRF invalide.";
                 $this->logger->warning("Invalid CSRF token during registration attempt");
-            } else {
+            }
+
+            if (empty($errors)) {
                 $userData = [
                     'nom' => trim($this->getPostData()['nom'] ?? ''),
                     'prenom' => trim($this->getPostData()['prenom'] ?? ''),
@@ -81,10 +85,14 @@ class AuthController extends BaseController {
             $this->logger->debug("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'not set'));
             $this->logger->debug("Posted CSRF Token: " . $postedToken);
 
-            if (!$this->validateCsrfToken($postedToken)) {
+            try {
+                $this->verifyCsrfToken(); // Vérification du jeton CSRF
+            } catch (Exception $e) {
                 $error = "Jeton CSRF invalide.";
                 $this->logger->warning("Invalid CSRF token during login attempt");
-            } else {
+            }
+
+            if (is_null($error)) {
                 try {
                     $user = User::authenticate($username, $password);
                     if ($user) {
@@ -151,33 +159,7 @@ class AuthController extends BaseController {
     private function generateCsrfToken() {
         if (empty($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-            $this->logger->debug("New CSRF token generated: " . $_SESSION['csrf_token']);
         }
         return $_SESSION['csrf_token'];
-    }
-
-    private function validateCsrfToken($token) {
-        $isValid = isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
-        $this->logger->debug("CSRF validation result: " . ($isValid ? "Valid" : "Invalid"));
-        return $isValid;
-    }
-
-    protected function isPost() {
-        return $_SERVER['REQUEST_METHOD'] === 'POST';
-    }
-
-    protected function getPostData() {
-        return $_POST;
-    }
-
-    protected function redirect($route, $params = []) {
-        $url = "index.php?route=" . urlencode($route);
-        if (!empty($params)) {
-            foreach ($params as $key => $value) {
-                $url .= "&" . urlencode($key) . "=" . urlencode($value);
-            }
-        }
-        header("Location: $url");
-        exit;
     }
 }
