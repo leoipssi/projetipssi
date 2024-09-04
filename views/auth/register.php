@@ -11,7 +11,7 @@
             </div>
         <?php endif; ?>
         <form action="index.php?route=register" method="post">
-            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="nom" class="form-label">Nom</label>
