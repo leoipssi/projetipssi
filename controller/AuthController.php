@@ -4,6 +4,8 @@ class AuthController extends BaseController {
 
     public function __construct($logger) {
         $this->logger = $logger;
+        // Assurez-vous que la session est démarrée
+        session_start();
     }
 
     public function register() {
@@ -13,7 +15,7 @@ class AuthController extends BaseController {
         if ($this->isPost()) {
             $this->logger->debug("POST data received: " . json_encode($_POST));
             $postedToken = $this->getPostData()['csrf_token'] ?? '';
-            
+
             $this->logger->debug("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'not set'));
             $this->logger->debug("Posted CSRF Token: " . $postedToken);
 
@@ -33,9 +35,9 @@ class AuthController extends BaseController {
                     'ville' => trim($this->getPostData()['ville'] ?? ''),
                     'telephone' => trim($this->getPostData()['telephone'] ?? '')
                 ];
-                
+
                 $errors = $this->validateRegistrationInput($userData);
-                
+
                 if (empty($errors)) {
                     try {
                         if (User::findByUsername($userData['username'])) {
@@ -73,7 +75,7 @@ class AuthController extends BaseController {
             $username = $this->getPostData()['username'] ?? '';
             $password = $this->getPostData()['password'] ?? '';
             $postedToken = $this->getPostData()['csrf_token'] ?? '';
-            
+
             $this->logger->debug("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'not set'));
             $this->logger->debug("Posted CSRF Token: " . $postedToken);
 
@@ -145,13 +147,12 @@ class AuthController extends BaseController {
     }
 
     private function generateCsrfToken() {
-       if (empty($_SESSION['csrf_token'])) {
-          $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-          $this->logger->debug("New CSRF token generated: " . $_SESSION['csrf_token']);
-     }
-         return $_SESSION['csrf_token'];
+        if (empty($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            $this->logger->debug("New CSRF token generated: " . $_SESSION['csrf_token']);
+        }
+        return $_SESSION['csrf_token'];
     }
-
 
     private function validateCsrfToken($token) {
         $isValid = isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
