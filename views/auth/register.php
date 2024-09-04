@@ -1,0 +1,54 @@
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h1 class="text-center mb-4">Inscription</h1>
+        <?php if (isset($error)): ?>
+            <div class="alert alert-danger"><?= $error ?></div>
+        <?php endif; ?>
+        <form action="index.php?route=register" method="post">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label for="nom" class="form-label">Nom</label>
+                    <input type="text" class="form-control" id="nom" name="nom" required>
+                </div>
+                <div class="col-md-6">
+                    <label for="prenom" class="form-label">Prénom</label>
+                    <input type="text" class="form-control" id="prenom" name="prenom" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="email" class="form-label">Adresse e-mail</label>
+                <input type="email" class="form-control" id="email" name="email" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <div class="mb-3">
+                <label for="password_confirm" class="form-label">Confirmer le mot de passe</label>
+                <input type="password" class="form-control" id="password_confirm" name="password_confirm" required>
+            </div>
+            <div class="mb-3">
+                <label for="adresse" class="form-label">Adresse</label>
+                <input type="text" class="form-control" id="adresse" name="adresse" required>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label for="code_postal" class="form-label">Code postal</label>
+                    <input type="text" class="form-control" id="code_postal" name="code_postal" required>
+                </div>
+                <div class="col-md-8">
+                    <label for="ville" class="form-label">Ville</label>
+                    <input type="text" class="form-control" id="ville" name="ville" required>
+                </div>
+            </div>
+            <div class="mb-3">
+                <label for="telephone" class="form-label">Téléphone</label>
+                <input type="tel" class="form-control" id="telephone" name="telephone" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
+        </form>
+        <p class="text-center mt-3">
+            Déjà un compte ? <a href="index.php?route=login">Connectez-vous ici</a>
+        </p>
+    </div>
+</div>
