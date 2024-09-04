@@ -16,8 +16,14 @@ class BaseController {
     
     protected function verifyCsrfToken() {
         if ($this->isPost()) {
-            if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-                throw new Exception('Jeton CSRF invalide');
+            if (!isset($_POST['csrf_token'])) {
+                throw new Exception('Jeton CSRF manquant dans la requête POST');
+            }
+            if (!isset($_SESSION['csrf_token'])) {
+                throw new Exception('Jeton CSRF manquant dans la session');
+            }
+            if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                throw new Exception('Les jetons CSRF ne correspondent pas');
             }
         }
     }
