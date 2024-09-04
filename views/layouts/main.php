@@ -23,11 +23,11 @@
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=vehicules">Véhicules</a>
                         </li>
-                        <?php if ($this->isLoggedIn()): ?>
+                        <?php if (isset($this) && method_exists($this, 'isLoggedIn') && $this->isLoggedIn()): ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=rentals">Mes locations</a>
                             </li>
-                            <?php if ($this->getCurrentUser()->isAdmin()): ?>
+                            <?php if (isset($this) && method_exists($this, 'getCurrentUser') && $this->getCurrentUser()->isAdmin()): ?>
                                 <li class="nav-item">
                                     <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=admin">Administration</a>
                                 </li>
@@ -35,7 +35,7 @@
                         <?php endif; ?>
                     </ul>
                     <ul class="navbar-nav">
-                        <?php if ($this->isLoggedIn()): ?>
+                        <?php if (isset($this) && method_exists($this, 'isLoggedIn') && $this->isLoggedIn()): ?>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=logout">Déconnexion</a>
                             </li>
