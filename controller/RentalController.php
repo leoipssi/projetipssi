@@ -1,6 +1,6 @@
 <?php
 // Inclusion manuelle du fichier Rental.php
-require_once 'path/to/Rental.php';
+require_once 'models/Rental.php';
 
 class RentalController extends BaseController {
     public function index() {
