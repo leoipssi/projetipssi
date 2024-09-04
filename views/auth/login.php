@@ -1,34 +1,25 @@
-<div class="row">
-    <div class="col-md-6">
-        <img src="<?= BASE_URL ?>/public/images/vehicules/<?= $vehicule->getId() ?>.jpg" class="img-fluid rounded" alt="<?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>">
-    </div>
-    <div class="col-md-6">
-        <h1><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h1>
-        <p class="lead">Type: <?= htmlspecialchars($vehicule->getType()) ?></p>
-        <p>Catégorie: <?= htmlspecialchars($vehicule->getCategorie()) ?></p>
-        <p>Couleur: <?= htmlspecialchars($vehicule->getCouleur()) ?></p>
-        <p>Immatriculation: <?= htmlspecialchars($vehicule->getImmatriculation()) ?></p>
-        <p>Kilométrage: <?= htmlspecialchars($vehicule->getKilometres()) ?> km</p>
-        <p>Date d'achat: <?= htmlspecialchars($vehicule->getDateAchat()) ?></p>
-        <h3 class="mt-4">Tarif journalier: <?= htmlspecialchars($vehicule->getTarifJournalier()) ?> €</h3>
-        <a href="index.php?route=rentals&action=create&vehicule_id=<?= $vehicule->getId() ?>" class="btn btn-success btn-lg mt-3">Réserver ce véhicule</a>
-    </div>
-</div>
-
-<div class="mt-5">
-    <h2>Offres disponibles pour ce véhicule</h2>
-    <div class="row">
-        <?php foreach ($offres as $offre): ?>
-            <div class="col-md-4 mb-4">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Offre <?= htmlspecialchars($offre->getDuree()) ?> jours</h5>
-                        <p class="card-text">Prix: <?= htmlspecialchars($offre->getPrix()) ?> €</p>
-                        <p class="card-text">Kilométrage inclus: <?= htmlspecialchars($offre->getKilometres()) ?> km</p>
-                        <a href="index.php?route=rentals&action=create&offer_id=<?= $offre->getId() ?>" class="btn btn-primary">Choisir cette offre</a>
-                    </div>
-                </div>
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h1 class="text-center mb-4">Connexion</h1>
+        <?php if (!empty($error)): ?>
+            <div class="alert alert-danger">
+                <?= htmlspecialchars($error) ?>
             </div>
-        <?php endforeach; ?>
+        <?php endif; ?>
+        <form action="index.php?route=login" method="post">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken ?? '') ?>">
+            <div class="mb-3">
+                <label for="username" class="form-label">Nom d'utilisateur</label>
+                <input type="text" class="form-control" id="username" name="username" value="<?= htmlspecialchars($username ?? '') ?>" required>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Mot de passe</label>
+                <input type="password" class="form-control" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Se connecter</button>
+        </form>
+        <p class="text-center mt-3">
+            Pas encore inscrit ? <a href="index.php?route=register">Inscrivez-vous ici</a>
+        </p>
     </div>
 </div>
