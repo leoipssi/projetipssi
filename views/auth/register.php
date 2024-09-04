@@ -1,10 +1,17 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         <h1 class="text-center mb-4">Inscription</h1>
-        <?php if (isset($error)): ?>
-            <div class="alert alert-danger"><?= $error ?></div>
+        <?php if (!empty($errors)): ?>
+            <div class="alert alert-danger">
+                <ul>
+                    <?php foreach ($errors as $error): ?>
+                        <li><?= htmlspecialchars($error) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
         <?php endif; ?>
         <form action="index.php?route=register" method="post">
+            <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrfToken) ?>">
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="nom" class="form-label">Nom</label>
@@ -14,6 +21,10 @@
                     <label for="prenom" class="form-label">Prénom</label>
                     <input type="text" class="form-control" id="prenom" name="prenom" required>
                 </div>
+            </div>
+            <div class="mb-3">
+                <label for="username" class="form-label">Nom d'utilisateur</label>
+                <input type="text" class="form-control" id="username" name="username" required>
             </div>
             <div class="mb-3">
                 <label for="email" class="form-label">Adresse e-mail</label>
