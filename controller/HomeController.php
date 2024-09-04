@@ -9,3 +9,4 @@ class HomeController extends BaseController {
             'activeOffers' => $activeOffers
         ]);
     }
+}
