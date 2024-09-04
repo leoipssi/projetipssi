@@ -1,10 +1,19 @@
 <?php
 class VehiculeController extends BaseController {
     public function index() {
-        $vehicules = Vehicule::findAll();
-        $this->render('vehicules/index', ['vehicules' => $vehicules]);
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $perPage = 9; // Nombre de véhicules par page
+        
+        $vehicules = Vehicule::findAll($page, $perPage);
+        $totalVehicules = Vehicule::count();
+        $totalPages = ceil($totalVehicules / $perPage);
+        
+        $this->render('vehicules/index', [
+            'vehicules' => $vehicules,
+            'currentPage' => $page,
+            'totalPages' => $totalPages
+        ]);
     }
-
     public function show($id) {
         $vehicule = Vehicule::findById($id);
         if ($vehicule) {
