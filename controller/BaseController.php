@@ -14,7 +14,19 @@ class BaseController {
             echo $content;
         }
     }
+    
+    protected function verifyCsrfToken() {
+        if ($this->isPost()) {
+            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                throw new Exception('Jeton CSRF invalide');
+            }
+        }
+    }
 
+    protected function isPost() {
+        return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
+    
     protected function redirect($route, $params = []) {
         $url = "index.php?route=" . urlencode($route);
         if (!empty($params)) {
