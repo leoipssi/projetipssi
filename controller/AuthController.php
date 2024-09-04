@@ -4,8 +4,10 @@ class AuthController extends BaseController {
 
     public function __construct($logger) {
         $this->logger = $logger;
-        // Assurez-vous que la session est démarrée
-        session_start();
+        // Vérifiez si une session est déjà active avant d'appeler session_start()
+        if (session_status() === PHP_SESSION_NONE) {
+            session_start();
+        }
     }
 
     public function register() {
