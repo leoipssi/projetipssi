@@ -16,7 +16,7 @@ class BaseController {
     
     protected function verifyCsrfToken() {
         if ($this->isPost()) {
-            if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            if (!isset($_POST['csrf_token']) || !isset($_SESSION['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
                 throw new Exception('Jeton CSRF invalide');
             }
         }
@@ -40,6 +40,7 @@ class BaseController {
     protected function json($data) {
         header('Content-Type: application/json');
         echo json_encode($data);
+        exit; // Ensure that no further output is sent
     }
 
     protected function getPostData() {
@@ -68,7 +69,8 @@ class BaseController {
     }
 
     protected function requireAdmin() {
-        if (!$this->isLoggedIn() || !$this->getCurrentUser()->isAdmin()) {
+        $user = $this->getCurrentUser();
+        if (!$this->isLoggedIn() || !$user || !$user->isAdmin()) {
             $this->redirect('home');
         }
     }
