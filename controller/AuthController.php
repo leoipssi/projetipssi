@@ -145,12 +145,13 @@ class AuthController extends BaseController {
     }
 
     private function generateCsrfToken() {
-        if (!isset($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-            $this->logger->debug("New CSRF token generated: " . $_SESSION['csrf_token']);
-        }
-        return $_SESSION['csrf_token'];
+       if (empty($_SESSION['csrf_token'])) {
+          $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+          $this->logger->debug("New CSRF token generated: " . $_SESSION['csrf_token']);
+     }
+         return $_SESSION['csrf_token'];
     }
+
 
     private function validateCsrfToken($token) {
         $isValid = isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
