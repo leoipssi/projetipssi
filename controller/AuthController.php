@@ -1,4 +1,5 @@
 <?php
+
 class AuthController extends BaseController {
     private $logger;
 
@@ -10,19 +11,22 @@ class AuthController extends BaseController {
         $errors = [];
         $csrfToken = $this->generateCsrfToken();
         $this->logger->debug("Generated CSRF Token for registration: " . $csrfToken);
+        $this->logger->debug("Session data before processing registration: " . json_encode($_SESSION));
 
         if ($this->isPost()) {
+            $this->logger->debug("POST request detected for registration");
             $this->logger->debug("POST data received for registration: " . json_encode($_POST));
-            $postedToken = $this->getPostData()['csrf_token'] ?? '';
+            $this->logger->debug("Session data in registration POST: " . json_encode($_SESSION));
 
-            $this->logger->debug("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'not set'));
-            $this->logger->debug("Posted CSRF Token: " . $postedToken);
+            $postedToken = $this->getPostData()['csrf_token'] ?? '';
+            $this->logger->debug("Posted CSRF Token for registration: " . $postedToken);
 
             try {
                 $this->verifyCsrfToken();
+                $this->logger->debug("CSRF verification passed for registration");
             } catch (Exception $e) {
                 $errors[] = "Jeton CSRF invalide : " . $e->getMessage();
-                $this->logger->warning("Invalid CSRF token during registration attempt: " . $e->getMessage());
+                $this->logger->warning("CSRF verification failed for registration: " . $e->getMessage());
             }
 
             if (empty($errors)) {
@@ -66,28 +70,34 @@ class AuthController extends BaseController {
             }
         }
 
-        $this->render('register', ['errors' => $errors, 'csrfToken' => $csrfToken]);
+        $this->logger->debug("Rendering registration view with CSRF token: " . $csrfToken);
+        $this->render('auth/register', ['errors' => $errors, 'csrfToken' => $csrfToken]);
     }
 
     public function login() {
         $error = null;
         $csrfToken = $this->generateCsrfToken();
         $this->logger->debug("Generated CSRF Token for login: " . $csrfToken);
+        $this->logger->debug("Session data before processing login: " . json_encode($_SESSION));
 
         if ($this->isPost()) {
+            $this->logger->debug("POST request detected for login");
             $this->logger->debug("POST data received for login: " . json_encode($_POST));
+            $this->logger->debug("Session data in login POST: " . json_encode($_SESSION));
+            
             $username = $this->getPostData()['username'] ?? '';
             $password = $this->getPostData()['password'] ?? '';
             $postedToken = $this->getPostData()['csrf_token'] ?? '';
 
-            $this->logger->debug("Session CSRF Token: " . ($_SESSION['csrf_token'] ?? 'not set'));
-            $this->logger->debug("Posted CSRF Token: " . $postedToken);
+            $this->logger->debug("Username: " . $username);
+            $this->logger->debug("Posted CSRF Token for login: " . $postedToken);
 
             try {
                 $this->verifyCsrfToken();
+                $this->logger->debug("CSRF verification passed for login");
             } catch (Exception $e) {
                 $error = "Jeton CSRF invalide : " . $e->getMessage();
-                $this->logger->warning("Invalid CSRF token during login attempt: " . $e->getMessage());
+                $this->logger->warning("CSRF verification failed for login: " . $e->getMessage());
             }
 
             if (is_null($error)) {
@@ -109,7 +119,8 @@ class AuthController extends BaseController {
             }
         }
 
-        $this->render('login', ['error' => $error, 'csrfToken' => $csrfToken]);
+        $this->logger->debug("Rendering login view with CSRF token: " . $csrfToken);
+        $this->render('auth/login', ['error' => $error, 'csrfToken' => $csrfToken]);
     }
 
     public function logout() {
@@ -157,6 +168,9 @@ class AuthController extends BaseController {
     private function generateCsrfToken() {
         if (empty($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+            $this->logger->debug("New CSRF token generated: " . $_SESSION['csrf_token']);
+        } else {
+            $this->logger->debug("Existing CSRF token used: " . $_SESSION['csrf_token']);
         }
         return $_SESSION['csrf_token'];
     }
