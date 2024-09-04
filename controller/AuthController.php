@@ -2,37 +2,45 @@
 class AuthController extends BaseController {
     private $logger;
 
-    // Constructeur avec le logger en paramètre
     public function __construct($logger) {
         $this->logger = $logger;
     }
 
-    // Méthode pour l'inscription des utilisateurs
     public function register() {
         $errors = [];
         if ($this->isPost()) {
-            $username = trim($this->getPostData()['username']);
-            $email = trim($this->getPostData()['email']);
-            $password = $this->getPostData()['password'];
             $csrfToken = $this->getPostData()['csrf_token'] ?? '';
             
             if (!$this->validateCsrfToken($csrfToken)) {
                 $errors[] = "Jeton CSRF invalide.";
             } else {
-                $errors = $this->validateRegistrationInput($username, $email, $password);
+                $userData = [
+                    'nom' => trim($this->getPostData()['nom']),
+                    'prenom' => trim($this->getPostData()['prenom']),
+                    'username' => trim($this->getPostData()['username']),
+                    'email' => trim($this->getPostData()['email']),
+                    'password' => $this->getPostData()['password'],
+                    'password_confirm' => $this->getPostData()['password_confirm'],
+                    'adresse' => trim($this->getPostData()['adresse']),
+                    'code_postal' => trim($this->getPostData()['code_postal']),
+                    'ville' => trim($this->getPostData()['ville']),
+                    'telephone' => trim($this->getPostData()['telephone'])
+                ];
+                
+                $errors = $this->validateRegistrationInput($userData);
                 
                 if (empty($errors)) {
                     try {
-                        if (User::findByUsername($username)) {
+                        if (User::findByUsername($userData['username'])) {
                             $errors[] = "Ce nom d'utilisateur est déjà pris.";
-                        } elseif (User::findByEmail($email)) {
+                        } elseif (User::findByEmail($userData['email'])) {
                             $errors[] = "Cette adresse email est déjà utilisée.";
                         } else {
-                            $user = User::create($username, $password, $email);
+                            $user = User::create($userData);
                             if ($user) {
                                 session_regenerate_id(true);
                                 $_SESSION['user_id'] = $user->getId();
-                                $this->logger->info("Nouvel utilisateur enregistré: {$username}");
+                                $this->logger->info("Nouvel utilisateur enregistré: {$userData['username']}");
                                 $this->redirect('home');
                             } else {
                                 $errors[] = "Erreur lors de l'inscription.";
@@ -46,10 +54,9 @@ class AuthController extends BaseController {
             }
         }
         $csrfToken = $this->generateCsrfToken();
-        $this->render('register', ['errors' => $errors ?? null, 'csrfToken' => $csrfToken]);
+        $this->render('register', ['errors' => $errors, 'csrfToken' => $csrfToken]);
     }
 
-    // Méthode pour la connexion des utilisateurs
     public function login() {
         $error = null;
         if ($this->isPost()) {
@@ -78,10 +85,9 @@ class AuthController extends BaseController {
             }
         }
         $csrfToken = $this->generateCsrfToken();
-        $this->render('login', ['error' => $error ?? null, 'csrfToken' => $csrfToken]);
+        $this->render('login', ['error' => $error, 'csrfToken' => $csrfToken]);
     }
 
-    // Méthode pour la déconnexion des utilisateurs
     public function logout() {
         $userId = $_SESSION['user_id'] ?? null;
         session_unset();
@@ -92,29 +98,44 @@ class AuthController extends BaseController {
         $this->redirect('home');
     }
 
-    // Validation des données d'inscription
-    private function validateRegistrationInput($username, $email, $password) {
+    private function validateRegistrationInput($data) {
         $errors = [];
-        if (strlen($username) < 3 || strlen($username) > 50) {
+        if (strlen($data['username']) < 3 || strlen($data['username']) > 50) {
             $errors[] = "Le nom d'utilisateur doit contenir entre 3 et 50 caractères.";
         }
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
             $errors[] = "L'adresse email n'est pas valide.";
         }
-        if (strlen($password) < 8) {
+        if (strlen($data['password']) < 8) {
             $errors[] = "Le mot de passe doit contenir au moins 8 caractères.";
+        }
+        if ($data['password'] !== $data['password_confirm']) {
+            $errors[] = "Les mots de passe ne correspondent pas.";
+        }
+        if (strlen($data['nom']) < 2 || strlen($data['prenom']) < 2) {
+            $errors[] = "Le nom et le prénom doivent contenir au moins 2 caractères.";
+        }
+        if (strlen($data['adresse']) < 5) {
+            $errors[] = "L'adresse doit contenir au moins 5 caractères.";
+        }
+        if (!preg_match("/^\d{5}$/", $data['code_postal'])) {
+            $errors[] = "Le code postal doit contenir 5 chiffres.";
+        }
+        if (strlen($data['ville']) < 2) {
+            $errors[] = "La ville doit contenir au moins 2 caractères.";
+        }
+        if (!preg_match("/^[0-9]{10}$/", $data['telephone'])) {
+            $errors[] = "Le numéro de téléphone doit contenir 10 chiffres.";
         }
         return $errors;
     }
 
-    // Génération du jeton CSRF
     private function generateCsrfToken() {
         $token = bin2hex(random_bytes(32));
         $_SESSION['csrf_token'] = $token;
         return $token;
     }
 
-    // Validation du jeton CSRF
     private function validateCsrfToken($token) {
         return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
     }
