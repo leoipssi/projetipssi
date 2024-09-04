@@ -1,9 +1,12 @@
 <?php
-session_start();
-ini_set('session.gc_maxlifetime', 3600); // Durée de vie de la session à 1 heure
-ini_set('session.cookie_lifetime', 3600); // Durée de vie du cookie de session
+// Configurations de session avant le démarrage de la session
+ini_set('session.gc_maxlifetime', 3600);
+ini_set('session.cookie_lifetime', 3600);
 ini_set('session.use_only_cookies', 1);
 ini_set('session.use_strict_mode', 1);
+
+// Démarrage de la session
+session_start();
 
 // Fonction de logging personnalisée
 function custom_log($message) {
@@ -36,7 +39,6 @@ require_once 'vendor/autoload.php';
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
 
 if (file_exists('database.php')) {
     require_once 'database.php';
