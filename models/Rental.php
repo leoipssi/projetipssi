@@ -63,20 +63,26 @@ class Rental {
     public static function findByUserId($userId, $page = 1, $perPage = 10, $status = null) {
         global $conn;
         $offset = ($page - 1) * $perPage;
-        $query = "SELECT * FROM rentals WHERE client_id = ?";
-        $params = [$userId];
+        $query = "SELECT * FROM rentals WHERE client_id = :userId";
+        $params = [':userId' => $userId];
         
         if ($status !== null) {
-            $query .= " AND status = ?";
-            $params[] = $status;
+            $query .= " AND status = :status";
+            $params[':status'] = $status;
         }
         
-        $query .= " ORDER BY date_debut DESC LIMIT ? OFFSET ?";
-        $params[] = $perPage;
-        $params[] = $offset;
+        $query .= " ORDER BY date_debut DESC LIMIT :limit OFFSET :offset";
+        $params[':limit'] = $perPage;
+        $params[':offset'] = $offset;
         
         $stmt = $conn->prepare($query);
-        $stmt->execute($params);
+        foreach ($params as $key => &$val) {
+            $stmt->bindParam($key, $val, PDO::PARAM_STR);
+        }
+        $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        
+        $stmt->execute();
         
         $rentals = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -87,12 +93,12 @@ class Rental {
 
     public static function countByUserId($userId, $status = null) {
         global $conn;
-        $query = "SELECT COUNT(*) FROM rentals WHERE client_id = ?";
-        $params = [$userId];
+        $query = "SELECT COUNT(*) FROM rentals WHERE client_id = :userId";
+        $params = [':userId' => $userId];
         
         if ($status !== null) {
-            $query .= " AND status = ?";
-            $params[] = $status;
+            $query .= " AND status = :status";
+            $params[':status'] = $status;
         }
         
         $stmt = $conn->prepare($query);
