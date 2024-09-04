@@ -1,33 +1,29 @@
-<h1>Nos véhicules</h1>
+<h1 class="text-center mb-4">Nos Véhicules Électriques</h1>
 
-<?php if (isset($success)): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
-<?php endif; ?>
-
-<?php if (isset($error)): ?>
-    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
-<?php endif; ?>
-
-<?php if ($this->getCurrentUser() && $this->getCurrentUser()->isAdmin()): ?>
-    <a href="<?= $this->url('vehicules', ['action' => 'create']) ?>" class="btn btn-primary">Ajouter un véhicule</a>
-<?php endif; ?>
-
-<?php if (!empty($vehicules)): ?>
-    <div class="vehicules-grid">
-        <?php foreach ($vehicules as $vehicule): ?>
-            <div class="vehicule-card">
-                <h2><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h2>
-                <p>Couleur: <?= htmlspecialchars($vehicule->getCouleur()) ?></p>
-                <p>Immatriculation: <?= htmlspecialchars($vehicule->getImmatriculation()) ?></p>
-                <p>Kilométrage: <?= htmlspecialchars($vehicule->getKilometres()) ?> km</p>
-                <a href="<?= $this->url('vehicules', ['action' => 'show', 'id' => $vehicule->getId()]) ?>" class="btn btn-info">Voir détails</a>
-                <?php if ($this->getCurrentUser() && $this->getCurrentUser()->isAdmin()): ?>
-                    <a href="<?= $this->url('vehicules', ['action' => 'edit', 'id' => $vehicule->getId()]) ?>" class="btn btn-warning">Modifier</a>
-                    <a href="<?= $this->url('vehicules', ['action' => 'delete', 'id' => $vehicule->getId()]) ?>" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce véhicule ?');">Supprimer</a>
-                <?php endif; ?>
+<div class="row">
+    <?php foreach ($vehicules as $vehicule): ?>
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <img src="<?= BASE_URL ?>/public/images/vehicules/<?= $vehicule->getId() ?>.jpg" class="card-img-top" alt="<?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>">
+                <div class="card-body">
+                    <h5 class="card-title"><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h5>
+                    <p class="card-text">Type: <?= htmlspecialchars($vehicule->getType()) ?></p>
+                    <p class="card-text">Catégorie: <?= htmlspecialchars($vehicule->getCategorie()) ?></p>
+                    <a href="index.php?route=vehicules&action=show&id=<?= $vehicule->getId() ?>" class="btn btn-primary">Voir détails</a>
+                </div>
             </div>
-        <?php endforeach; ?>
-    </div>
-<?php else: ?>
-    <p>Aucun véhicule disponible pour le moment.</p>
+        </div>
+    <?php endforeach; ?>
+</div>
+
+<?php if ($totalPages > 1): ?>
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                <li class="page-item <?= $currentPage == $i ? 'active' : '' ?>">
+                    <a class="page-link" href="index.php?route=vehicules&page=<?= $i ?>"><?= $i ?></a>
+                </li>
+            <?php endfor; ?>
+        </ul>
+    </nav>
 <?php endif; ?>
