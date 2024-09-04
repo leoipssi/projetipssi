@@ -1,5 +1,34 @@
 <?php
 session_start();
+ini_set('session.gc_maxlifetime', 3600); // Durée de vie de la session à 1 heure
+ini_set('session.cookie_lifetime', 3600); // Durée de vie du cookie de session
+ini_set('session.use_only_cookies', 1);
+ini_set('session.use_strict_mode', 1);
+
+// Fonction de logging personnalisée
+function custom_log($message) {
+    error_log(date('Y-m-d H:i:s') . ': ' . $message);
+}
+
+// Logging des informations de session
+custom_log('Session ID: ' . session_id());
+custom_log('Session Data: ' . json_encode($_SESSION));
+
+// Test de persistance de session
+if (!isset($_SESSION['init_time'])) {
+    $_SESSION['init_time'] = time();
+    custom_log('Nouvelle session initialisée');
+} else {
+    custom_log('Session existante depuis: ' . date('Y-m-d H:i:s', $_SESSION['init_time']));
+}
+
+// Vérification du jeton CSRF
+if (isset($_SESSION['csrf_token'])) {
+    custom_log('CSRF Token in session: ' . $_SESSION['csrf_token']);
+} else {
+    custom_log('CSRF Token not set in session');
+}
+
 require_once 'config.php';
 require_once 'helpers.php';
 require_once 'vendor/autoload.php';
