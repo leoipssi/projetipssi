@@ -14,12 +14,16 @@ class RentalController extends BaseController {
         $totalRentals = Rental::countByUserId($userId, $status);
         $totalPages = ceil($totalRentals / $perPage);
         
+        error_log("Rendering rentals/index view");
+        error_log("Number of rentals: " . count($rentals));
+        
         $this->render('rentals/index', [
             'rentals' => $rentals,
             'page' => $page,
             'totalPages' => $totalPages,
-            'status' => $status
-        ]);
+            'status' => $status,
+            'title' => 'Mes locations'
+        ], 'main');
     }
 
     public function create($vehiculeId) {
@@ -36,13 +40,21 @@ class RentalController extends BaseController {
             $data['status'] = 'En cours';
             
             if (!$this->validateDates($data['date_debut'], $data['date_fin'])) {
-                $this->render('rentals/create', ['vehicule' => $vehicule, 'error' => 'Dates invalides']);
+                $this->render('rentals/create', [
+                    'vehicule' => $vehicule, 
+                    'error' => 'Dates invalides',
+                    'title' => 'Créer une location'
+                ], 'main');
                 return;
             }
 
             $offer = RentalOffer::findById($data['offer_id']);
             if (!$offer || $offer->getVehiculeTypeId() != $vehicule->getTypeId()) {
-                $this->render('rentals/create', ['vehicule' => $vehicule, 'error' => 'Offre de location invalide']);
+                $this->render('rentals/create', [
+                    'vehicule' => $vehicule, 
+                    'error' => 'Offre de location invalide',
+                    'title' => 'Créer une location'
+                ], 'main');
                 return;
             }
 
@@ -53,11 +65,19 @@ class RentalController extends BaseController {
                 $vehicule->setAvailable(false);
                 $this->redirect('rentals', ['success' => 'Location créée avec succès']);
             } else {
-                $this->render('rentals/create', ['vehicule' => $vehicule, 'error' => 'Erreur lors de la création de la location']);
+                $this->render('rentals/create', [
+                    'vehicule' => $vehicule, 
+                    'error' => 'Erreur lors de la création de la location',
+                    'title' => 'Créer une location'
+                ], 'main');
             }
         } else {
             $offers = RentalOffer::findActiveByVehiculeType($vehicule->getTypeId());
-            $this->render('rentals/create', ['vehicule' => $vehicule, 'offers' => $offers]);
+            $this->render('rentals/create', [
+                'vehicule' => $vehicule, 
+                'offers' => $offers,
+                'title' => 'Créer une location'
+            ], 'main');
         }
     }
 
@@ -67,7 +87,12 @@ class RentalController extends BaseController {
         if ($rental && $rental->getClientId() == $this->getCurrentUser()->getId()) {
             $vehicule = Vehicule::findById($rental->getVehiculeId());
             $offer = RentalOffer::findById($rental->getOfferId());
-            $this->render('rentals/show', ['rental' => $rental, 'vehicule' => $vehicule, 'offer' => $offer]);
+            $this->render('rentals/show', [
+                'rental' => $rental, 
+                'vehicule' => $vehicule, 
+                'offer' => $offer,
+                'title' => 'Détails de la location'
+            ], 'main');
         } else {
             $this->renderError(404);
         }
@@ -94,7 +119,11 @@ class RentalController extends BaseController {
         if ($rental && $rental->getClientId() == $this->getCurrentUser()->getId() && $rental->getStatus() == 'Terminée') {
             $invoice = Invoice::findByRentalId($rental->getId());
             if ($invoice) {
-                $this->render('invoices/show', ['invoice' => $invoice, 'rental' => $rental]);
+                $this->render('invoices/show', [
+                    'invoice' => $invoice, 
+                    'rental' => $rental,
+                    'title' => 'Facture de location'
+                ], 'main');
             } else {
                 $this->renderError(404);
             }
