@@ -1,6 +1,8 @@
 <?php
-// Inclusion manuelle du fichier Rental.php
 require_once 'models/Rental.php';
+require_once 'models/Vehicule.php';
+require_once 'models/RentalOffer.php';
+require_once 'models/Invoice.php';
 
 class RentalController extends BaseController {
     public function index() {
@@ -13,9 +15,6 @@ class RentalController extends BaseController {
         $rentals = Rental::findByUserId($userId, $page, $perPage, $status);
         $totalRentals = Rental::countByUserId($userId, $status);
         $totalPages = ceil($totalRentals / $perPage);
-        
-        error_log("Rendering rentals/index view");
-        error_log("Number of rentals: " . count($rentals));
         
         $this->render('rentals/index', [
             'rentals' => $rentals,
