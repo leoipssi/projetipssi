@@ -1,14 +1,14 @@
 <?php
 class BaseController {
-    protected function render($view, $data = []) {
+    protected function render($view, $data = [], $layout = 'main') {
         extract($data);
         
         ob_start();
         include "views/{$view}.php";
         $content = ob_get_clean();
         
-        if (file_exists('views/layouts/main.php')) {
-            include 'views/layouts/main.php';
+        if ($layout && file_exists("views/layouts/{$layout}.php")) {
+            include "views/layouts/{$layout}.php";
         } else {
             echo $content;
         }
@@ -33,20 +33,25 @@ class BaseController {
     }
     
     protected function redirect($route, $params = []) {
-        $url = "index.php?route=" . urlencode($route);
+        $url = $this->url($route, $params);
+        header("Location: $url");
+        exit;
+    }
+
+    protected function url($route, $params = []) {
+        $url = BASE_URL . "/index.php?route=" . urlencode($route);
         if (!empty($params)) {
             foreach ($params as $key => $value) {
                 $url .= "&" . urlencode($key) . "=" . urlencode($value);
             }
         }
-        header("Location: $url");
-        exit;
+        return $url;
     }
 
     protected function json($data) {
         header('Content-Type: application/json');
         echo json_encode($data);
-        exit; // Ensure that no further output is sent
+        exit;
     }
 
     protected function getPostData() {
@@ -79,5 +84,10 @@ class BaseController {
         if (!$this->isLoggedIn() || !$user || !$user->isAdmin()) {
             $this->redirect('home');
         }
+    }
+
+    protected function renderError($code) {
+        http_response_code($code);
+        $this->render("errors/{$code}", ['title' => "Erreur {$code}"], 'main');
     }
 }
