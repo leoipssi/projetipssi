@@ -1,18 +1,11 @@
-<?php
-// Assurez-vous que l'utilisateur est connecté
-if (!$this->isLoggedIn()) {
-    $this->redirect('login');
-}
-?>
-
 <h1 class="text-center mb-4">Mes locations</h1>
 
 <?php if (isset($success)): ?>
-    <div class="alert alert-success"><?= $success ?></div>
+    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
 <?php endif; ?>
 
 <?php if (isset($error)): ?>
-    <div class="alert alert-danger"><?= $error ?></div>
+    <div class="alert alert-danger"><?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 
 <div class="card mb-4">
@@ -33,7 +26,7 @@ if (!$this->isLoggedIn()) {
 
 <?php if (empty($rentals)): ?>
     <div class="alert alert-info">
-        <p>Vous n'avez pas encore de location<?= $status ? " avec le statut '$status'" : '' ?>.</p>
+        <p>Vous n'avez pas encore de location<?= $status ? " avec le statut '" . htmlspecialchars($status) . "'" : '' ?>.</p>
     </div>
     <a href="<?= $this->url('vehicules') ?>" class="btn btn-primary">Voir les véhicules disponibles</a>
 <?php else: ?>
