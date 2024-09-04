@@ -42,8 +42,9 @@ if (!$this->isLoggedIn()) {
             <?php
             $vehicule = Vehicule::findById($rental->getVehiculeId());
             ?>
-            <div class="col-md-6 col-lg-4 mb-4">
+            <div class="col-md-4 mb-4">
                 <div class="card h-100">
+                    <img src="<?= BASE_URL ?>/public/images/vehicules/<?= $vehicule->getId() ?>.jpg" class="card-img-top" alt="<?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>">
                     <div class="card-body">
                         <h5 class="card-title">Location #<?= $rental->getId() ?></h5>
                         <p class="card-text"><strong>Véhicule:</strong> <?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></p>
@@ -58,8 +59,6 @@ if (!$this->isLoggedIn()) {
                                 <?= htmlspecialchars($rental->getStatus()) ?>
                             </span>
                         </p>
-                    </div>
-                    <div class="card-footer">
                         <?php if ($rental->getStatus() === 'En cours'): ?>
                             <a href="<?= $this->url('rentals', ['action' => 'return', 'id' => $rental->getId()]) ?>" class="btn btn-warning">Retourner le véhicule</a>
                         <?php elseif ($rental->getStatus() === 'Terminée'): ?>
@@ -72,19 +71,15 @@ if (!$this->isLoggedIn()) {
         <?php endforeach; ?>
     </div>
     
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center">
-            <?php if ($page > 1): ?>
-                <li class="page-item">
-                    <a class="page-link" href="<?= $this->url('rentals', ['page' => $page - 1, 'status' => $status]) ?>">&laquo; Précédent</a>
-                </li>
-            <?php endif; ?>
-            
-            <?php if ($page < $totalPages): ?>
-                <li class="page-item">
-                    <a class="page-link" href="<?= $this->url('rentals', ['page' => $page + 1, 'status' => $status]) ?>">Suivant &raquo;</a>
-                </li>
-            <?php endif; ?>
-        </ul>
-    </nav>
+    <?php if ($totalPages > 1): ?>
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <?php for ($i = 1; $i <= $totalPages; $i++): ?>
+                    <li class="page-item <?= $page == $i ? 'active' : '' ?>">
+                        <a class="page-link" href="<?= $this->url('rentals', ['page' => $i, 'status' => $status]) ?>"><?= $i ?></a>
+                    </li>
+                <?php endfor; ?>
+            </ul>
+        </nav>
+    <?php endif; ?>
 <?php endif; ?>
