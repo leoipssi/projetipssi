@@ -4,6 +4,7 @@ class AuthController extends BaseController {
     private $logger;
 
     public function __construct($logger) {
+        parent::__construct(); // Appel du constructeur parent
         $this->logger = $logger;
     }
 
@@ -110,9 +111,7 @@ class AuthController extends BaseController {
         return false;
     }
 
-    public static function isLoggedIn() {
-        return isset($_SESSION['user_id']);
-    }
+    // La méthode isLoggedIn() est héritée de BaseController, donc nous ne la redéfinissons pas ici
 
     private function sanitizeUserData($data) {
         return array_map('trim', array_map('htmlspecialchars', $data));
