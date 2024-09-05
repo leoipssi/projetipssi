@@ -111,7 +111,10 @@ class AuthController extends BaseController {
         return false;
     }
 
-    // La méthode isLoggedIn() est héritée de BaseController, donc nous ne la redéfinissons pas ici
+    // Nouvelle méthode statique pour vérifier si l'utilisateur est connecté
+    public static function checkLoggedIn() {
+        return isset($_SESSION['user_id']);
+    }
 
     private function sanitizeUserData($data) {
         return array_map('trim', array_map('htmlspecialchars', $data));
