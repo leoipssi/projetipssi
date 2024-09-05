@@ -28,8 +28,6 @@
                                 <a class="nav-link" href="<?= htmlspecialchars(BASE_URL) ?>/index.php?route=rentals">Mes locations</a>
                             </li>
                             <?php
-                            // Débogage temporaire
-                            var_dump($_SESSION['user_role']);
                             if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Administrateur'): ?>
                                 <li class="nav-item">
                                     <a class="nav-link" href="<?= htmlspecialchars(BASE_URL) ?>/index.php?route=admin">Administration</a>
