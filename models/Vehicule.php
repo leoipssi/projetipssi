@@ -135,7 +135,6 @@ class Vehicule {
         return $vehicules;
     }
 
-    // Nouvelle méthode ajoutée
     public static function getTopRented($limit = 5) {
         global $conn;
         $stmt = $conn->prepare("
