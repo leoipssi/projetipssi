@@ -18,11 +18,9 @@
     </div>
     <div class="stat-card">
         <h2>Revenu total</h2>
-        <p class="stat-number"><?= number_format($totalRevenue, 2) ?> €</p>
+        <p class="stat-number"><?= number_format($totalRevenue ?? 0, 2) ?> €</p>
     </div>
 </div>
-
-<!-- Rest of the dashboard HTML remains unchanged -->
 
 <h2>Actions rapides</h2>
 <div class="quick-actions">
