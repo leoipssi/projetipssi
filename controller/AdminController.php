@@ -15,9 +15,14 @@ class AdminController extends BaseController {
     public function __construct() {
         parent::__construct();
         // Vérifie si l'utilisateur est un administrateur
-        if (!AuthController::isAdmin()) {
+        if (!$this->isAdmin()) {
             $this->redirect('home');
         }
+    }
+
+    // Add this method to the AdminController
+    protected function isAdmin() {
+        return AuthController::isAdmin();
     }
 
     public function dashboard() {
