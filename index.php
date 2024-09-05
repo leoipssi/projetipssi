@@ -84,7 +84,7 @@ try {
             $controller->$action($_GET['id'] ?? null);
             break;
         case 'rentals':
-            if (!isLoggedIn()) {
+            if (!AuthController::isLoggedIn()) {
                 header('Location: index.php?route=login');
                 exit;
             }
@@ -93,7 +93,7 @@ try {
             $controller->$action($_POST ?? null);
             break;
         case 'admin':
-            if (!isAdmin()) {
+            if (!AuthController::isAdmin()) {
                 header('Location: index.php?route=login');
                 exit;
             }
