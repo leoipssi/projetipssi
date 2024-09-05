@@ -11,38 +11,16 @@ class AuthController extends BaseController {
         $errors = [];
         $csrfToken = $this->generateCsrfToken();
         $this->logger->debug("Generated CSRF Token for registration: " . $csrfToken);
-        $this->logger->debug("Session data before processing registration: " . json_encode($_SESSION));
 
         if ($this->isPost()) {
             $this->logger->debug("POST request detected for registration");
             $this->logger->debug("POST data received for registration: " . json_encode($_POST));
-            $this->logger->debug("Session data in registration POST: " . json_encode($_SESSION));
-
-            $postedToken = $this->getPostData()['csrf_token'] ?? '';
-            $this->logger->debug("Posted CSRF Token for registration: " . $postedToken);
 
             try {
                 $this->verifyCsrfToken();
                 $this->logger->debug("CSRF verification passed for registration");
-            } catch (Exception $e) {
-                $errors[] = "Jeton CSRF invalide : " . $e->getMessage();
-                $this->logger->warning("CSRF verification failed for registration: " . $e->getMessage());
-            }
 
-            if (empty($errors)) {
-                $userData = [
-                    'nom' => trim($this->getPostData()['nom'] ?? ''),
-                    'prenom' => trim($this->getPostData()['prenom'] ?? ''),
-                    'username' => trim($this->getPostData()['username'] ?? ''),
-                    'email' => trim($this->getPostData()['email'] ?? ''),
-                    'password' => $this->getPostData()['password'] ?? '',
-                    'password_confirm' => $this->getPostData()['password_confirm'] ?? '',
-                    'adresse' => trim($this->getPostData()['adresse'] ?? ''),
-                    'code_postal' => trim($this->getPostData()['code_postal'] ?? ''),
-                    'ville' => trim($this->getPostData()['ville'] ?? ''),
-                    'telephone' => trim($this->getPostData()['telephone'] ?? '')
-                ];
-
+                $userData = $this->sanitizeUserData($_POST);
                 $errors = $this->validateRegistrationInput($userData);
 
                 if (empty($errors)) {
@@ -54,8 +32,7 @@ class AuthController extends BaseController {
                         } else {
                             $user = User::create($userData);
                             if ($user) {
-                                session_regenerate_id(true);
-                                $_SESSION['user_id'] = $user->getId();
+                                $this->initializeUserSession($user);
                                 $this->logger->info("Nouvel utilisateur enregistré: {$userData['username']}");
                                 $this->redirect('home');
                             } else {
@@ -67,6 +44,9 @@ class AuthController extends BaseController {
                         $errors[] = "Une erreur est survenue lors de l'inscription.";
                     }
                 }
+            } catch (Exception $e) {
+                $errors[] = "Jeton CSRF invalide : " . $e->getMessage();
+                $this->logger->warning("CSRF verification failed for registration: " . $e->getMessage());
             }
         }
 
@@ -78,34 +58,21 @@ class AuthController extends BaseController {
         $error = null;
         $csrfToken = $this->generateCsrfToken();
         $this->logger->debug("Generated CSRF Token for login: " . $csrfToken);
-        $this->logger->debug("Session data before processing login: " . json_encode($_SESSION));
 
         if ($this->isPost()) {
             $this->logger->debug("POST request detected for login");
-            $this->logger->debug("POST data received for login: " . json_encode($_POST));
-            $this->logger->debug("Session data in login POST: " . json_encode($_SESSION));
             
-            $username = $this->getPostData()['username'] ?? '';
-            $password = $this->getPostData()['password'] ?? '';
-            $postedToken = $this->getPostData()['csrf_token'] ?? '';
-
-            $this->logger->debug("Username: " . $username);
-            $this->logger->debug("Posted CSRF Token for login: " . $postedToken);
-
             try {
                 $this->verifyCsrfToken();
                 $this->logger->debug("CSRF verification passed for login");
-            } catch (Exception $e) {
-                $error = "Jeton CSRF invalide : " . $e->getMessage();
-                $this->logger->warning("CSRF verification failed for login: " . $e->getMessage());
-            }
 
-            if (is_null($error)) {
+                $username = $this->getPostData()['username'] ?? '';
+                $password = $this->getPostData()['password'] ?? '';
+
                 try {
                     $user = User::authenticate($username, $password);
                     if ($user) {
-                        session_regenerate_id(true);
-                        $_SESSION['user_id'] = $user->getId();
+                        $this->initializeUserSession($user);
                         $this->logger->info("Connexion réussie: {$username}");
                         $this->redirect('home');
                     } else {
@@ -116,6 +83,9 @@ class AuthController extends BaseController {
                     $this->logger->error("Erreur lors de la connexion: " . $e->getMessage());
                     $error = "Une erreur est survenue lors de la connexion.";
                 }
+            } catch (Exception $e) {
+                $error = "Jeton CSRF invalide : " . $e->getMessage();
+                $this->logger->warning("CSRF verification failed for login: " . $e->getMessage());
             }
         }
 
@@ -131,6 +101,10 @@ class AuthController extends BaseController {
             $this->logger->info("Utilisateur déconnecté: ID {$userId}");
         }
         $this->redirect('home');
+    }
+
+    private function sanitizeUserData($data) {
+        return array_map('trim', array_map('htmlspecialchars', $data));
     }
 
     private function validateRegistrationInput($data) {
@@ -173,5 +147,11 @@ class AuthController extends BaseController {
             $this->logger->debug("Existing CSRF token used: " . $_SESSION['csrf_token']);
         }
         return $_SESSION['csrf_token'];
+    }
+
+    private function initializeUserSession($user) {
+        session_regenerate_id(true);
+        $_SESSION['user_id'] = $user->getId();
+        $_SESSION['user_role'] = $user->getRole();
     }
 }
