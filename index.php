@@ -58,7 +58,7 @@ spl_autoload_register(function($class) {
             return;
         }
     }
-    die("La classe {$class} n'a pas été trouvée.");
+    throw new Exception("La classe {$class} n'a pas été trouvée.");
 });
 
 $logger = new \Monolog\Logger('app');
@@ -84,7 +84,7 @@ try {
             $controller->$action($_GET['id'] ?? null);
             break;
         case 'rentals':
-            if (!AuthController::isLoggedIn()) {
+            if (!AuthController::checkLoggedIn()) {
                 header('Location: index.php?route=login');
                 exit;
             }
