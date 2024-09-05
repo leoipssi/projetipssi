@@ -1,17 +1,8 @@
 <?php
-
 class AuthController extends BaseController {
-    private $logger;
-
     public function __construct($logger = null) {
-        parent::__construct();
-        if ($logger === null) {
-            // Créer un logger par défaut si aucun n'est fourni
-            $this->logger = new \Monolog\Logger('auth');
-            $this->logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/auth.log', \Monolog\Logger::DEBUG));
-        } else {
-            $this->logger = $logger;
-        }
+        parent::__construct($logger);
+        // Vous pouvez ajouter ici une logique spécifique à AuthController si nécessaire
     }
 
     public function register() {
