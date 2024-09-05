@@ -103,6 +103,13 @@ class AuthController extends BaseController {
         $this->redirect('home');
     }
 
+    public static function isAdmin() {
+        if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
+            return $_SESSION['user_role'] === 'admin';
+        }
+        return false;
+    }
+
     private function sanitizeUserData($data) {
         return array_map('trim', array_map('htmlspecialchars', $data));
     }
