@@ -1,12 +1,12 @@
 <?php
 // Inclure les dépendances nécessaires
-require_once 'BaseController.php';
-require_once 'AuthController.php';
-require_once 'models/Vehicule.php';
-require_once 'models/User.php';
-require_once 'models/Rental.php';
-require_once 'models/VehiculeType.php';
-require_once 'models/Rental.php';
+require_once __DIR__ . '/BaseController.php';
+require_once __DIR__ . '/AuthController.php';
+require_once __DIR__ . '/models/Vehicule.php';
+require_once __DIR__ . '/models/User.php';
+require_once __DIR__ . '/models/Rental.php';
+require_once __DIR__ . '/models/VehiculeType.php';
+require_once __DIR__ . '/models/RentalOffer.php';
 
 class AdminController extends BaseController {
     public function __construct() {
@@ -78,7 +78,7 @@ class AdminController extends BaseController {
 
             if (empty($errors)) {
                 try {
-                    $offer = Offer::create($offerData);
+                    $offer = RentalOffer::create($offerData);
                     if ($offer) {
                         $this->redirect('admin', ['action' => 'dashboard', 'success' => 'Offre créée avec succès']);
                     } else {
