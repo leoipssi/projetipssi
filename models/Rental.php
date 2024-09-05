@@ -113,7 +113,6 @@ class Rental {
         return $stmt->rowCount() > 0;
     }
 
-    // Nouvelles méthodes ajoutées
     public static function count() {
         global $conn;
         $stmt = $conn->query("SELECT COUNT(*) FROM rentals");
