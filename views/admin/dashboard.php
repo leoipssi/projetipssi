@@ -1,10 +1,3 @@
-<?php
-// Vérification que l'utilisateur est un administrateur
-if (!$this->isAdmin()) {
-    $this->redirect('home');
-}
-?>
-
 <h1>Tableau de bord administrateur</h1>
 
 <div class="dashboard-stats">
@@ -28,6 +21,8 @@ if (!$this->isAdmin()) {
         <p class="stat-number"><?= number_format($totalRevenue, 2) ?> €</p>
     </div>
 </div>
+
+<!-- Rest of the dashboard HTML remains unchanged -->
 
 <h2>Actions rapides</h2>
 <div class="quick-actions">
