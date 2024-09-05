@@ -134,4 +134,20 @@ class Vehicule {
         }
         return $vehicules;
     }
+
+    // Nouvelle méthode ajoutée
+    public static function getTopRented($limit = 5) {
+        global $conn;
+        $stmt = $conn->prepare("
+            SELECT v.*, COUNT(r.id) as rental_count, SUM(r.prix_total) as revenue
+            FROM vehicules v
+            LEFT JOIN rentals r ON v.id = r.vehicule_id
+            GROUP BY v.id
+            ORDER BY rental_count DESC
+            LIMIT :limit
+        ");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
