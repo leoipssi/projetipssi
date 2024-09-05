@@ -118,36 +118,6 @@ class AdminController extends BaseController {
         ]);
     }
 
-    public function createOffer() {
-        // Récupère les types de véhicules disponibles
-        $vehiculeTypes = VehiculeType::getAll();
-        $errors = [];
-
-        if ($this->isPost()) {
-            $offerData = $this->sanitizeUserData($_POST);
-            $errors = $this->validateOfferInput($offerData);
-
-            if (empty($errors)) {
-                try {
-                    $offer = RentalOffer::create($offerData);
-                    if ($offer) {
-                        $this->redirect('admin', ['action' => 'dashboard', 'success' => 'Offre créée avec succès']);
-                    } else {
-                        $errors[] = "Erreur lors de la création de l'offre.";
-                    }
-                } catch (Exception $e) {
-                    $errors[] = "Une erreur est survenue lors de la création de l'offre : " . $e->getMessage();
-                }
-            }
-        }
-
-        // Affiche la vue de création d'offre
-        $this->render('admin/createOffer', [
-            'vehiculeTypes' => $vehiculeTypes,
-            'errors' => $errors
-        ]);
-    }
-
     public function manageUsers() {
         // Récupère les paramètres de la requête
         $page = $this->getQueryParam('page', 1);
