@@ -12,20 +12,46 @@ if (!$isCLI) {
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
-// Inclure les fichiers nécessaires
-require_once __DIR__ . 'database.php';  // Assurez-vous que ce chemin est correct
-require_once __DIR__ . '/models/User.php';      // Assurez-vous que ce chemin est correct
+echo "Début du script.\n";
 
-echo "Fichiers inclus avec succès.\n";
+// Vérification et inclusion du fichier database.php
+$databaseFile = __DIR__ . '/database.php';
+if (file_exists($databaseFile)) {
+    echo "Inclusion du fichier database.php...\n";
+    require_once $databaseFile;
+    echo "Fichier database.php inclus avec succès.\n";
+} else {
+    die("Erreur : Le fichier database.php n'existe pas dans le répertoire " . __DIR__ . "\n");
+}
 
-// Le reste du code reste inchangé...
+// Vérification et inclusion du fichier User.php
+$userFile = __DIR__ . '/models/User.php';
+if (file_exists($userFile)) {
+    echo "Inclusion du fichier User.php...\n";
+    require_once $userFile;
+    echo "Fichier User.php inclus avec succès.\n";
+} else {
+    die("Erreur : Le fichier User.php n'existe pas dans le répertoire " . __DIR__ . "/models/\n");
+}
 
-// Le code de création d'administrateur
+// Vérification de la connexion à la base de données
+if (!isset($conn) || !($conn instanceof PDO)) {
+    die("Erreur : La connexion à la base de données n'est pas établie correctement.\n");
+}
+
+// Vérification de l'existence de la classe User
+if (!class_exists('User')) {
+    die("Erreur : La classe User n'a pas été chargée correctement.\n");
+}
+
+echo "Toutes les vérifications préliminaires ont réussi.\n";
+
+// Données pour le compte administrateur
 $adminData = [
     'nom' => 'Nom_Admin',
     'prenom' => 'Prenom_Admin',
     'username' => 'admin_username',
-    'password' => 'mot_de_passe_très_sécurisé',
+    'password' => 'mot_de_passe_très_sécurisé',  // Assurez-vous d'utiliser un mot de passe fort
     'email' => 'admin@example.com',
     'role' => 'Administrateur',
     'adresse' => 'Adresse de l\'administrateur',
@@ -34,25 +60,28 @@ $adminData = [
     'telephone' => '0123456789'
 ];
 
-echo "Données administrateur prêtes.\n";
+echo "Données administrateur préparées.\n";
 
 try {
     echo "Recherche d'un utilisateur existant...\n";
     $existingUser = User::findByUsername($adminData['username']);
     if ($existingUser) {
-        echo "Un utilisateur avec ce nom d'utilisateur existe déjà.\n";
+        echo "Attention : Un utilisateur avec ce nom d'utilisateur existe déjà.\n";
     } else {
         echo "Création du nouveau compte administrateur...\n";
         $admin = User::create($adminData);
         if ($admin) {
-            echo "Compte administrateur créé avec succès. ID: " . $admin->getId() . "\n";
+            echo "Succès : Compte administrateur créé avec succès. ID: " . $admin->getId() . "\n";
         } else {
-            echo "Erreur lors de la création du compte administrateur.\n";
+            echo "Erreur : Échec de la création du compte administrateur.\n";
         }
     }
 } catch (Exception $e) {
-    echo "Une erreur est survenue : " . $e->getMessage() . "\n";
-    echo "Trace : " . $e->getTraceAsString() . "\n";
+    echo "Erreur critique : " . $e->getMessage() . "\n";
+    echo "Trace de l'erreur : " . $e->getTraceAsString() . "\n";
 }
 
 echo "Fin du script.\n";
+
+// Décommentez la ligne suivante pour supprimer le script après son exécution
+// unlink(__FILE__);
