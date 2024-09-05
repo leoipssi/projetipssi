@@ -1,13 +1,14 @@
-<?php
 class AdminController extends BaseController {
     public function __construct() {
         parent::__construct();
+        // Vérifie si l'utilisateur est un administrateur
         if (!AuthController::isAdmin()) {
             $this->redirect('home');
         }
     }
 
     public function dashboard() {
+        // Récupère les statistiques pour le tableau de bord
         $totalVehicules = Vehicule::count();
         $totalUsers = User::count();
         $totalRentals = Rental::count();
@@ -15,6 +16,7 @@ class AdminController extends BaseController {
         $recentRentals = Rental::getRecent(5);
         $topVehicules = Vehicule::getTopRented(5);
 
+        // Affiche la vue du tableau de bord
         $this->render('admin/dashboard', [
             'totalVehicules' => $totalVehicules,
             'totalUsers' => $totalUsers,
@@ -26,6 +28,7 @@ class AdminController extends BaseController {
     }
 
     public function addVehicule() {
+        // Récupère les types de véhicules disponibles
         $vehiculeTypes = VehiculeType::getAll();
         $errors = [];
 
@@ -47,6 +50,7 @@ class AdminController extends BaseController {
             }
         }
 
+        // Affiche la vue d'ajout de véhicule
         $this->render('admin/addVehicule', [
             'vehiculeTypes' => $vehiculeTypes,
             'errors' => $errors
@@ -54,6 +58,7 @@ class AdminController extends BaseController {
     }
 
     public function createOffer() {
+        // Récupère les types de véhicules disponibles
         $vehiculeTypes = VehiculeType::getAll();
         $errors = [];
 
@@ -75,6 +80,7 @@ class AdminController extends BaseController {
             }
         }
 
+        // Affiche la vue de création d'offre
         $this->render('admin/createOffer', [
             'vehiculeTypes' => $vehiculeTypes,
             'errors' => $errors
@@ -82,15 +88,18 @@ class AdminController extends BaseController {
     }
 
     public function manageUsers() {
+        // Récupère les paramètres de la requête
         $page = $this->getQueryParam('page', 1);
         $search = $this->getQueryParam('search', '');
         $role = $this->getQueryParam('role', '');
         $sortBy = $this->getQueryParam('sort', 'id');
         $sortOrder = $this->getQueryParam('order', 'ASC');
 
+        // Récupère la liste des utilisateurs filtrée
         $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
         $totalPages = User::getTotalPages($search, $role);
 
+        // Affiche la vue de gestion des utilisateurs
         $this->render('admin/manageUsers', [
             'users' => $users,
             'page' => $page,
