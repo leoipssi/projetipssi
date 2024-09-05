@@ -112,4 +112,29 @@ class Rental {
         $stmt->execute([$data['status'], $this->id]);
         return $stmt->rowCount() > 0;
     }
+
+    // Nouvelles méthodes ajoutées
+    public static function count() {
+        global $conn;
+        $stmt = $conn->query("SELECT COUNT(*) FROM rentals");
+        return $stmt->fetchColumn();
+    }
+
+    public static function totalRevenue() {
+        global $conn;
+        $stmt = $conn->query("SELECT SUM(prix_total) FROM rentals WHERE status = 'terminée'");
+        return $stmt->fetchColumn();
+    }
+
+    public static function getRecent($limit = 5) {
+        global $conn;
+        $stmt = $conn->prepare("SELECT * FROM rentals ORDER BY date_debut DESC LIMIT :limit");
+        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $stmt->execute();
+        $rentals = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $rentals[] = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
+        }
+        return $rentals;
+    }
 }
