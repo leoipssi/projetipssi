@@ -1,5 +1,17 @@
 <?php
 class BaseController {
+    protected $logger;
+
+    public function __construct($logger = null) {
+        if ($logger === null) {
+            // Créer un logger par défaut si aucun n'est fourni
+            $this->logger = new \Monolog\Logger('base');
+            $this->logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/base.log', \Monolog\Logger::DEBUG));
+        } else {
+            $this->logger = $logger;
+        }
+    }
+
     protected function render($view, $data = [], $layout = 'main') {
         extract($data);
         
