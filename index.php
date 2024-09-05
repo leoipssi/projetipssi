@@ -85,7 +85,7 @@ try {
             break;
         case 'rentals':
             if (!AuthController::isLoggedIn()) {
-                header('Location: index.php?route=login');
+                header('Location: index.php?route=rentals');
                 exit;
             }
             $controller = new RentalController();
