@@ -1,12 +1,15 @@
 <?php
+// Définir le chemin de base du projet
+define('BASE_PATH', '/var/www/html/e-motion');
+
 // Inclure les dépendances nécessaires
-require_once __DIR__ . '/BaseController.php';
-require_once __DIR__ . '/AuthController.php';
-require_once __DIR__ . '/models/Vehicule.php';
-require_once __DIR__ . '/models/User.php';
-require_once __DIR__ . '/models/Rental.php';
-require_once __DIR__ . '/models/VehiculeType.php';
-require_once __DIR__ . '/models/RentalOffer.php';
+require_once BASE_PATH . '/controllers/BaseController.php';
+require_once BASE_PATH . '/controllers/AuthController.php';
+require_once BASE_PATH . '/models/Vehicule.php';
+require_once BASE_PATH . '/models/User.php';
+require_once BASE_PATH . '/models/Rental.php';
+require_once BASE_PATH . '/models/VehiculeType.php';
+require_once BASE_PATH . '/models/RentalOffer.php';
 
 class AdminController extends BaseController {
     public function __construct() {
