@@ -3,7 +3,7 @@ class AdminController extends BaseController {
     public function __construct() {
         parent::__construct();
         if (!AuthController::isAdmin()) {
-            $this->redirect('login');
+            $this->redirect('home');
         }
     }
 
@@ -27,6 +27,7 @@ class AdminController extends BaseController {
 
     public function addVehicule() {
         $vehiculeTypes = VehiculeType::getAll();
+        $errors = [];
 
         if ($this->isPost()) {
             $vehiculeData = $this->sanitizeUserData($_POST);
@@ -48,12 +49,13 @@ class AdminController extends BaseController {
 
         $this->render('admin/addVehicule', [
             'vehiculeTypes' => $vehiculeTypes,
-            'errors' => $errors ?? []
+            'errors' => $errors
         ]);
     }
 
     public function createOffer() {
         $vehiculeTypes = VehiculeType::getAll();
+        $errors = [];
 
         if ($this->isPost()) {
             $offerData = $this->sanitizeUserData($_POST);
@@ -75,7 +77,7 @@ class AdminController extends BaseController {
 
         $this->render('admin/createOffer', [
             'vehiculeTypes' => $vehiculeTypes,
-            'errors' => $errors ?? []
+            'errors' => $errors
         ]);
     }
 
