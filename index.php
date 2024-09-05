@@ -19,22 +19,6 @@ function custom_log($message) {
 custom_log('Session ID: ' . session_id());
 custom_log('Session Data: ' . json_encode($_SESSION));
 
-// Test de persistance de session
-if (!isset($_SESSION['init_time'])) {
-    $_SESSION['init_time'] = time();
-    custom_log('Nouvelle session initialisée');
-} else {
-    custom_log('Session existante depuis: ' . date('Y-m-d H:i:s', $_SESSION['init_time']));
-}
-
-// Vérification du jeton CSRF
-if (!isset($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-    custom_log('Nouveau CSRF Token généré: ' . $_SESSION['csrf_token']);
-} else {
-    custom_log('CSRF Token existant: ' . $_SESSION['csrf_token']);
-}
-
 require_once 'config.php';
 require_once 'helpers.php';
 require_once 'vendor/autoload.php';
@@ -78,6 +62,15 @@ try {
             $controller = new AuthController($logger);
             $controller->$route();
             break;
+        case 'admin':
+            if (!AuthController::isAdmin()) {
+                header('Location: index.php?route=login');
+                exit;
+            }
+            $controller = new AdminController();
+            $action = $_GET['action'] ?? 'dashboard';
+            $controller->$action();
+            break;
         case 'vehicules':
             $controller = new VehiculeController();
             $action = $_GET['action'] ?? 'index';
@@ -91,15 +84,6 @@ try {
             $controller = new RentalController();
             $action = $_GET['action'] ?? 'index';
             $controller->$action($_POST ?? null);
-            break;
-        case 'admin':
-            if (!AuthController::isAdmin()) {
-                header('Location: index.php?route=login');
-                exit;
-            }
-            $controller = new AdminController();
-            $action = $_GET['action'] ?? 'dashboard';
-            $controller->$action();
             break;
         default:
             throw new Exception("Page non trouvée", 404);
