@@ -13,10 +13,12 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Inclure les fichiers nécessaires
-require_once __DIR__ . 'database.php';
-require_once __DIR__ . '/models/User.php';
+require_once __DIR__ . 'database.php';  // Assurez-vous que ce chemin est correct
+require_once __DIR__ . '/models/User.php';      // Assurez-vous que ce chemin est correct
 
 echo "Fichiers inclus avec succès.\n";
+
+// Le reste du code reste inchangé...
 
 // Le code de création d'administrateur
 $adminData = [
