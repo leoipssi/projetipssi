@@ -68,7 +68,7 @@ try {
             // Vérifie les autorisations d'accès
             if (!AuthController::isAdmin()) {
                 $logger->warning("Accès refusé à la page d'administration pour un utilisateur non administrateur.");
-                header('Location: index.php?route=login');
+                header('Location: index.php?route=admin');
                 exit;
             }
             $logger->info("Accès à la page d'administration autorisé.");
