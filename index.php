@@ -48,8 +48,10 @@ spl_autoload_register(function($class) {
 $logger = new \Monolog\Logger('app');
 $logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/app.log', \Monolog\Logger::DEBUG));
 
+// Détermine la route actuelle
 $route = $_GET['route'] ?? 'home';
 
+// Gestion des erreurs
 try {
     switch ($route) {
         case 'home':
@@ -63,11 +65,14 @@ try {
             $controller->$route();
             break;
         case 'admin':
+            // Vérifie les autorisations d'accès
             if (!AuthController::isAdmin()) {
+                $logger->warning("Accès refusé à la page d'administration pour un utilisateur non administrateur.");
                 header('Location: index.php?route=login');
                 exit;
             }
-            $controller = new AdminController();
+            $logger->info("Accès à la page d'administration autorisé.");
+            $controller = new AdminController($logger);
             $action = $_GET['action'] ?? 'dashboard';
             $controller->$action();
             break;
@@ -77,10 +82,13 @@ try {
             $controller->$action($_GET['id'] ?? null);
             break;
         case 'rentals':
+            // Vérifie si l'utilisateur est connecté
             if (!AuthController::checkLoggedIn()) {
+                $logger->warning("Tentative d'accès à la page de locations sans connexion.");
                 header('Location: index.php?route=login');
                 exit;
             }
+            $logger->info("Accès à la page de locations autorisé.");
             $controller = new RentalController();
             $action = $_GET['action'] ?? 'index';
             $controller->$action($_POST ?? null);
