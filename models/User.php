@@ -35,7 +35,10 @@ class User {
     public function getPrenom() { return $this->prenom; }
     public function getUsername() { return $this->username; }
     public function getEmail() { return $this->email; }
-    public function getRole() { return $this->role; }
+    public function getRole() { 
+        $validRoles = ['Administrateur', 'Utilisateur', 'Gestionnaire'];
+        return in_array($this->role, $validRoles) ? $this->role : 'Utilisateur';
+    }
     public function getAdresse() { return $this->adresse; }
     public function getCodePostal() { return $this->code_postal; }
     public function getVille() { return $this->ville; }
@@ -223,7 +226,7 @@ class User {
     }
 
     public function hasPermission($action) {
-        switch ($this->role) {
+        switch ($this->getRole()) {
             case 'Administrateur':
                 return true;
             case 'Utilisateur':
@@ -284,7 +287,7 @@ class User {
     }
 
     public function isAdmin() {
-        return $this->role === 'Administrateur';
+        return $this->getRole() === 'Administrateur';
     }
 
     public static function findAllClients() {
