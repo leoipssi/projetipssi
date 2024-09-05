@@ -1,7 +1,3 @@
-<?php
-// Débogage temporaire - à commenter ou supprimer en production
-// var_dump($_SESSION);
-?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -40,9 +36,6 @@
                     </ul>
                     <ul class="navbar-nav">
                         <?php if (isset($_SESSION['user_id'])): ?>
-                            <li class="nav-item">
-                                <span class="nav-link">Bienvenue, <?= htmlspecialchars($_SESSION['username'] ?? 'Utilisateur') ?></span>
-                            </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="<?= htmlspecialchars(BASE_URL) ?>/index.php?route=logout">Déconnexion</a>
                             </li>
