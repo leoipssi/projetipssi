@@ -13,7 +13,7 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 
 // Inclure les fichiers nécessaires
-require_once __DIR__ . '/config/database.php';
+require_once __DIR__ . 'database.php';
 require_once __DIR__ . '/models/User.php';
 
 echo "Fichiers inclus avec succès.\n";
