@@ -30,25 +30,19 @@ class AdminController extends BaseController {
 
     public function manageUsers() {
         $page = $this->getQueryParam('page', 1);
-        $perPage = 20; // Nombre d'utilisateurs par page
+        $perPage = 20;
         $search = $this->getQueryParam('search', '');
         $role = $this->getQueryParam('role', '');
         $sortBy = $this->getQueryParam('sort', 'id');
         $sortOrder = $this->getQueryParam('order', 'asc');
 
-        // Validation des paramètres de tri
         $allowedSortFields = ['id', 'username', 'email', 'role', 'created_at'];
-        if (!in_array($sortBy, $allowedSortFields)) {
-            $sortBy = 'id';
-        }
+        $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
         $sortOrder = strtolower($sortOrder) === 'desc' ? 'DESC' : 'ASC';
 
-        // Récupération des utilisateurs avec recherche, filtrage et tri
         $users = User::findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage);
         $totalUsers = User::countFiltered($search, $role);
         $totalPages = ceil($totalUsers / $perPage);
-
-        // Récupération des rôles disponibles pour le filtre
         $availableRoles = User::getAvailableRoles();
 
         $content = $this->render('admin/manageUsers', [
@@ -65,9 +59,9 @@ class AdminController extends BaseController {
     }
 
     public function manageVehicules() {
-        $action = $_GET['action'] ?? '';
+        $action = $this->getQueryParam('action', '');
 
-        if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($action === 'add' && $this->isPost()) {
             $this->addVehicule($_POST);
         } elseif ($action === 'edit' && isset($_GET['id'])) {
             $this->editVehicule($_GET['id']);
@@ -81,24 +75,14 @@ class AdminController extends BaseController {
     }
 
     private function addVehicule($data) {
-        // Logique pour ajouter un véhicule
         $result = Vehicule::create($data);
-        if ($result) {
-            $_SESSION['flash'] = "Véhicule ajouté avec succès.";
-        } else {
-            $_SESSION['flash'] = "Erreur lors de l'ajout du véhicule.";
-        }
+        $_SESSION['flash'] = $result ? "Véhicule ajouté avec succès." : "Erreur lors de l'ajout du véhicule.";
     }
 
     private function editVehicule($id) {
-        // Logique pour éditer un véhicule
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->isPost()) {
             $result = Vehicule::update($id, $_POST);
-            if ($result) {
-                $_SESSION['flash'] = "Véhicule mis à jour avec succès.";
-            } else {
-                $_SESSION['flash'] = "Erreur lors de la mise à jour du véhicule.";
-            }
+            $_SESSION['flash'] = $result ? "Véhicule mis à jour avec succès." : "Erreur lors de la mise à jour du véhicule.";
         }
         $vehicule = Vehicule::findById($id);
         $content = $this->render('admin/edit_vehicule', ['vehicule' => $vehicule]);
@@ -106,13 +90,8 @@ class AdminController extends BaseController {
     }
 
     private function deleteVehicule($id) {
-        // Logique pour supprimer un véhicule
         $result = Vehicule::delete($id);
-        if ($result) {
-            $_SESSION['flash'] = "Véhicule supprimé avec succès.";
-        } else {
-            $_SESSION['flash'] = "Erreur lors de la suppression du véhicule.";
-        }
+        $_SESSION['flash'] = $result ? "Véhicule supprimé avec succès." : "Erreur lors de la suppression du véhicule.";
     }
 
     public function manageClients() {
@@ -122,9 +101,9 @@ class AdminController extends BaseController {
     }
 
     public function manageOffers() {
-        $action = $_GET['action'] ?? '';
+        $action = $this->getQueryParam('action', '');
 
-        if ($action === 'add' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($action === 'add' && $this->isPost()) {
             $this->addOffer($_POST);
         } elseif ($action === 'edit' && isset($_GET['id'])) {
             $this->editOffer($_GET['id']);
@@ -138,24 +117,14 @@ class AdminController extends BaseController {
     }
 
     private function addOffer($data) {
-        // Logique pour ajouter une offre
         $result = RentalOffer::create($data);
-        if ($result) {
-            $_SESSION['flash'] = "Offre ajoutée avec succès.";
-        } else {
-            $_SESSION['flash'] = "Erreur lors de l'ajout de l'offre.";
-        }
+        $_SESSION['flash'] = $result ? "Offre ajoutée avec succès." : "Erreur lors de l'ajout de l'offre.";
     }
 
     private function editOffer($id) {
-        // Logique pour éditer une offre
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($this->isPost()) {
             $result = RentalOffer::update($id, $_POST);
-            if ($result) {
-                $_SESSION['flash'] = "Offre mise à jour avec succès.";
-            } else {
-                $_SESSION['flash'] = "Erreur lors de la mise à jour de l'offre.";
-            }
+            $_SESSION['flash'] = $result ? "Offre mise à jour avec succès." : "Erreur lors de la mise à jour de l'offre.";
         }
         $offer = RentalOffer::findById($id);
         $content = $this->render('admin/edit_offer', ['offer' => $offer]);
@@ -163,13 +132,8 @@ class AdminController extends BaseController {
     }
 
     private function deleteOffer($id) {
-        // Logique pour supprimer une offre
         $result = RentalOffer::delete($id);
-        if ($result) {
-            $_SESSION['flash'] = "Offre supprimée avec succès.";
-        } else {
-            $_SESSION['flash'] = "Erreur lors de la suppression de l'offre.";
-        }
+        $_SESSION['flash'] = $result ? "Offre supprimée avec succès." : "Erreur lors de la suppression de l'offre.";
     }
 
     private function getQueryParam($key, $default = null) {
