@@ -20,7 +20,6 @@ class AdminController extends BaseController {
         }
     }
 
-    // Add this method to the AdminController
     protected function isAdmin() {
         return AuthController::isAdmin();
     }
@@ -31,6 +30,10 @@ class AdminController extends BaseController {
         $totalUsers = User::count();
         $totalRentals = Rental::count();
         $totalRevenue = Rental::totalRevenue();
+        
+        // Ensure $totalRevenue is a number
+        $totalRevenue = is_null($totalRevenue) ? 0 : $totalRevenue;
+        
         $recentRentals = Rental::getRecent(5);
         $topVehicules = Vehicule::getTopRented(5);
 
@@ -46,6 +49,11 @@ class AdminController extends BaseController {
     }
 
     public function addVehicule() {
+        // Check if VehiculeType class exists
+        if (!class_exists('VehiculeType')) {
+            throw new Exception('VehiculeType class not found. Please ensure it is properly defined and included.');
+        }
+
         // Récupère les types de véhicules disponibles
         $vehiculeTypes = VehiculeType::getAll();
         $errors = [];
@@ -70,6 +78,41 @@ class AdminController extends BaseController {
 
         // Affiche la vue d'ajout de véhicule
         $this->render('admin/addVehicule', [
+            'vehiculeTypes' => $vehiculeTypes,
+            'errors' => $errors
+        ]);
+    }
+
+    public function createOffer() {
+        // Check if VehiculeType class exists
+        if (!class_exists('VehiculeType')) {
+            throw new Exception('VehiculeType class not found. Please ensure it is properly defined and included.');
+        }
+
+        // Récupère les types de véhicules disponibles
+        $vehiculeTypes = VehiculeType::getAll();
+        $errors = [];
+
+        if ($this->isPost()) {
+            $offerData = $this->sanitizeUserData($_POST);
+            $errors = $this->validateOfferInput($offerData);
+
+            if (empty($errors)) {
+                try {
+                    $offer = RentalOffer::create($offerData);
+                    if ($offer) {
+                        $this->redirect('admin', ['action' => 'dashboard', 'success' => 'Offre créée avec succès']);
+                    } else {
+                        $errors[] = "Erreur lors de la création de l'offre.";
+                    }
+                } catch (Exception $e) {
+                    $errors[] = "Une erreur est survenue lors de la création de l'offre : " . $e->getMessage();
+                }
+            }
+        }
+
+        // Affiche la vue de création d'offre
+        $this->render('admin/createOffer', [
             'vehiculeTypes' => $vehiculeTypes,
             'errors' => $errors
         ]);
