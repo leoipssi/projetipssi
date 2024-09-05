@@ -1,9 +1,13 @@
 <?php
-// Assurez-vous que ce script n'est exécuté que dans un environnement sécurisé
-if (!in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1'])) {
-    die("Ce script ne peut être exécuté que localement.");
-}
+// Vérification de l'environnement d'exécution
+$isCLI = (php_sapi_name() === 'cli');
 
+if (!$isCLI) {
+    // Si exécuté via le web, vérifiez l'adresse IP
+    if (!in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1'])) {
+        die("Ce script ne peut être exécuté que localement.");
+    }
+}
 // Inclure les fichiers nécessaires
 require_once 'database.php';  // Ajustez le chemin selon votre structure
 require_once 'models/User.php';      // Assurez-vous que le chemin est correct
