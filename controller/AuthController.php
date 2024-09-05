@@ -2,92 +2,65 @@
 class AuthController extends BaseController {
     public function __construct($logger = null) {
         parent::__construct($logger);
-        // Vous pouvez ajouter ici une logique spécifique à AuthController si nécessaire
     }
 
     public function register() {
         $errors = [];
         $csrfToken = $this->generateCsrfToken();
-        $this->logger->debug("Generated CSRF Token for registration: " . $csrfToken);
 
         if ($this->isPost()) {
-            $this->logger->debug("POST request detected for registration");
-            $this->logger->debug("POST data received for registration: " . json_encode($_POST));
-
             try {
                 $this->verifyCsrfToken();
-                $this->logger->debug("CSRF verification passed for registration");
 
                 $userData = $this->sanitizeUserData($_POST);
                 $errors = $this->validateRegistrationInput($userData);
 
                 if (empty($errors)) {
-                    try {
-                        if (User::findByUsername($userData['username'])) {
-                            $errors[] = "Ce nom d'utilisateur est déjà pris.";
-                        } elseif (User::findByEmail($userData['email'])) {
-                            $errors[] = "Cette adresse email est déjà utilisée.";
+                    if (User::findByUsername($userData['username'])) {
+                        $errors[] = "Ce nom d'utilisateur est déjà pris.";
+                    } elseif (User::findByEmail($userData['email'])) {
+                        $errors[] = "Cette adresse email est déjà utilisée.";
+                    } else {
+                        $user = User::create($userData);
+                        if ($user) {
+                            $this->initializeUserSession($user);
+                            $this->redirect('home');
                         } else {
-                            $user = User::create($userData);
-                            if ($user) {
-                                $this->initializeUserSession($user);
-                                $this->logger->info("Nouvel utilisateur enregistré: {$userData['username']}");
-                                $this->redirect('home');
-                            } else {
-                                $errors[] = "Erreur lors de l'inscription.";
-                            }
+                            $errors[] = "Erreur lors de l'inscription.";
                         }
-                    } catch (Exception $e) {
-                        $this->logger->error("Erreur lors de l'inscription: " . $e->getMessage());
-                        $errors[] = "Une erreur est survenue lors de l'inscription.";
                     }
                 }
             } catch (Exception $e) {
                 $errors[] = "Jeton CSRF invalide : " . $e->getMessage();
-                $this->logger->warning("CSRF verification failed for registration: " . $e->getMessage());
             }
         }
 
-        $this->logger->debug("Rendering registration view with CSRF token: " . $csrfToken);
         $this->render('auth/register', ['errors' => $errors, 'csrfToken' => $csrfToken]);
     }
 
     public function login() {
         $error = null;
         $csrfToken = $this->generateCsrfToken();
-        $this->logger->debug("Generated CSRF Token for login: " . $csrfToken);
 
         if ($this->isPost()) {
-            $this->logger->debug("POST request detected for login");
-            
             try {
                 $this->verifyCsrfToken();
-                $this->logger->debug("CSRF verification passed for login");
 
                 $username = $this->getPostData()['username'] ?? '';
                 $password = $this->getPostData()['password'] ?? '';
 
-                try {
-                    $user = User::authenticate($username, $password);
-                    if ($user) {
-                        $this->initializeUserSession($user);
-                        $this->logger->info("Connexion réussie: {$username}");
-                        $this->redirect('home');
-                    } else {
-                        $this->logger->warning("Tentative de connexion échouée pour l'utilisateur: {$username}");
-                        $error = "Nom d'utilisateur ou mot de passe incorrect.";
-                    }
-                } catch (Exception $e) {
-                    $this->logger->error("Erreur lors de la connexion: " . $e->getMessage());
-                    $error = "Une erreur est survenue lors de la connexion.";
+                $user = User::authenticate($username, $password);
+                if ($user) {
+                    $this->initializeUserSession($user);
+                    $this->redirect('home');
+                } else {
+                    $error = "Nom d'utilisateur ou mot de passe incorrect.";
                 }
             } catch (Exception $e) {
                 $error = "Jeton CSRF invalide : " . $e->getMessage();
-                $this->logger->warning("CSRF verification failed for login: " . $e->getMessage());
             }
         }
 
-        $this->logger->debug("Rendering login view with CSRF token: " . $csrfToken);
         $this->render('auth/login', ['error' => $error, 'csrfToken' => $csrfToken]);
     }
 
@@ -102,10 +75,7 @@ class AuthController extends BaseController {
     }
 
     public static function isAdmin() {
-        if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
-            return $_SESSION['user_role'] === 'admin';
-        }
-        return false;
+        return isset($_SESSION['user_id']) && isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin';
     }
 
     public static function checkLoggedIn() {
@@ -151,11 +121,14 @@ class AuthController extends BaseController {
     private function generateCsrfToken() {
         if (empty($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-            $this->logger->debug("New CSRF token generated: " . $_SESSION['csrf_token']);
-        } else {
-            $this->logger->debug("Existing CSRF token used: " . $_SESSION['csrf_token']);
         }
         return $_SESSION['csrf_token'];
+    }
+
+    private function verifyCsrfToken() {
+        if (empty($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+            throw new Exception("Jeton CSRF invalide.");
+        }
     }
 
     private function initializeUserSession($user) {
