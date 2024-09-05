@@ -1,3 +1,13 @@
+<?php
+// Inclure les dépendances nécessaires
+require_once 'BaseController.php';
+require_once 'AuthController.php';
+require_once 'models/Vehicule.php';
+require_once 'models/User.php';
+require_once 'models/Rental.php';
+require_once 'models/VehiculeType.php';
+require_once 'models/Offer.php';
+
 class AdminController extends BaseController {
     public function __construct() {
         parent::__construct();
