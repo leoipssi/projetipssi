@@ -87,28 +87,11 @@ class User {
         try {
             $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
             $stmt->execute([$id]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($row) {
-                return new User(
-                    $row['id'],
-                    $row['nom'],
-                    $row['prenom'],
-                    $row['username'],
-                    $row['password'],
-                    $row['email'],
-                    $row['role'],
-                    $row['adresse'],
-                    $row['code_postal'],
-                    $row['ville'],
-                    $row['telephone'],
-                    $row['created_at']
-                );
-            }
+            return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
         } catch (PDOException $e) {
             error_log("Erreur lors de la recherche de l'utilisateur par ID : " . $e->getMessage());
             throw new Exception("Erreur lors de la recherche de l'utilisateur.");
         }
-        return null;
     }
 
     public static function findByUsername($username) {
@@ -116,28 +99,11 @@ class User {
         try {
             $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
             $stmt->execute([$username]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($row) {
-                return new User(
-                    $row['id'],
-                    $row['nom'],
-                    $row['prenom'],
-                    $row['username'],
-                    $row['password'],
-                    $row['email'],
-                    $row['role'],
-                    $row['adresse'],
-                    $row['code_postal'],
-                    $row['ville'],
-                    $row['telephone'],
-                    $row['created_at']
-                );
-            }
+            return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
         } catch (PDOException $e) {
             error_log("Erreur lors de la recherche de l'utilisateur par nom d'utilisateur : " . $e->getMessage());
             throw new Exception("Erreur lors de la recherche de l'utilisateur.");
         }
-        return null;
     }
 
     public static function findByEmail($email) {
@@ -145,28 +111,29 @@ class User {
         try {
             $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
             $stmt->execute([$email]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($row) {
-                return new User(
-                    $row['id'],
-                    $row['nom'],
-                    $row['prenom'],
-                    $row['username'],
-                    $row['password'],
-                    $row['email'],
-                    $row['role'],
-                    $row['adresse'],
-                    $row['code_postal'],
-                    $row['ville'],
-                    $row['telephone'],
-                    $row['created_at']
-                );
-            }
+            return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
         } catch (PDOException $e) {
             error_log("Erreur lors de la recherche de l'utilisateur par email : " . $e->getMessage());
             throw new Exception("Erreur lors de la recherche de l'utilisateur.");
         }
-        return null;
+    }
+
+    private static function createFromRow($row) {
+        if (!$row) return null;
+        return new User(
+            $row['id'],
+            $row['nom'],
+            $row['prenom'],
+            $row['username'],
+            $row['password'],
+            $row['email'],
+            $row['role'],
+            $row['adresse'],
+            $row['code_postal'],
+            $row['ville'],
+            $row['telephone'],
+            $row['created_at']
+        );
     }
 
     public static function authenticate($username, $password) {
@@ -184,6 +151,73 @@ class User {
             return $stmt->fetchColumn();
         } catch (PDOException $e) {
             error_log("Erreur lors du comptage des utilisateurs : " . $e->getMessage());
+            throw new Exception("Erreur lors du comptage des utilisateurs.");
+        }
+    }
+
+    public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage) {
+        global $conn;
+        $offset = ($page - 1) * $perPage;
+        $allowedSortFields = ['id', 'username', 'email', 'role', 'created_at'];
+        $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
+        $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
+
+        $where = [];
+        $params = [];
+        if ($search) {
+            $where[] = "(username LIKE ? OR email LIKE ? OR nom LIKE ? OR prenom LIKE ?)";
+            $searchParam = "%$search%";
+            $params = array_fill(0, 4, $searchParam);
+        }
+        if ($role) {
+            $where[] = "role = ?";
+            $params[] = $role;
+        }
+
+        $whereClause = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
+
+        $sql = "SELECT * FROM users $whereClause ORDER BY $sortBy $sortOrder LIMIT ? OFFSET ?";
+        $params[] = $perPage;
+        $params[] = $offset;
+
+        try {
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($params);
+            $users = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $users[] = self::createFromRow($row);
+            }
+            return $users;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la recherche filtrée des utilisateurs : " . $e->getMessage());
+            throw new Exception("Erreur lors de la recherche des utilisateurs.");
+        }
+    }
+
+    public static function countFiltered($search, $role) {
+        global $conn;
+        $where = [];
+        $params = [];
+        if ($search) {
+            $where[] = "(username LIKE ? OR email LIKE ? OR nom LIKE ? OR prenom LIKE ?)";
+            $searchParam = "%$search%";
+            $params = array_fill(0, 4, $searchParam);
+        }
+        if ($role) {
+            $where[] = "role = ?";
+            $params[] = $role;
+        }
+
+        $whereClause = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
+
+        $sql = "SELECT COUNT(*) FROM users $whereClause";
+
+        try {
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($params);
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("Erreur lors du comptage filtré des utilisateurs : " . $e->getMessage());
             throw new Exception("Erreur lors du comptage des utilisateurs.");
         }
     }
@@ -245,7 +279,27 @@ class User {
         return false;
     }
 
+    public static function getAvailableRoles() {
+        return ['Administrateur', 'Utilisateur', 'Gestionnaire'];
+    }
+
     public function isAdmin() {
         return $this->role === 'Administrateur';
+    }
+
+    public static function findAllClients() {
+        global $conn;
+        try {
+            $stmt = $conn->prepare("SELECT * FROM users WHERE role = 'Utilisateur'");
+            $stmt->execute();
+            $clients = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $clients[] = self::createFromRow($row);
+            }
+            return $clients;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la récupération des clients : " . $e->getMessage());
+            throw new Exception("Erreur lors de la récupération des clients.");
+        }
     }
 }
