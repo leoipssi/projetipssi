@@ -103,7 +103,7 @@ class AuthController extends BaseController {
 
     public static function isAdmin() {
         if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
-            return $_SESSION['user_role'] === 'admin';
+            return $_SESSION['user_role'] === 'Administrateur';
         }
         return false;
     }
@@ -162,5 +162,6 @@ class AuthController extends BaseController {
         session_regenerate_id(true);
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_role'] = $user->getRole();
+        $this->logger->debug("User session initialized. User ID: {$user->getId()}, Role: {$user->getRole()}");
     }
 }
