@@ -112,11 +112,7 @@ class AuthController extends BaseController {
         return isset($_SESSION['user_id']);
     }
 
-    private function sanitizeUserData($data) {
-        return array_map('trim', array_map('htmlspecialchars', $data));
-    }
-
-    private function validateRegistrationInput($data) {
+    protected function validateRegistrationInput($data) {
         $errors = [];
         if (strlen($data['username']) < 3 || strlen($data['username']) > 50) {
             $errors[] = "Le nom d'utilisateur doit contenir entre 3 et 50 caractères.";
@@ -148,7 +144,7 @@ class AuthController extends BaseController {
         return $errors;
     }
 
-    private function generateCsrfToken() {
+    protected function generateCsrfToken() {
         if (empty($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
             $this->logger->debug("New CSRF token generated: " . $_SESSION['csrf_token']);
@@ -158,7 +154,7 @@ class AuthController extends BaseController {
         return $_SESSION['csrf_token'];
     }
 
-    private function initializeUserSession($user) {
+    protected function initializeUserSession($user) {
         session_regenerate_id(true);
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_role'] = $user->getRole();
