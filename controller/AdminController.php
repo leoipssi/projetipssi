@@ -167,63 +167,41 @@ class AdminController extends BaseController {
         $this->redirect('admin', ['action' => 'manageUsers']);
     }
 
-    public function manageUsers() {
-        $this->logger->info("Début de la méthode manageUsers");
-        try {
-            $page = $this->getQueryParam('page', 1);
-            $search = $this->getQueryParam('search', '');
-            $role = $this->getQueryParam('role', '');
-            $sortBy = $this->getQueryParam('sort', 'id');
-            $sortOrder = $this->getQueryParam('order', 'ASC');
+public function manageUsers() {
+    $this->logger->info("Début de la méthode manageUsers");
+    try {
+        $page = $this->getQueryParam('page', 1);
+        $search = $this->getQueryParam('search', '');
+        $role = $this->getQueryParam('role', '');
+        $sortBy = $this->getQueryParam('sort', 'id');
+        $sortOrder = $this->getQueryParam('order', 'ASC');
 
-            $this->logger->debug("Paramètres reçus pour manageUsers", [
-                'page' => $page,
-                'search' => $search,
-                'role' => $role,
-                'sortBy' => $sortBy,
-                'sortOrder' => $sortOrder
-            ]);
+        $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
+        $totalPages = User::getTotalPages($search, $role);
 
-            $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
-            $totalPages = User::getTotalPages($search, $role);
+        $this->render('admin/manageUsers', [
+            'users' => $users,
+            'page' => $page,
+            'totalPages' => $totalPages,
+            'search' => $search,
+            'role' => $role,
+            'sortBy' => $sortBy,
+            'sortOrder' => $sortOrder,
+            'availableRoles' => User::getAvailableRoles()
+        ]);
 
-            $this->logger->debug("Résultats de la requête utilisateurs", [
-                'usersCount' => count($users),
-                'totalPages' => $totalPages
-            ]);
-
-            ob_start();
-            $this->render('admin/manageUsers', [
-                'users' => $users,
-                'page' => $page,
-                'totalPages' => $totalPages,
-                'search' => $search,
-                'role' => $role,
-                'sortBy' => $sortBy,
-                'sortOrder' => $sortOrder,
-                'availableRoles' => User::getAvailableRoles()
-            ]);
-            $output = ob_get_clean();
-
-            if (empty($output)) {
-                $this->logger->error("La méthode render n'a produit aucune sortie");
-                throw new Exception("Erreur lors du rendu de la vue");
-            }
-
-            echo $output;
-            $this->logger->info("Fin de la méthode manageUsers");
-        } catch (Exception $e) {
-            $this->logger->error('Erreur dans manageUsers: ' . $e->getMessage(), [
-                'exception' => $e,
-                'trace' => $e->getTraceAsString()
-            ]);
-            $this->render('error', [
-                'message' => 'Une erreur est survenue lors de la récupération des utilisateurs.',
-                'details' => $e->getMessage()
-            ]);
-        }
+        $this->logger->info("Fin de la méthode manageUsers");
+    } catch (Exception $e) {
+        $this->logger->error('Erreur dans manageUsers: ' . $e->getMessage(), [
+            'exception' => $e,
+            'trace' => $e->getTraceAsString()
+        ]);
+        $this->render('error', [
+            'message' => 'Une erreur est survenue lors de la récupération des utilisateurs.',
+            'details' => $e->getMessage()
+        ]);
     }
-
+}
     private function validateVehiculeInput($data) {
         $errors = [];
         if (empty($data['nom'])) {
