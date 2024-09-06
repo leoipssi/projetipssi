@@ -79,7 +79,6 @@ class User {
                 );
             }
         } catch (PDOException $e) {
-            error_log("Erreur lors de la création de l'utilisateur : " . $e->getMessage());
             throw new Exception("Erreur lors de la création de l'utilisateur.");
         }
         return null;
@@ -92,7 +91,6 @@ class User {
             $stmt->execute([$id]);
             return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
         } catch (PDOException $e) {
-            error_log("Erreur lors de la recherche de l'utilisateur par ID : " . $e->getMessage());
             throw new Exception("Erreur lors de la recherche de l'utilisateur.");
         }
     }
@@ -104,7 +102,6 @@ class User {
             $stmt->execute([$username]);
             return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
         } catch (PDOException $e) {
-            error_log("Erreur lors de la recherche de l'utilisateur par nom d'utilisateur : " . $e->getMessage());
             throw new Exception("Erreur lors de la recherche de l'utilisateur.");
         }
     }
@@ -116,7 +113,6 @@ class User {
             $stmt->execute([$email]);
             return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
         } catch (PDOException $e) {
-            error_log("Erreur lors de la recherche de l'utilisateur par email : " . $e->getMessage());
             throw new Exception("Erreur lors de la recherche de l'utilisateur.");
         }
     }
@@ -153,81 +149,60 @@ class User {
             $stmt = $conn->query("SELECT COUNT(*) FROM users");
             return $stmt->fetchColumn();
         } catch (PDOException $e) {
-            error_log("Erreur lors du comptage des utilisateurs : " . $e->getMessage());
             throw new Exception("Erreur lors du comptage des utilisateurs.");
         }
     }
 
     public static function getFiltered($page, $search, $role, $sortBy, $sortOrder) {
-        error_log("Début de getFiltered avec les paramètres : " . json_encode(func_get_args()));
         $perPage = 10; // Nombre d'utilisateurs par page
-        try {
-            $users = self::findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage);
-            error_log("getFiltered a récupéré " . count($users) . " utilisateurs");
-            return $users;
-        } catch (Exception $e) {
-            error_log("Erreur dans getFiltered : " . $e->getMessage());
-            throw $e;
-        }
+        return self::findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage);
     }
 
     public static function getTotalPages($search, $role) {
         $perPage = 10; // Même nombre que dans getFiltered
+        $totalUsers = self::countFiltered($search, $role);
+        return ceil($totalUsers / $perPage);
+    }
+
+    public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage) {
+        global $conn;
+        $offset = ($page - 1) * $perPage;
+        $allowedSortFields = ['id', 'username', 'email', 'role', 'created_at'];
+        $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
+        $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
+
+        $where = [];
+        $params = [];
+        if ($search) {
+            $where[] = "(username LIKE ? OR email LIKE ? OR nom LIKE ? OR prenom LIKE ?)";
+            $searchParam = "%$search%";
+            $params = array_fill(0, 4, $searchParam);
+        }
+        if ($role) {
+            $where[] = "role = ?";
+            $params[] = $role;
+        }
+
+        $whereClause = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
+
+        $sql = "SELECT * FROM users $whereClause ORDER BY $sortBy $sortOrder LIMIT $perPage OFFSET $offset";
+
         try {
-            $totalUsers = self::countFiltered($search, $role);
-            return ceil($totalUsers / $perPage);
-        } catch (Exception $e) {
-            error_log("Erreur dans getTotalPages : " . $e->getMessage());
-            throw $e;
+            $stmt = $conn->prepare($sql);
+            if (!empty($params)) {
+                $stmt->execute($params);
+            } else {
+                $stmt->execute();
+            }
+            $users = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $users[] = self::createFromRow($row);
+            }
+            return $users;
+        } catch (PDOException $e) {
+            throw new Exception("Erreur lors de la recherche des utilisateurs.");
         }
     }
-
-public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage) {
-    global $conn;
-    $offset = ($page - 1) * $perPage;
-    $allowedSortFields = ['id', 'username', 'email', 'role', 'created_at'];
-    $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
-    $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
-
-    $where = [];
-    $params = [];
-    if ($search) {
-        $where[] = "(username LIKE ? OR email LIKE ? OR nom LIKE ? OR prenom LIKE ?)";
-        $searchParam = "%$search%";
-        $params = array_fill(0, 4, $searchParam);
-    }
-    if ($role) {
-        $where[] = "role = ?";
-        $params[] = $role;
-    }
-
-    $whereClause = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
-
-    // Modification ici : on utilise des valeurs directes pour LIMIT et OFFSET
-    $sql = "SELECT * FROM users $whereClause ORDER BY $sortBy $sortOrder LIMIT $perPage OFFSET $offset";
-
-    try {
-        error_log("SQL Query: " . $sql);
-        error_log("Params: " . json_encode($params));
-
-        $stmt = $conn->prepare($sql);
-        if (!empty($params)) {
-            $stmt->execute($params);
-        } else {
-            $stmt->execute();
-        }
-        $users = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $users[] = self::createFromRow($row);
-        }
-        error_log("Nombre d'utilisateurs trouvés : " . count($users));
-        return $users;
-    } catch (PDOException $e) {
-        error_log("Erreur lors de la recherche filtrée des utilisateurs : " . $e->getMessage());
-        error_log("Code d'erreur : " . $e->getCode());
-        throw new Exception("Erreur lors de la recherche des utilisateurs.");
-    }
-}
 
     public static function countFiltered($search, $role) {
         global $conn;
@@ -248,17 +223,10 @@ public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, 
         $sql = "SELECT COUNT(*) FROM users $whereClause";
 
         try {
-            error_log("SQL Count Query: " . $sql);
-            error_log("Count Params: " . json_encode($params));
-
             $stmt = $conn->prepare($sql);
             $stmt->execute($params);
-            $count = $stmt->fetchColumn();
-            error_log("Nombre total d'utilisateurs filtrés : " . $count);
-            return $count;
+            return $stmt->fetchColumn();
         } catch (PDOException $e) {
-            error_log("Erreur lors du comptage filtré des utilisateurs : " . $e->getMessage());
-            error_log("Code d'erreur : " . $e->getCode());
             throw new Exception("Erreur lors du comptage des utilisateurs.");
         }
     }
@@ -295,7 +263,6 @@ public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, 
                 $stmt = $conn->prepare($sql);
                 return $stmt->execute($values);
             } catch (PDOException $e) {
-                error_log("Erreur lors de la mise à jour de l'utilisateur : " . $e->getMessage());
                 throw new Exception("Erreur lors de la mise à jour de l'utilisateur.");
             }
         }
@@ -314,7 +281,6 @@ public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, 
                 return true;
             }
         } catch (PDOException $e) {
-            error_log("Erreur lors du changement de mot de passe : " . $e->getMessage());
             throw new Exception("Erreur lors du changement de mot de passe.");
         }
         return false;
@@ -339,7 +305,6 @@ public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, 
             }
             return $clients;
         } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération des clients : " . $e->getMessage());
             throw new Exception("Erreur lors de la récupération des clients.");
         }
     }
