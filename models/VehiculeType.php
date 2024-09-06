@@ -1,5 +1,5 @@
 <?php
-class TypeVehicule {
+class VehiculeType {
     private $id;
     private $nom;
 
@@ -20,17 +20,17 @@ class TypeVehicule {
         $stmt = $conn->prepare("INSERT INTO type_vehicules (nom) VALUES (?)");
         $stmt->execute([$nom]);
         if ($stmt->rowCount() > 0) {
-            return new TypeVehicule($conn->lastInsertId(), $nom);
+            return new VehiculeType($conn->lastInsertId(), $nom);
         }
         return null;
     }
 
-    public static function findAll() {
+    public static function getAll() {
         global $conn;
         $stmt = $conn->query("SELECT * FROM type_vehicules");
         $types = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $types[] = new TypeVehicule($row['id'], $row['nom']);
+            $types[] = new VehiculeType($row['id'], $row['nom']);
         }
         return $types;
     }
@@ -41,15 +41,15 @@ class TypeVehicule {
         $stmt->execute([$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
-            return new TypeVehicule($row['id'], $row['nom']);
+            return new VehiculeType($row['id'], $row['nom']);
         }
         return null;
     }
 
-    public function update($nom) {
+    public function update() {
         global $conn;
         $stmt = $conn->prepare("UPDATE type_vehicules SET nom = ? WHERE id = ?");
-        $stmt->execute([$nom, $this->id]);
+        $stmt->execute([$this->nom, $this->id]);
         return $stmt->rowCount() > 0;
     }
 
