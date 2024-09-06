@@ -1,4 +1,8 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+echo "Début du fichier AdminController.php";
+
 // Définir le chemin de base du projet
 define('BASE_PATH', '/var/www/html/e-motion');
 
