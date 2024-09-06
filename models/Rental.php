@@ -137,52 +137,50 @@ class Rental {
         return $rentals;
     }
 
-    public static function getFiltered($page, $search, $status, $sortBy, $sortOrder) {
-        global $conn;
-        $perPage = 10;
-        $offset = ($page - 1) * $perPage;
+public static function getFiltered($page, $search, $status, $sortBy, $sortOrder) {
+    global $conn;
+    $perPage = 10;
+    $offset = ($page - 1) * $perPage;
 
-        $sql = "SELECT r.*, u.username as client_name, v.nom as vehicule_name 
-                FROM rentals r
-                LEFT JOIN users u ON r.client_id = u.id
-                LEFT JOIN vehicules v ON r.vehicule_id = v.id
-                WHERE 1=1";
-        $params = [];
+    $sql = "SELECT r.*, u.username as client_name, v.nom as vehicule_name 
+            FROM rentals r
+            LEFT JOIN users u ON r.client_id = u.id
+            LEFT JOIN vehicules v ON r.vehicule_id = v.id
+            WHERE 1=1";
+    $params = [];
 
-        if (!empty($search)) {
-            $sql .= " AND (u.username LIKE :search OR v.nom LIKE :search)";
-            $params[':search'] = "%$search%";
-        }
-
-        if (!empty($status)) {
-            $sql .= " AND r.status = :status";
-            $params[':status'] = $status;
-        }
-
-        $allowedSortFields = ['id', 'client_name', 'vehicule_name', 'date_debut', 'date_fin', 'prix_total', 'status'];
-        $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
-        $sortOrder = $sortOrder === 'DESC' ? 'DESC' : 'ASC';
-
-        $sql .= " ORDER BY $sortBy $sortOrder LIMIT :limit OFFSET :offset";
-        $params[':limit'] = $perPage;
-        $params[':offset'] = $offset;
-
-        $stmt = $conn->prepare($sql);
-        foreach ($params as $key => &$val) {
-            $stmt->bindParam($key, $val);
-        }
-        $stmt->execute();
-
-        $rentals = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $rental = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
-            $rental->client_name = $row['client_name'];
-            $rental->vehicule_name = $row['vehicule_name'];
-            $rentals[] = $rental;
-        }
-        return $rentals;
+    if (!empty($search)) {
+        $sql .= " AND (u.username LIKE :search OR v.nom LIKE :search)";
+        $params[':search'] = "%$search%";
     }
 
+    if (!empty($status)) {
+        $sql .= " AND r.status = :status";
+        $params[':status'] = $status;
+    }
+
+    $allowedSortFields = ['id', 'client_name', 'vehicule_name', 'date_debut', 'date_fin', 'prix_total', 'status'];
+    $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
+    $sortOrder = $sortOrder === 'DESC' ? 'DESC' : 'ASC';
+
+    $sql .= " ORDER BY $sortBy $sortOrder LIMIT $perPage OFFSET $offset";
+
+    $stmt = $conn->prepare($sql);
+    foreach ($params as $key => &$val) {
+        $stmt->bindParam($key, $val);
+    }
+    $stmt->execute();
+
+    $rentals = [];
+    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+        $rental = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
+        $rental->client_name = $row['client_name'];
+        $rental->vehicule_name = $row['vehicule_name'];
+        $rentals[] = $rental;
+    }
+    return $rentals;
+}
+    
     public static function getTotalPages($search, $status) {
         global $conn;
         $perPage = 10;
