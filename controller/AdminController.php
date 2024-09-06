@@ -39,16 +39,13 @@ class AdminController extends BaseController {
         echo "Début de dashboard<br>";
         $this->logger->info("Accès au tableau de bord administrateur");
         try {
-            // Test de connexion à la base de données
             $this->testDatabaseConnection();
 
-            // Récupère les statistiques pour le tableau de bord
             $totalVehicules = Vehicule::count();
             $totalUsers = User::count();
             $totalRentals = Rental::count();
             $totalRevenue = Rental::totalRevenue();
             
-            // Ensure $totalRevenue is a number
             $totalRevenue = is_null($totalRevenue) ? 0 : $totalRevenue;
             
             $recentRentals = Rental::getRecent(5);
@@ -61,7 +58,6 @@ class AdminController extends BaseController {
                 'totalRevenue' => $totalRevenue
             ]);
 
-            // Affiche la vue du tableau de bord
             $this->render('admin/dashboard', [
                 'totalVehicules' => $totalVehicules,
                 'totalUsers' => $totalUsers,
@@ -96,7 +92,7 @@ class AdminController extends BaseController {
         try {
             $this->testDatabaseConnection();
             if (!class_exists('VehiculeType')) {
-                throw new Exception('VehiculeType class not found. Please ensure it is properly defined and included.');
+                throw new Exception('VehiculeType class not found. File location: ' . BASE_PATH . '/models/VehiculeType.php');
             }
 
             $vehiculeTypes = VehiculeType::getAll();
@@ -134,7 +130,7 @@ class AdminController extends BaseController {
         try {
             $this->testDatabaseConnection();
             if (!class_exists('VehiculeType')) {
-                throw new Exception('VehiculeType class not found. Please ensure it is properly defined and included.');
+                throw new Exception('VehiculeType class not found. File location: ' . BASE_PATH . '/models/VehiculeType.php');
             }
 
             $vehiculeTypes = VehiculeType::getAll();
@@ -181,7 +177,10 @@ class AdminController extends BaseController {
             $sortBy = $this->getQueryParam('sort', 'id');
             $sortOrder = $this->getQueryParam('order', 'ASC');
 
+            echo "Avant User::getFiltered()<br>";
             $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
+            echo "Après User::getFiltered()<br>";
+
             $totalPages = User::getTotalPages($search, $role);
 
             $this->render('admin/manageUsers', [
@@ -197,7 +196,7 @@ class AdminController extends BaseController {
 
             $this->logger->info("Fin de la méthode manageUsers");
         } catch (Exception $e) {
-            $this->handleError($e, 'Erreur dans manageUsers');
+            $this->handleError($e, 'Erreur dans manageUsers: ' . $e->getMessage());
         }
     }
 
@@ -209,7 +208,6 @@ class AdminController extends BaseController {
         if (empty($data['type'])) {
             $errors[] = "Le type de véhicule est requis.";
         }
-        // Ajoutez d'autres validations selon vos besoins
         return $errors;
     }
 
@@ -221,7 +219,6 @@ class AdminController extends BaseController {
         if (empty($data['prix'])) {
             $errors[] = "Le prix de l'offre est requis.";
         }
-        // Ajoutez d'autres validations selon vos besoins
         return $errors;
     }
 
@@ -240,9 +237,12 @@ class AdminController extends BaseController {
 
     private function testDatabaseConnection() {
         try {
-            $pdo = new PDO("mysql:host=localhost;dbname=e_motion", "emotion_user", "IPSSI2024");
+            global $conn;
+            if (!$conn) {
+                throw new Exception("La connexion à la base de données n'est pas établie.");
+            }
             echo "Connexion à la base de données réussie<br>";
-        } catch (PDOException $e) {
+        } catch (Exception $e) {
             echo "Erreur de connexion à la base de données : " . $e->getMessage() . "<br>";
             throw $e;
         }
