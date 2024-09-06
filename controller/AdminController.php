@@ -12,7 +12,7 @@ require_once BASE_PATH . '/models/VehiculeType.php';
 require_once BASE_PATH . '/models/RentalOffer.php';
 
 class AdminController extends BaseController {
-    private $logger;
+    protected $logger;
 
     public function __construct($logger = null) {
         parent::__construct();
