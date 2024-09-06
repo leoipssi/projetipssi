@@ -25,27 +25,34 @@ class AdminController extends BaseController {
     }
 
     public function dashboard() {
-        // Récupère les statistiques pour le tableau de bord
-        $totalVehicules = Vehicule::count();
-        $totalUsers = User::count();
-        $totalRentals = Rental::count();
-        $totalRevenue = Rental::totalRevenue();
-        
-        // Ensure $totalRevenue is a number
-        $totalRevenue = is_null($totalRevenue) ? 0 : $totalRevenue;
-        
-        $recentRentals = Rental::getRecent(5);
-        $topVehicules = Vehicule::getTopRented(5);
+        try {
+            // Récupère les statistiques pour le tableau de bord
+            $totalVehicules = Vehicule::count();
+            $totalUsers = User::count();
+            $totalRentals = Rental::count();
+            $totalRevenue = Rental::totalRevenue();
+            
+            // Ensure $totalRevenue is a number
+            $totalRevenue = is_null($totalRevenue) ? 0 : $totalRevenue;
+            
+            $recentRentals = Rental::getRecent(5);
+            $topVehicules = Vehicule::getTopRented(5);
 
-        // Affiche la vue du tableau de bord
-        $this->render('admin/dashboard', [
-            'totalVehicules' => $totalVehicules,
-            'totalUsers' => $totalUsers,
-            'totalRentals' => $totalRentals,
-            'totalRevenue' => $totalRevenue,
-            'recentRentals' => $recentRentals,
-            'topVehicules' => $topVehicules
-        ]);
+            // Affiche la vue du tableau de bord
+            $this->render('admin/dashboard', [
+                'totalVehicules' => $totalVehicules,
+                'totalUsers' => $totalUsers,
+                'totalRentals' => $totalRentals,
+                'totalRevenue' => $totalRevenue,
+                'recentRentals' => $recentRentals,
+                'topVehicules' => $topVehicules
+            ]);
+        } catch (Exception $e) {
+            error_log('Erreur dans dashboard: ' . $e->getMessage());
+            $this->render('error', [
+                'message' => 'Une erreur est survenue lors du chargement du tableau de bord.'
+            ]);
+        }
     }
 
     public function vehicules() {
@@ -63,73 +70,79 @@ class AdminController extends BaseController {
     }
     
     public function addVehicule() {
-        // Check if VehiculeType class exists
-        if (!class_exists('VehiculeType')) {
-            throw new Exception('VehiculeType class not found. Please ensure it is properly defined and included.');
-        }
+        try {
+            // Check if VehiculeType class exists
+            if (!class_exists('VehiculeType')) {
+                throw new Exception('VehiculeType class not found. Please ensure it is properly defined and included.');
+            }
 
-        // Récupère les types de véhicules disponibles
-        $vehiculeTypes = VehiculeType::getAll();
-        $errors = [];
+            // Récupère les types de véhicules disponibles
+            $vehiculeTypes = VehiculeType::getAll();
+            $errors = [];
 
-        if ($this->isPost()) {
-            $vehiculeData = $this->sanitizeUserData($_POST);
-            $errors = $this->validateVehiculeInput($vehiculeData);
+            if ($this->isPost()) {
+                $vehiculeData = $this->sanitizeUserData($_POST);
+                $errors = $this->validateVehiculeInput($vehiculeData);
 
-            if (empty($errors)) {
-                try {
+                if (empty($errors)) {
                     $vehicule = Vehicule::create($vehiculeData);
                     if ($vehicule) {
                         $this->redirect('admin', ['action' => 'dashboard', 'success' => 'Véhicule ajouté avec succès']);
                     } else {
                         $errors[] = "Erreur lors de l'ajout du véhicule.";
                     }
-                } catch (Exception $e) {
-                    $errors[] = "Une erreur est survenue lors de l'ajout du véhicule : " . $e->getMessage();
                 }
             }
-        }
 
-        // Affiche la vue d'ajout de véhicule
-        $this->render('admin/addVehicule', [
-            'vehiculeTypes' => $vehiculeTypes,
-            'errors' => $errors
-        ]);
+            // Affiche la vue d'ajout de véhicule
+            $this->render('admin/addVehicule', [
+                'vehiculeTypes' => $vehiculeTypes,
+                'errors' => $errors
+            ]);
+        } catch (Exception $e) {
+            error_log('Erreur dans addVehicule: ' . $e->getMessage());
+            $this->render('error', [
+                'message' => "Une erreur est survenue lors de l'ajout du véhicule."
+            ]);
+        }
     }
 
     public function createOffer() {
-        // Check if VehiculeType class exists
-        if (!class_exists('VehiculeType')) {
-            throw new Exception('VehiculeType class not found. Please ensure it is properly defined and included.');
-        }
+        try {
+            // Check if VehiculeType class exists
+            if (!class_exists('VehiculeType')) {
+                throw new Exception('VehiculeType class not found. Please ensure it is properly defined and included.');
+            }
 
-        // Récupère les types de véhicules disponibles
-        $vehiculeTypes = VehiculeType::getAll();
-        $errors = [];
+            // Récupère les types de véhicules disponibles
+            $vehiculeTypes = VehiculeType::getAll();
+            $errors = [];
 
-        if ($this->isPost()) {
-            $offerData = $this->sanitizeUserData($_POST);
-            $errors = $this->validateOfferInput($offerData);
+            if ($this->isPost()) {
+                $offerData = $this->sanitizeUserData($_POST);
+                $errors = $this->validateOfferInput($offerData);
 
-            if (empty($errors)) {
-                try {
+                if (empty($errors)) {
                     $offer = RentalOffer::create($offerData);
                     if ($offer) {
                         $this->redirect('admin', ['action' => 'dashboard', 'success' => 'Offre créée avec succès']);
                     } else {
                         $errors[] = "Erreur lors de la création de l'offre.";
                     }
-                } catch (Exception $e) {
-                    $errors[] = "Une erreur est survenue lors de la création de l'offre : " . $e->getMessage();
                 }
             }
-        }
 
-        // Affiche la vue de création d'offre
-        $this->render('admin/createOffer', [
-            'vehiculeTypes' => $vehiculeTypes,
-            'errors' => $errors
-        ]);
+            // Affiche la vue de création d'offre
+            $this->render('admin/createOffer', [
+                'vehiculeTypes' => $vehiculeTypes,
+                'errors' => $errors
+            ]);
+        } catch (Exception $e) {
+            error_log('Erreur dans createOffer: ' . $e->getMessage());
+            $this->render('error', [
+                'message' => "Une erreur est survenue lors de la création de l'offre."
+            ]);
+        }
     }
 
     public function users() {
@@ -138,17 +151,33 @@ class AdminController extends BaseController {
     }
 
     public function manageUsers() {
-        // Récupère les paramètres de la requête
-        $page = $this->getQueryParam('page', 1);
-        $search = $this->getQueryParam('search', '');
-        $role = $this->getQueryParam('role', '');
-        $sortBy = $this->getQueryParam('sort', 'id');
-        $sortOrder = $this->getQueryParam('order', 'ASC');
-
         try {
+            // Ajout de logs pour le débogage
+            error_log("Début de la méthode manageUsers");
+
+            // Récupère les paramètres de la requête
+            $page = $this->getQueryParam('page', 1);
+            $search = $this->getQueryParam('search', '');
+            $role = $this->getQueryParam('role', '');
+            $sortBy = $this->getQueryParam('sort', 'id');
+            $sortOrder = $this->getQueryParam('order', 'ASC');
+
+            // Log des paramètres reçus
+            error_log("Paramètres reçus : " . json_encode([
+                'page' => $page,
+                'search' => $search,
+                'role' => $role,
+                'sortBy' => $sortBy,
+                'sortOrder' => $sortOrder
+            ]));
+
             // Récupère la liste des utilisateurs filtrée
             $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
             $totalPages = User::getTotalPages($search, $role);
+
+            // Log du nombre d'utilisateurs récupérés
+            error_log("Nombre d'utilisateurs récupérés : " . count($users));
+            error_log("Nombre total de pages : " . $totalPages);
 
             // Affiche la vue de gestion des utilisateurs
             $this->render('admin/manageUsers', [
@@ -161,20 +190,24 @@ class AdminController extends BaseController {
                 'sortOrder' => $sortOrder,
                 'availableRoles' => User::getAvailableRoles()
             ]);
+
+            // Log de fin de méthode
+            error_log("Fin de la méthode manageUsers");
         } catch (Exception $e) {
-            // Log l'erreur
+            // Log détaillé de l'erreur
             error_log('Erreur dans manageUsers: ' . $e->getMessage());
+            error_log('Stack trace: ' . $e->getTraceAsString());
+
             // Affiche un message d'erreur à l'utilisateur
             $this->render('error', [
-                'message' => 'Une erreur est survenue lors de la récupération des utilisateurs.'
+                'message' => 'Une erreur est survenue lors de la récupération des utilisateurs.',
+                'details' => $e->getMessage() // Ajoutez ceci uniquement en environnement de développement
             ]);
         }
     }
 
     private function validateVehiculeInput($data) {
         $errors = [];
-        // Ajoutez ici la logique de validation pour les véhicules
-        // Par exemple :
         if (empty($data['nom'])) {
             $errors[] = "Le nom du véhicule est requis.";
         }
@@ -187,8 +220,6 @@ class AdminController extends BaseController {
 
     private function validateOfferInput($data) {
         $errors = [];
-        // Ajoutez ici la logique de validation pour les offres
-        // Par exemple :
         if (empty($data['titre'])) {
             $errors[] = "Le titre de l'offre est requis.";
         }
