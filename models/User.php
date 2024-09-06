@@ -158,6 +158,17 @@ class User {
         }
     }
 
+    public static function getFiltered($page, $search, $role, $sortBy, $sortOrder) {
+        $perPage = 10; // Nombre d'utilisateurs par page
+        return self::findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage);
+    }
+
+    public static function getTotalPages($search, $role) {
+        $perPage = 10; // Même nombre que dans getFiltered
+        $totalUsers = self::countFiltered($search, $role);
+        return ceil($totalUsers / $perPage);
+    }
+
     public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage) {
         global $conn;
         $offset = ($page - 1) * $perPage;
