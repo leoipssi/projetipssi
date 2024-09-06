@@ -177,8 +177,25 @@ class AdminController extends BaseController {
             $sortBy = $this->getQueryParam('sort', 'id');
             $sortOrder = $this->getQueryParam('order', 'ASC');
 
+            $this->logger->debug("Paramètres de filtrage", [
+                'page' => $page,
+                'search' => $search,
+                'role' => $role,
+                'sortBy' => $sortBy,
+                'sortOrder' => $sortOrder
+            ]);
+
             echo "Avant User::getFiltered()<br>";
-            $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
+            try {
+                $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
+                $this->logger->debug("Utilisateurs récupérés avec succès", ['count' => count($users)]);
+            } catch (Exception $e) {
+                $this->logger->error("Erreur dans User::getFiltered()", [
+                    'error' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString()
+                ]);
+                throw $e;
+            }
             echo "Après User::getFiltered()<br>";
 
             $totalPages = User::getTotalPages($search, $role);
@@ -196,6 +213,12 @@ class AdminController extends BaseController {
 
             $this->logger->info("Fin de la méthode manageUsers");
         } catch (Exception $e) {
+            $this->logger->error("Erreur détaillée dans manageUsers", [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
             $this->handleError($e, 'Erreur dans manageUsers: ' . $e->getMessage());
         }
     }
@@ -241,9 +264,13 @@ class AdminController extends BaseController {
             if (!$conn) {
                 throw new Exception("La connexion à la base de données n'est pas établie.");
             }
+            $result = $conn->query("SELECT 1");
+            if ($result === false) {
+                throw new Exception("Impossible d'exécuter une requête de test sur la base de données.");
+            }
             echo "Connexion à la base de données réussie<br>";
         } catch (Exception $e) {
-            echo "Erreur de connexion à la base de données : " . $e->getMessage() . "<br>";
+            $this->logger->error("Erreur de connexion à la base de données", ['error' => $e->getMessage()]);
             throw $e;
         }
     }
