@@ -49,5 +49,3 @@ for ($i = 1; $i <= $totalPages; $i++) {
     echo "<a href='index.php?route=admin&action=rentals&page=$i'>$i</a> ";
 }
 ?>
-
-<?php require_once BASE_PATH . '/views/admin/footer.php'; ?>
