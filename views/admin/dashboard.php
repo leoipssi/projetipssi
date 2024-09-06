@@ -3,17 +3,17 @@
 <div class="dashboard-stats">
     <div class="stat-card">
         <h2>Total des véhicules</h2>
-        <p class="stat-number"><?= $totalVehicules ?></p>
+        <p class="stat-number"><?= $totalVehicules ?? 0 ?></p>
         <a href="<?= $this->url('admin', ['action' => 'vehicules']) ?>" class="stat-link">Voir tous</a>
     </div>
     <div class="stat-card">
         <h2>Total des utilisateurs</h2>
-        <p class="stat-number"><?= $totalUsers ?></p>
+        <p class="stat-number"><?= $totalUsers ?? 0 ?></p>
         <a href="<?= $this->url('admin', ['action' => 'users']) ?>" class="stat-link">Voir tous</a>
     </div>
     <div class="stat-card">
         <h2>Total des locations</h2>
-        <p class="stat-number"><?= $totalRentals ?></p>
+        <p class="stat-number"><?= $totalRentals ?? 0 ?></p>
         <a href="<?= $this->url('admin', ['action' => 'rentals']) ?>" class="stat-link">Voir toutes</a>
     </div>
     <div class="stat-card">
@@ -77,8 +77,8 @@
                 <?php foreach ($topVehicules as $vehicule): ?>
                     <tr>
                         <td><?= htmlspecialchars($vehicule['marque'] . ' ' . $vehicule['modele']) ?></td>
-                        <td><?= $vehicule['rental_count'] ?></td>
-                        <td><?= number_format($vehicule['revenue'], 2) ?> €</td>
+                        <td><?= $vehicule['rental_count'] ?? 0 ?></td>
+                        <td><?= number_format($vehicule['revenue'] ?? 0, 2) ?> €</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
