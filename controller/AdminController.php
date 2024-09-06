@@ -48,7 +48,7 @@ class AdminController extends BaseController {
         ]);
     }
 
-        public function vehicules() {
+    public function vehicules() {
         try {
             $vehicules = Vehicule::getAll();
             $this->render('vehicules/index', [
