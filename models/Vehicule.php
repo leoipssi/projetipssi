@@ -54,6 +54,7 @@ class Vehicule {
         return $this->tarif_journalier * $duree;
     }
 
+    // Méthode pour créer un nouveau véhicule
     public static function create($data) {
         global $conn;
         $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat, categorie, tarif_journalier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -67,41 +68,16 @@ class Vehicule {
             $data['kilometres'],
             $data['date_achat'],
             $data['prix_achat'],
-            $data['categorie'],
-            $data['tarif_journalier']
+            $data['categorie'] ?? null, // Vérification pour éviter l'erreur
+            $data['tarif_journalier'] ?? null // Vérification pour éviter l'erreur
         ]);
         if ($stmt->rowCount() > 0) {
-            return new Vehicule($conn->lastInsertId(), $data['type_id'], $data['marque'], $data['modele'], $data['numero_serie'], $data['couleur'], $data['immatriculation'], $data['kilometres'], $data['date_achat'], $data['prix_achat'], $data['categorie'], $data['tarif_journalier']);
+            return new Vehicule($conn->lastInsertId(), $data['type_id'], $data['marque'], $data['modele'], $data['numero_serie'], $data['couleur'], $data['immatriculation'], $data['kilometres'], $data['date_achat'], $data['prix_achat'], $data['categorie'] ?? null, $data['tarif_journalier'] ?? null);
         }
         return null;
     }
 
-    public static function findAll() {
-        global $conn;
-        $stmt = $conn->query("SELECT * FROM vehicules");
-        $vehicules = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat'], $row['categorie'], $row['tarif_journalier']);
-        }
-        return $vehicules;
-    }
-
-    // Nouvelle méthode getAll()
-    public static function getAll() {
-        return self::findAll();
-    }
-
-    public static function findById($id) {
-        global $conn;
-        $stmt = $conn->prepare("SELECT * FROM vehicules WHERE id = ?");
-        $stmt->execute([$id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row) {
-            return new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat'], $row['categorie'], $row['tarif_journalier']);
-        }
-        return null;
-    }
-
+    // Méthode pour mettre à jour un véhicule existant
     public function update($data) {
         global $conn;
         $stmt = $conn->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ?, categorie = ?, tarif_journalier = ? WHERE id = ?");
@@ -115,19 +91,49 @@ class Vehicule {
             $data['kilometres'],
             $data['date_achat'],
             $data['prix_achat'],
-            $data['categorie'],
-            $data['tarif_journalier'],
+            $data['categorie'] ?? $this->categorie, // Utilise la valeur existante si null
+            $data['tarif_journalier'] ?? $this->tarif_journalier, // Utilise la valeur existante si null
             $this->id
         ]);
         return $stmt->rowCount() > 0;
     }
 
+    // Méthode pour récupérer tous les véhicules
+    public static function findAll() {
+        global $conn;
+        $stmt = $conn->query("SELECT * FROM vehicules");
+        $vehicules = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat'], $row['categorie'], $row['tarif_journalier']);
+        }
+        return $vehicules;
+    }
+
+    // Méthode statique pour obtenir tous les véhicules
+    public static function getAll() {
+        return self::findAll();
+    }
+
+    // Méthode pour trouver un véhicule par son ID
+    public static function findById($id) {
+        global $conn;
+        $stmt = $conn->prepare("SELECT * FROM vehicules WHERE id = ?");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($row) {
+            return new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat'], $row['categorie'], $row['tarif_journalier']);
+        }
+        return null;
+    }
+
+    // Méthode pour compter le nombre total de véhicules
     public static function count() {
         global $conn;
         $stmt = $conn->query("SELECT COUNT(*) FROM vehicules");
         return $stmt->fetchColumn();
     }
 
+    // Méthode pour obtenir les véhicules les plus récents
     public static function getRecentVehicules($limit = 5) {
         global $conn;
         $stmt = $conn->prepare("SELECT * FROM vehicules ORDER BY date_achat DESC LIMIT :limit");
@@ -140,6 +146,7 @@ class Vehicule {
         return $vehicules;
     }
 
+    // Méthode pour obtenir les véhicules les plus loués
     public static function getTopRented($limit = 5) {
         global $conn;
         $stmt = $conn->prepare("
