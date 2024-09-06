@@ -132,6 +132,11 @@ class AdminController extends BaseController {
         ]);
     }
 
+    public function users() {
+        // Redirige vers manageUsers
+        $this->redirect('admin', ['action' => 'manageUsers']);
+    }
+
     public function manageUsers() {
         // Récupère les paramètres de la requête
         $page = $this->getQueryParam('page', 1);
@@ -140,32 +145,57 @@ class AdminController extends BaseController {
         $sortBy = $this->getQueryParam('sort', 'id');
         $sortOrder = $this->getQueryParam('order', 'ASC');
 
-        // Récupère la liste des utilisateurs filtrée
-        $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
-        $totalPages = User::getTotalPages($search, $role);
+        try {
+            // Récupère la liste des utilisateurs filtrée
+            $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
+            $totalPages = User::getTotalPages($search, $role);
 
-        // Affiche la vue de gestion des utilisateurs
-        $this->render('admin/manageUsers', [
-            'users' => $users,
-            'page' => $page,
-            'totalPages' => $totalPages,
-            'search' => $search,
-            'role' => $role,
-            'sortBy' => $sortBy,
-            'sortOrder' => $sortOrder,
-            'availableRoles' => User::getAvailableRoles()
-        ]);
+            // Affiche la vue de gestion des utilisateurs
+            $this->render('admin/manageUsers', [
+                'users' => $users,
+                'page' => $page,
+                'totalPages' => $totalPages,
+                'search' => $search,
+                'role' => $role,
+                'sortBy' => $sortBy,
+                'sortOrder' => $sortOrder,
+                'availableRoles' => User::getAvailableRoles()
+            ]);
+        } catch (Exception $e) {
+            // Log l'erreur
+            error_log('Erreur dans manageUsers: ' . $e->getMessage());
+            // Affiche un message d'erreur à l'utilisateur
+            $this->render('error', [
+                'message' => 'Une erreur est survenue lors de la récupération des utilisateurs.'
+            ]);
+        }
     }
 
     private function validateVehiculeInput($data) {
         $errors = [];
         // Ajoutez ici la logique de validation pour les véhicules
+        // Par exemple :
+        if (empty($data['nom'])) {
+            $errors[] = "Le nom du véhicule est requis.";
+        }
+        if (empty($data['type'])) {
+            $errors[] = "Le type de véhicule est requis.";
+        }
+        // Ajoutez d'autres validations selon vos besoins
         return $errors;
     }
 
     private function validateOfferInput($data) {
         $errors = [];
         // Ajoutez ici la logique de validation pour les offres
+        // Par exemple :
+        if (empty($data['titre'])) {
+            $errors[] = "Le titre de l'offre est requis.";
+        }
+        if (empty($data['prix'])) {
+            $errors[] = "Le prix de l'offre est requis.";
+        }
+        // Ajoutez d'autres validations selon vos besoins
         return $errors;
     }
 }
