@@ -1,10 +1,9 @@
+<?php
+// Configurations de session avant le démarrage de la session
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-
-<?php
-// Configurations de session avant le démarrage de la session
-ini_set('session.gc_maxlifetime', 3600);
+ini_set('session.gc_maxlifetime', 3600)
 ini_set('session.cookie_lifetime', 3600);
 ini_set('session.use_only_cookies', 1);
 ini_set('session.use_strict_mode', 1);
