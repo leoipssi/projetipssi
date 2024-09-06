@@ -9,6 +9,8 @@ class Rental {
     private $date_fin;
     private $prix_total;
     private $status;
+    private $client_name;
+    private $vehicule_name;
 
     public function __construct($id, $client_id, $vehicule_id, $offer_id, $date_debut, $date_fin, $prix_total, $status) {
         $this->id = $id;
@@ -137,49 +139,49 @@ class Rental {
         return $rentals;
     }
 
-public static function getFiltered($page, $search, $status, $sortBy, $sortOrder) {
-    global $conn;
-    $perPage = 10;
-    $offset = ($page - 1) * $perPage;
+    public static function getFiltered($page, $search, $status, $sortBy, $sortOrder) {
+        global $conn;
+        $perPage = 10;
+        $offset = ($page - 1) * $perPage;
 
-    $sql = "SELECT r.*, u.username as client_name, v.nom as vehicule_name 
-            FROM rentals r
-            LEFT JOIN users u ON r.client_id = u.id
-            LEFT JOIN vehicules v ON r.vehicule_id = v.id
-            WHERE 1=1";
-    $params = [];
+        $sql = "SELECT r.*, u.username as client_name, CONCAT(v.marque, ' ', v.modele) as vehicule_name 
+                FROM rentals r
+                LEFT JOIN users u ON r.client_id = u.id
+                LEFT JOIN vehicules v ON r.vehicule_id = v.id
+                WHERE 1=1";
+        $params = [];
 
-    if (!empty($search)) {
-        $sql .= " AND (u.username LIKE :search OR v.nom LIKE :search)";
-        $params[':search'] = "%$search%";
+        if (!empty($search)) {
+            $sql .= " AND (u.username LIKE :search OR CONCAT(v.marque, ' ', v.modele) LIKE :search)";
+            $params[':search'] = "%$search%";
+        }
+
+        if (!empty($status)) {
+            $sql .= " AND r.status = :status";
+            $params[':status'] = $status;
+        }
+
+        $allowedSortFields = ['id', 'client_name', 'vehicule_name', 'date_debut', 'date_fin', 'prix_total', 'status'];
+        $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
+        $sortOrder = $sortOrder === 'DESC' ? 'DESC' : 'ASC';
+
+        $sql .= " ORDER BY $sortBy $sortOrder LIMIT $perPage OFFSET $offset";
+
+        $stmt = $conn->prepare($sql);
+        foreach ($params as $key => &$val) {
+            $stmt->bindParam($key, $val);
+        }
+        $stmt->execute();
+
+        $rentals = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $rental = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
+            $rental->client_name = $row['client_name'];
+            $rental->vehicule_name = $row['vehicule_name'];
+            $rentals[] = $rental;
+        }
+        return $rentals;
     }
-
-    if (!empty($status)) {
-        $sql .= " AND r.status = :status";
-        $params[':status'] = $status;
-    }
-
-    $allowedSortFields = ['id', 'client_name', 'vehicule_name', 'date_debut', 'date_fin', 'prix_total', 'status'];
-    $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
-    $sortOrder = $sortOrder === 'DESC' ? 'DESC' : 'ASC';
-
-    $sql .= " ORDER BY $sortBy $sortOrder LIMIT $perPage OFFSET $offset";
-
-    $stmt = $conn->prepare($sql);
-    foreach ($params as $key => &$val) {
-        $stmt->bindParam($key, $val);
-    }
-    $stmt->execute();
-
-    $rentals = [];
-    while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-        $rental = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
-        $rental->client_name = $row['client_name'];
-        $rental->vehicule_name = $row['vehicule_name'];
-        $rentals[] = $rental;
-    }
-    return $rentals;
-}
     
     public static function getTotalPages($search, $status) {
         global $conn;
@@ -193,7 +195,7 @@ public static function getFiltered($page, $search, $status, $sortBy, $sortOrder)
         $params = [];
 
         if (!empty($search)) {
-            $sql .= " AND (u.username LIKE :search OR v.nom LIKE :search)";
+            $sql .= " AND (u.username LIKE :search OR CONCAT(v.marque, ' ', v.modele) LIKE :search)";
             $params[':search'] = "%$search%";
         }
 
