@@ -1,8 +1,4 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
-echo "Début du fichier AdminController.php";
-
 // Définir le chemin de base du projet
 define('BASE_PATH', '/var/www/html/e-motion');
 
@@ -19,7 +15,6 @@ class AdminController extends BaseController {
     protected $logger;
 
     public function __construct($logger = null) {
-        echo "Constructeur AdminController appelé<br>";
         parent::__construct();
         $this->logger = $logger ?? new \Monolog\Logger('admin');
         $this->logger->pushHandler(new \Monolog\Handler\StreamHandler(BASE_PATH . '/logs/admin.log', \Monolog\Logger::DEBUG));
@@ -36,7 +31,6 @@ class AdminController extends BaseController {
     }
 
     public function dashboard() {
-        echo "Début de dashboard<br>";
         $this->logger->info("Accès au tableau de bord administrateur");
         try {
             $this->testDatabaseConnection();
@@ -72,7 +66,6 @@ class AdminController extends BaseController {
     }
 
     public function vehicules() {
-        echo "Début de vehicules<br>";
         $this->logger->info("Accès à la liste des véhicules");
         try {
             $this->testDatabaseConnection();
@@ -87,7 +80,6 @@ class AdminController extends BaseController {
     }
     
     public function addVehicule() {
-        echo "Début de addVehicule<br>";
         $this->logger->info("Accès au formulaire d'ajout de véhicule");
         try {
             $this->testDatabaseConnection();
@@ -125,7 +117,6 @@ class AdminController extends BaseController {
     }
 
     public function createOffer() {
-        echo "Début de createOffer<br>";
         $this->logger->info("Accès au formulaire de création d'offre");
         try {
             $this->testDatabaseConnection();
@@ -167,7 +158,6 @@ class AdminController extends BaseController {
     }
 
     public function manageUsers() {
-        echo "Début de manageUsers<br>";
         $this->logger->info("Début de la méthode manageUsers");
         try {
             $this->testDatabaseConnection();
@@ -185,7 +175,6 @@ class AdminController extends BaseController {
                 'sortOrder' => $sortOrder
             ]);
 
-            echo "Avant User::getFiltered()<br>";
             try {
                 $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
                 $this->logger->debug("Utilisateurs récupérés avec succès", ['count' => count($users)]);
@@ -196,7 +185,6 @@ class AdminController extends BaseController {
                 ]);
                 throw $e;
             }
-            echo "Après User::getFiltered()<br>";
 
             $totalPages = User::getTotalPages($search, $role);
 
@@ -246,8 +234,6 @@ class AdminController extends BaseController {
     }
 
     private function handleError(Exception $e, $context) {
-        echo "Erreur : " . $e->getMessage() . "<br>";
-        error_log($context . ": " . $e->getMessage());
         $this->logger->error($context . ': ' . $e->getMessage(), [
             'exception' => $e,
             'trace' => $e->getTraceAsString()
@@ -268,7 +254,6 @@ class AdminController extends BaseController {
             if ($result === false) {
                 throw new Exception("Impossible d'exécuter une requête de test sur la base de données.");
             }
-            echo "Connexion à la base de données réussie<br>";
         } catch (Exception $e) {
             $this->logger->error("Erreur de connexion à la base de données", ['error' => $e->getMessage()]);
             throw $e;
