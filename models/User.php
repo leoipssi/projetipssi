@@ -182,49 +182,52 @@ class User {
         }
     }
 
-    public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage) {
-        global $conn;
-        $offset = ($page - 1) * $perPage;
-        $allowedSortFields = ['id', 'username', 'email', 'role', 'created_at'];
-        $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
-        $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
+public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage) {
+    global $conn;
+    $offset = ($page - 1) * $perPage;
+    $allowedSortFields = ['id', 'username', 'email', 'role', 'created_at'];
+    $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
+    $sortOrder = strtoupper($sortOrder) === 'DESC' ? 'DESC' : 'ASC';
 
-        $where = [];
-        $params = [];
-        if ($search) {
-            $where[] = "(username LIKE ? OR email LIKE ? OR nom LIKE ? OR prenom LIKE ?)";
-            $searchParam = "%$search%";
-            $params = array_fill(0, 4, $searchParam);
-        }
-        if ($role) {
-            $where[] = "role = ?";
-            $params[] = $role;
-        }
-
-        $whereClause = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
-
-        $sql = "SELECT * FROM users $whereClause ORDER BY $sortBy $sortOrder LIMIT ? OFFSET ?";
-        $params[] = $perPage;
-        $params[] = $offset;
-
-        try {
-            error_log("SQL Query: " . $sql);
-            error_log("Params: " . json_encode($params));
-
-            $stmt = $conn->prepare($sql);
-            $stmt->execute($params);
-            $users = [];
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $users[] = self::createFromRow($row);
-            }
-            error_log("Nombre d'utilisateurs trouvés : " . count($users));
-            return $users;
-        } catch (PDOException $e) {
-            error_log("Erreur lors de la recherche filtrée des utilisateurs : " . $e->getMessage());
-            error_log("Code d'erreur : " . $e->getCode());
-            throw new Exception("Erreur lors de la recherche des utilisateurs.");
-        }
+    $where = [];
+    $params = [];
+    if ($search) {
+        $where[] = "(username LIKE ? OR email LIKE ? OR nom LIKE ? OR prenom LIKE ?)";
+        $searchParam = "%$search%";
+        $params = array_fill(0, 4, $searchParam);
     }
+    if ($role) {
+        $where[] = "role = ?";
+        $params[] = $role;
+    }
+
+    $whereClause = !empty($where) ? "WHERE " . implode(" AND ", $where) : "";
+
+    // Modification ici : on utilise des valeurs directes pour LIMIT et OFFSET
+    $sql = "SELECT * FROM users $whereClause ORDER BY $sortBy $sortOrder LIMIT $perPage OFFSET $offset";
+
+    try {
+        error_log("SQL Query: " . $sql);
+        error_log("Params: " . json_encode($params));
+
+        $stmt = $conn->prepare($sql);
+        if (!empty($params)) {
+            $stmt->execute($params);
+        } else {
+            $stmt->execute();
+        }
+        $users = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $users[] = self::createFromRow($row);
+        }
+        error_log("Nombre d'utilisateurs trouvés : " . count($users));
+        return $users;
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la recherche filtrée des utilisateurs : " . $e->getMessage());
+        error_log("Code d'erreur : " . $e->getCode());
+        throw new Exception("Erreur lors de la recherche des utilisateurs.");
+    }
+}
 
     public static function countFiltered($search, $role) {
         global $conn;
