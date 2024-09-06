@@ -211,6 +211,38 @@ class AdminController extends BaseController {
         }
     }
 
+    public function rentals() {
+        $this->logger->info("Accès à la liste des locations");
+        try {
+            $this->testDatabaseConnection();
+            
+            $page = $this->getQueryParam('page', 1);
+            $search = $this->getQueryParam('search', '');
+            $status = $this->getQueryParam('status', '');
+            $sortBy = $this->getQueryParam('sort', 'id');
+            $sortOrder = $this->getQueryParam('order', 'DESC');
+
+            $rentals = Rental::getFiltered($page, $search, $status, $sortBy, $sortOrder);
+            $totalPages = Rental::getTotalPages($search, $status);
+
+            $this->render('admin/rentals', [
+                'rentals' => $rentals,
+                'page' => $page,
+                'totalPages' => $totalPages,
+                'search' => $search,
+                'status' => $status,
+                'sortBy' => $sortBy,
+                'sortOrder' => $sortOrder
+            ]);
+        } catch (Exception $e) {
+            $this->logger->error("Erreur dans la méthode rentals", [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            $this->handleError($e, 'Erreur lors de l\'affichage des locations');
+        }
+    }
+
     private function validateVehiculeInput($data) {
         $errors = [];
         if (empty($data['nom'])) {
