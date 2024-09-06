@@ -1,3 +1,7 @@
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 <?php
 // Configurations de session avant le démarrage de la session
 ini_set('session.gc_maxlifetime', 3600);
