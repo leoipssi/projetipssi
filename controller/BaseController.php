@@ -13,16 +13,25 @@ class BaseController {
     }
 
     protected function render($view, $data = [], $layout = 'main') {
-        extract($data);
-        
-        ob_start();
-        include "views/{$view}.php";
-        $content = ob_get_clean();
-        
-        if ($layout && file_exists("views/layouts/{$layout}.php")) {
-            include "views/layouts/{$layout}.php";
-        } else {
-            echo $content;
+        try {
+            extract($data);
+            
+            ob_start();
+            $viewPath = "views/{$view}.php";
+            if (!file_exists($viewPath)) {
+                throw new Exception("Vue non trouvée : {$view}");
+            }
+            include $viewPath;
+            $content = ob_get_clean();
+            
+            if ($layout && file_exists("views/layouts/{$layout}.php")) {
+                include "views/layouts/{$layout}.php";
+            } else {
+                echo $content;
+            }
+        } catch (Exception $e) {
+            $this->logger->error('Erreur lors du rendu de la vue: ' . $e->getMessage());
+            echo "Une erreur est survenue lors de l'affichage de la page. Veuillez réessayer plus tard.";
         }
     }
     
@@ -98,8 +107,25 @@ class BaseController {
         }
     }
 
-    protected function renderError($code) {
+    protected function renderError($code, $message = null) {
         http_response_code($code);
-        $this->render("errors/{$code}", ['title' => "Erreur {$code}"], 'main');
+        $this->render("errors/{$code}", [
+            'title' => "Erreur {$code}",
+            'message' => $message
+        ], 'main');
+    }
+
+    protected function sanitizeUserData($data) {
+        $sanitized = [];
+        foreach ($data as $key => $value) {
+            $sanitized[$key] = htmlspecialchars(trim($value), ENT_QUOTES, 'UTF-8');
+        }
+        return $sanitized;
+    }
+
+    protected function log($level, $message, array $context = []) {
+        if ($this->logger) {
+            $this->logger->log($level, $message, $context);
+        }
     }
 }
