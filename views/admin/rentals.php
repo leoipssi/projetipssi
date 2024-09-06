@@ -1,8 +1,3 @@
-<?php
-$pageTitle = "Gestion des Locations";
-require_once BASE_PATH . '/views/admin/header.php';
-?>
-
 <h1>Gestion des Locations</h1>
 
 <form action="index.php" method="get">
