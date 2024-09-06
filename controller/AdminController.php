@@ -19,6 +19,7 @@ class AdminController extends BaseController {
     protected $logger;
 
     public function __construct($logger = null) {
+        echo "Constructeur AdminController appelé<br>";
         parent::__construct();
         $this->logger = $logger ?? new \Monolog\Logger('admin');
         $this->logger->pushHandler(new \Monolog\Handler\StreamHandler(BASE_PATH . '/logs/admin.log', \Monolog\Logger::DEBUG));
@@ -35,8 +36,12 @@ class AdminController extends BaseController {
     }
 
     public function dashboard() {
+        echo "Début de dashboard<br>";
         $this->logger->info("Accès au tableau de bord administrateur");
         try {
+            // Test de connexion à la base de données
+            $this->testDatabaseConnection();
+
             // Récupère les statistiques pour le tableau de bord
             $totalVehicules = Vehicule::count();
             $totalUsers = User::count();
@@ -66,32 +71,30 @@ class AdminController extends BaseController {
                 'topVehicules' => $topVehicules
             ]);
         } catch (Exception $e) {
-            $this->logger->error('Erreur dans dashboard: ' . $e->getMessage(), ['exception' => $e]);
-            $this->render('error', [
-                'message' => 'Une erreur est survenue lors du chargement du tableau de bord.'
-            ]);
+            $this->handleError($e, 'Erreur dans dashboard');
         }
     }
 
     public function vehicules() {
+        echo "Début de vehicules<br>";
         $this->logger->info("Accès à la liste des véhicules");
         try {
+            $this->testDatabaseConnection();
             $vehicules = Vehicule::getAll();
             $this->logger->debug("Nombre de véhicules récupérés : " . count($vehicules));
             $this->render('vehicules/index', [
                 'vehicules' => $vehicules
             ]);
         } catch (Exception $e) {
-            $this->logger->error('Erreur dans vehicules: ' . $e->getMessage(), ['exception' => $e]);
-            $this->render('error', [
-                'message' => 'Une erreur est survenue lors de la récupération des véhicules.'
-            ]);
+            $this->handleError($e, 'Erreur dans vehicules');
         }
     }
     
     public function addVehicule() {
+        echo "Début de addVehicule<br>";
         $this->logger->info("Accès au formulaire d'ajout de véhicule");
         try {
+            $this->testDatabaseConnection();
             if (!class_exists('VehiculeType')) {
                 throw new Exception('VehiculeType class not found. Please ensure it is properly defined and included.');
             }
@@ -121,16 +124,15 @@ class AdminController extends BaseController {
                 'errors' => $errors
             ]);
         } catch (Exception $e) {
-            $this->logger->error('Erreur dans addVehicule: ' . $e->getMessage(), ['exception' => $e]);
-            $this->render('error', [
-                'message' => "Une erreur est survenue lors de l'ajout du véhicule."
-            ]);
+            $this->handleError($e, 'Erreur dans addVehicule');
         }
     }
 
     public function createOffer() {
+        echo "Début de createOffer<br>";
         $this->logger->info("Accès au formulaire de création d'offre");
         try {
+            $this->testDatabaseConnection();
             if (!class_exists('VehiculeType')) {
                 throw new Exception('VehiculeType class not found. Please ensure it is properly defined and included.');
             }
@@ -160,10 +162,7 @@ class AdminController extends BaseController {
                 'errors' => $errors
             ]);
         } catch (Exception $e) {
-            $this->logger->error('Erreur dans createOffer: ' . $e->getMessage(), ['exception' => $e]);
-            $this->render('error', [
-                'message' => "Une erreur est survenue lors de la création de l'offre."
-            ]);
+            $this->handleError($e, 'Erreur dans createOffer');
         }
     }
 
@@ -171,41 +170,37 @@ class AdminController extends BaseController {
         $this->redirect('admin', ['action' => 'manageUsers']);
     }
 
-public function manageUsers() {
-    $this->logger->info("Début de la méthode manageUsers");
-    try {
-        $page = $this->getQueryParam('page', 1);
-        $search = $this->getQueryParam('search', '');
-        $role = $this->getQueryParam('role', '');
-        $sortBy = $this->getQueryParam('sort', 'id');
-        $sortOrder = $this->getQueryParam('order', 'ASC');
+    public function manageUsers() {
+        echo "Début de manageUsers<br>";
+        $this->logger->info("Début de la méthode manageUsers");
+        try {
+            $this->testDatabaseConnection();
+            $page = $this->getQueryParam('page', 1);
+            $search = $this->getQueryParam('search', '');
+            $role = $this->getQueryParam('role', '');
+            $sortBy = $this->getQueryParam('sort', 'id');
+            $sortOrder = $this->getQueryParam('order', 'ASC');
 
-        $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
-        $totalPages = User::getTotalPages($search, $role);
+            $users = User::getFiltered($page, $search, $role, $sortBy, $sortOrder);
+            $totalPages = User::getTotalPages($search, $role);
 
-        $this->render('admin/manageUsers', [
-            'users' => $users,
-            'page' => $page,
-            'totalPages' => $totalPages,
-            'search' => $search,
-            'role' => $role,
-            'sortBy' => $sortBy,
-            'sortOrder' => $sortOrder,
-            'availableRoles' => User::getAvailableRoles()
-        ]);
+            $this->render('admin/manageUsers', [
+                'users' => $users,
+                'page' => $page,
+                'totalPages' => $totalPages,
+                'search' => $search,
+                'role' => $role,
+                'sortBy' => $sortBy,
+                'sortOrder' => $sortOrder,
+                'availableRoles' => User::getAvailableRoles()
+            ]);
 
-        $this->logger->info("Fin de la méthode manageUsers");
-    } catch (Exception $e) {
-        $this->logger->error('Erreur dans manageUsers: ' . $e->getMessage(), [
-            'exception' => $e,
-            'trace' => $e->getTraceAsString()
-        ]);
-        $this->render('error', [
-            'message' => 'Une erreur est survenue lors de la récupération des utilisateurs.',
-            'details' => $e->getMessage()
-        ]);
+            $this->logger->info("Fin de la méthode manageUsers");
+        } catch (Exception $e) {
+            $this->handleError($e, 'Erreur dans manageUsers');
+        }
     }
-}
+
     private function validateVehiculeInput($data) {
         $errors = [];
         if (empty($data['nom'])) {
@@ -228,5 +223,28 @@ public function manageUsers() {
         }
         // Ajoutez d'autres validations selon vos besoins
         return $errors;
+    }
+
+    private function handleError(Exception $e, $context) {
+        echo "Erreur : " . $e->getMessage() . "<br>";
+        error_log($context . ": " . $e->getMessage());
+        $this->logger->error($context . ': ' . $e->getMessage(), [
+            'exception' => $e,
+            'trace' => $e->getTraceAsString()
+        ]);
+        $this->render('error', [
+            'message' => 'Une erreur est survenue.',
+            'details' => $e->getMessage()
+        ]);
+    }
+
+    private function testDatabaseConnection() {
+        try {
+            $pdo = new PDO("mysql:host=localhost;dbname=e_motion", "emotion_user", "IPSSI2024");
+            echo "Connexion à la base de données réussie<br>";
+        } catch (PDOException $e) {
+            echo "Erreur de connexion à la base de données : " . $e->getMessage() . "<br>";
+            throw $e;
+        }
     }
 }
