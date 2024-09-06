@@ -17,7 +17,7 @@ class VehiculeType {
 
     public static function create($nom) {
         global $conn;
-        $stmt = $conn->prepare("INSERT INTO type_vehicules (nom) VALUES (?)");
+        $stmt = $conn->prepare("INSERT INTO vehicule_types (nom) VALUES (?)");
         $stmt->execute([$nom]);
         if ($stmt->rowCount() > 0) {
             return new VehiculeType($conn->lastInsertId(), $nom);
@@ -27,7 +27,7 @@ class VehiculeType {
 
     public static function getAll() {
         global $conn;
-        $stmt = $conn->query("SELECT * FROM type_vehicules");
+        $stmt = $conn->query("SELECT * FROM vehicule_types");
         $types = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $types[] = new VehiculeType($row['id'], $row['nom']);
@@ -37,7 +37,7 @@ class VehiculeType {
 
     public static function findById($id) {
         global $conn;
-        $stmt = $conn->prepare("SELECT * FROM type_vehicules WHERE id = ?");
+        $stmt = $conn->prepare("SELECT * FROM vehicule_types WHERE id = ?");
         $stmt->execute([$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
@@ -48,14 +48,14 @@ class VehiculeType {
 
     public function update() {
         global $conn;
-        $stmt = $conn->prepare("UPDATE type_vehicules SET nom = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE vehicule_types SET nom = ? WHERE id = ?");
         $stmt->execute([$this->nom, $this->id]);
         return $stmt->rowCount() > 0;
     }
 
     public static function delete($id) {
         global $conn;
-        $stmt = $conn->prepare("DELETE FROM type_vehicules WHERE id = ?");
+        $stmt = $conn->prepare("DELETE FROM vehicule_types WHERE id = ?");
         $stmt->execute([$id]);
         return $stmt->rowCount() > 0;
     }
