@@ -48,6 +48,20 @@ class AdminController extends BaseController {
         ]);
     }
 
+        public function vehicules() {
+        try {
+            $vehicules = Vehicule::getAll();
+            $this->render('vehicules/index', [
+                'vehicules' => $vehicules
+            ]);
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            $this->render('error', [
+                'message' => 'Une erreur est survenue lors de la récupération des véhicules.'
+            ]);
+        }
+    }
+    
     public function addVehicule() {
         // Check if VehiculeType class exists
         if (!class_exists('VehiculeType')) {
