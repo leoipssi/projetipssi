@@ -86,6 +86,11 @@ class Vehicule {
         return $vehicules;
     }
 
+    // Nouvelle méthode getAll()
+    public static function getAll() {
+        return self::findAll();
+    }
+
     public static function findById($id) {
         global $conn;
         $stmt = $conn->prepare("SELECT * FROM vehicules WHERE id = ?");
