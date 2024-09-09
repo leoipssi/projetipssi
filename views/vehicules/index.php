@@ -27,7 +27,6 @@ function safeHtmlSpecialChars($str) {
                             <div class="card-body">
                                 <h5 class="card-title"><?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h5>
                                 <p class="card-text">Type: <?= safeHtmlSpecialChars($vehicule->getType()) ?></p>
-                                <p class="card-text">Catégorie: <?= safeHtmlSpecialChars($vehicule->getCategorie()) ?></p>
                                 <a href="index.php?route=vehicules&action=show&id=<?= $vehicule->getId() ?>" class="btn btn-primary">Voir détails</a>
                             </div>
                         </div>
