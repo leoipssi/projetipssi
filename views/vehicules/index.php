@@ -2,7 +2,6 @@
 // Ensure $totalPages and $currentPage are set
 $totalPages = $totalPages ?? 1;
 $currentPage = $currentPage ?? 1;
-
 // Helper function to safely handle potentially null values
 function safeHtmlSpecialChars($str) {
     return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
@@ -14,8 +13,7 @@ function safeHtmlSpecialChars($str) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nos Véhicules Électriques - E-Motion</title>
-    <link rel="stylesheet" href="<?= BASE_URL ?>/public/css/bootstrap.min.css">
-    <link rel="stylesheet" href="<?= BASE_URL ?>/public/css/styles.css">
+    <link rel="stylesheet" href="<?= BASE_URL ?>/public/css/style.css">
 </head>
 <body>
     <div class="container">
@@ -25,7 +23,7 @@ function safeHtmlSpecialChars($str) {
                 <?php foreach ($vehicules as $vehicule): ?>
                     <div class="col-md-4 mb-4">
                         <div class="card h-100">
-                            <img src="<?= BASE_URL ?>/public/images/vehicules/<?= $vehicule->getId() ?>.jpg" class="card-img-top" alt="<?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>">
+                            <img src="<?= BASE_URL ?>/public/images/vehicules/<?= $vehicule->getId() ?>.png" class="card-img-top" alt="<?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>">
                             <div class="card-body">
                                 <h5 class="card-title"><?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h5>
                                 <p class="card-text">Type: <?= safeHtmlSpecialChars($vehicule->getType()) ?></p>
@@ -53,6 +51,6 @@ function safeHtmlSpecialChars($str) {
             </nav>
         <?php endif; ?>
     </div>
-    <script src="<?= BASE_URL ?>/public/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= BASE_URL ?>/public/js/script.js"></script>
 </body>
 </html>
