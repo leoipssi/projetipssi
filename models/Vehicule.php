@@ -12,8 +12,9 @@ class Vehicule {
     private $prix_achat;
     private $categorie;
     private $tarif_journalier;
+    private $is_available;
 
-    public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie = null, $tarif_journalier = null) {
+    public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie = null, $tarif_journalier = null, $is_available = true) {
         $this->id = $id;
         $this->type_id = $type_id;
         $this->marque = $marque;
@@ -26,6 +27,7 @@ class Vehicule {
         $this->prix_achat = $prix_achat;
         $this->categorie = $categorie;
         $this->tarif_journalier = $tarif_journalier;
+        $this->is_available = $is_available;
     }
 
     // Getters
@@ -41,6 +43,11 @@ class Vehicule {
     public function getPrixAchat() { return $this->prix_achat; }
     public function getCategorie() { return $this->categorie; }
     public function getTarifJournalier() { return $this->tarif_journalier; }
+    public function isAvailable() { return $this->is_available; }
+
+    public function setAvailable($available) {
+        $this->is_available = $available;
+    }
 
     public function getType() {
         global $conn;
@@ -57,7 +64,6 @@ class Vehicule {
     public static function create($data) {
         global $conn;
         
-        // Définir des valeurs par défaut pour tous les champs
         $defaultData = [
             'type_id' => null,
             'marque' => '',
@@ -66,16 +72,16 @@ class Vehicule {
             'couleur' => '',
             'immatriculation' => '',
             'kilometres' => 0,
-            'date_achat' => date('Y-m-d'), // Date actuelle par défaut
+            'date_achat' => date('Y-m-d'),
             'prix_achat' => 0,
             'categorie' => null,
-            'tarif_journalier' => null
+            'tarif_journalier' => null,
+            'is_available' => true
         ];
         
-        // Fusionner les données fournies avec les valeurs par défaut
         $data = array_merge($defaultData, $data);
 
-        $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat, categorie, tarif_journalier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat, categorie, tarif_journalier, is_available) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['type_id'],
             $data['marque'],
@@ -87,7 +93,8 @@ class Vehicule {
             $data['date_achat'],
             $data['prix_achat'],
             $data['categorie'],
-            $data['tarif_journalier']
+            $data['tarif_journalier'],
+            $data['is_available']
         ]);
         if ($stmt->rowCount() > 0) {
             return new Vehicule(
@@ -102,7 +109,8 @@ class Vehicule {
                 $data['date_achat'],
                 $data['prix_achat'],
                 $data['categorie'],
-                $data['tarif_journalier']
+                $data['tarif_journalier'],
+                $data['is_available']
             );
         }
         return null;
@@ -110,7 +118,7 @@ class Vehicule {
 
     public function update($data) {
         global $conn;
-        $stmt = $conn->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ?, categorie = ?, tarif_journalier = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ?, categorie = ?, tarif_journalier = ?, is_available = ? WHERE id = ?");
         $stmt->execute([
             $data['type_id'] ?? $this->type_id,
             $data['marque'] ?? $this->marque,
@@ -123,6 +131,7 @@ class Vehicule {
             $data['prix_achat'] ?? $this->prix_achat,
             $data['categorie'] ?? $this->categorie,
             $data['tarif_journalier'] ?? $this->tarif_journalier,
+            $data['is_available'] ?? $this->is_available,
             $this->id
         ]);
         return $stmt->rowCount() > 0;
@@ -145,14 +154,11 @@ class Vehicule {
                 $row['date_achat'],
                 $row['prix_achat'],
                 $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null
+                $row['tarif_journalier'] ?? null,
+                $row['is_available']
             );
         }
         return $vehicules;
-    }
-
-    public static function getAll() {
-        return self::findAll();
     }
 
     public static function findById($id) {
@@ -173,10 +179,59 @@ class Vehicule {
                 $row['date_achat'],
                 $row['prix_achat'],
                 $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null
+                $row['tarif_journalier'] ?? null,
+                $row['is_available']
             );
         }
         return null;
+    }
+
+    public static function findAvailable() {
+        global $conn;
+        $stmt = $conn->query("SELECT * FROM vehicules WHERE is_available = TRUE");
+        $vehicules = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $vehicules[] = new Vehicule(
+                $row['id'],
+                $row['type_id'],
+                $row['marque'],
+                $row['modele'],
+                $row['numero_serie'],
+                $row['couleur'],
+                $row['immatriculation'],
+                $row['kilometres'],
+                $row['date_achat'],
+                $row['prix_achat'],
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null,
+                $row['is_available']
+            );
+        }
+        return $vehicules;
+    }
+
+    public static function findRented() {
+        global $conn;
+        $stmt = $conn->query("SELECT v.* FROM vehicules v JOIN rentals r ON v.id = r.vehicule_id WHERE r.status = 'En cours'");
+        $vehicules = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $vehicules[] = new Vehicule(
+                $row['id'],
+                $row['type_id'],
+                $row['marque'],
+                $row['modele'],
+                $row['numero_serie'],
+                $row['couleur'],
+                $row['immatriculation'],
+                $row['kilometres'],
+                $row['date_achat'],
+                $row['prix_achat'],
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null,
+                false
+            );
+        }
+        return $vehicules;
     }
 
     public static function count() {
@@ -204,7 +259,8 @@ class Vehicule {
                 $row['date_achat'],
                 $row['prix_achat'],
                 $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null
+                $row['tarif_journalier'] ?? null,
+                $row['is_available']
             );
         }
         return $vehicules;
@@ -223,32 +279,5 @@ class Vehicule {
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public static function findAvailableByType($typeId) {
-        global $conn;
-        $rentedVehicules = Rental::getRentedVehicules();
-        $placeholders = implode(',', array_fill(0, count($rentedVehicules), '?'));
-        $sql = "SELECT * FROM vehicules WHERE type_id = ? AND id NOT IN ($placeholders)";
-        $stmt = $conn->prepare($sql);
-        $stmt->execute(array_merge([$typeId], $rentedVehicules));
-        $vehicules = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicules[] = new Vehicule(
-                $row['id'],
-                $row['type_id'],
-                $row['marque'],
-                $row['modele'],
-                $row['numero_serie'],
-                $row['couleur'],
-                $row['immatriculation'],
-                $row['kilometres'],
-                $row['date_achat'],
-                $row['prix_achat'],
-                $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null
-            );
-        }
-        return $vehicules;
     }
 }
