@@ -30,7 +30,11 @@ class RentalOffer {
     public function setAvailable($available) {
         $this->is_available = $available;
     }
-
+    
+    public function getVehicule() {
+        return Vehicule::findById($this->vehicule_id);
+    }
+    
     public static function create($data) {
         global $conn;
         $sql = "INSERT INTO location_offers (vehicule_id, duree, kilometres, prix, is_active, is_available) 
