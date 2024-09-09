@@ -33,25 +33,19 @@ class RentalOffer {
 
     public static function create($data) {
         global $conn;
-        $stmt = $conn->prepare("INSERT INTO location_offers (vehicule_id, duree, kilometres, prix, is_active, is_available) VALUES (?, ?, ?, ?, ?, ?)");
+        $sql = "INSERT INTO rental_offers (vehicule_id, duree, kilometres, prix, description) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
         $stmt->execute([
             $data['vehicule_id'],
             $data['duree'],
             $data['kilometres'],
             $data['prix'],
-            $data['is_active'] ?? true,
-            $data['is_available'] ?? true
+            $data['description'] ?? ''
         ]);
+        
         if ($stmt->rowCount() > 0) {
-            return new RentalOffer(
-                $conn->lastInsertId(),
-                $data['vehicule_id'],
-                $data['duree'],
-                $data['kilometres'],
-                $data['prix'],
-                $data['is_active'] ?? true,
-                $data['is_available'] ?? true
-            );
+            $id = $conn->lastInsertId();
+            return new self($id, $data['vehicule_id'], $data['duree'], $data['kilometres'], $data['prix'], $data['description'] ?? '');
         }
         return null;
     }
