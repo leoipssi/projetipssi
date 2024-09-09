@@ -25,33 +25,27 @@ class RentalController extends BaseController {
         ], 'main');
     }
 
-    public function create($vehiculeId) {
+    public function create($offerId) {
         $this->requireLogin();
-        $vehicule = Vehicule::findById($vehiculeId);
-        if (!$vehicule || !$vehicule->isAvailable()) {
-            $this->redirect('vehicules', ['error' => 'Véhicule non disponible']);
+        $offer = RentalOffer::findById($offerId);
+        if (!$offer || !$offer->isAvailable()) {
+            $this->redirect('rental_offers', ['error' => 'Offre non disponible']);
         }
+
+        $vehicule = Vehicule::findById($offer->getVehiculeId());
 
         if ($this->isPost()) {
             $data = $this->getPostData();
             $data['client_id'] = $this->getCurrentUser()->getId();
-            $data['vehicule_id'] = $vehiculeId;
+            $data['vehicule_id'] = $vehicule->getId();
+            $data['offer_id'] = $offerId;
             $data['status'] = 'En cours';
             
             if (!$this->validateDates($data['date_debut'], $data['date_fin'])) {
                 $this->render('rentals/create', [
-                    'vehicule' => $vehicule, 
+                    'offer' => $offer,
+                    'vehicule' => $vehicule,
                     'error' => 'Dates invalides',
-                    'title' => 'Créer une location'
-                ], 'main');
-                return;
-            }
-
-            $offer = RentalOffer::findById($data['offer_id']);
-            if (!$offer || $offer->getVehiculeTypeId() != $vehicule->getTypeId()) {
-                $this->render('rentals/create', [
-                    'vehicule' => $vehicule, 
-                    'error' => 'Offre de location invalide',
                     'title' => 'Créer une location'
                 ], 'main');
                 return;
@@ -62,19 +56,22 @@ class RentalController extends BaseController {
             $rental = Rental::create($data);
             if ($rental) {
                 $vehicule->setAvailable(false);
+                $vehicule->update();
+                $offer->setAvailable(false);
+                $offer->update();
                 $this->redirect('rentals', ['success' => 'Location créée avec succès']);
             } else {
                 $this->render('rentals/create', [
-                    'vehicule' => $vehicule, 
+                    'offer' => $offer,
+                    'vehicule' => $vehicule,
                     'error' => 'Erreur lors de la création de la location',
                     'title' => 'Créer une location'
                 ], 'main');
             }
         } else {
-            $offers = RentalOffer::findActiveByVehiculeType($vehicule->getTypeId());
             $this->render('rentals/create', [
-                'vehicule' => $vehicule, 
-                'offers' => $offers,
+                'offer' => $offer,
+                'vehicule' => $vehicule,
                 'title' => 'Créer une location'
             ], 'main');
         }
@@ -104,6 +101,10 @@ class RentalController extends BaseController {
             $rental->update(['status' => 'Terminée']);
             $vehicule = Vehicule::findById($rental->getVehiculeId());
             $vehicule->setAvailable(true);
+            $vehicule->update();
+            $offer = RentalOffer::findById($rental->getOfferId());
+            $offer->setAvailable(true);
+            $offer->update();
             
             $invoice = $this->generateInvoice($rental);
             $this->redirect('rentals', ['success' => 'Véhicule retourné avec succès. Facture n°' . $invoice->getId() . ' générée.']);
