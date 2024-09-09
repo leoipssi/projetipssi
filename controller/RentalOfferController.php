@@ -1,4 +1,5 @@
 <?php
+
 class RentalOfferController extends BaseController {
     public function __construct() {
         parent::__construct();
@@ -13,6 +14,12 @@ class RentalOfferController extends BaseController {
     public function create() {
         if ($this->isPost()) {
             $data = $this->getPostData();
+            $data['duration'] = 7; // Durée fixée à 7 jours
+            $vehicle = Vehicle::findById($data['vehicle_id']);
+            if (!$vehicle) {
+                $this->render('rental_offers/create', ['error' => 'Véhicule non trouvé']);
+                return;
+            }
             $offer = RentalOffer::create($data);
             if ($offer) {
                 $this->redirect('rental_offers', ['success' => 'Offre créée avec succès']);
@@ -20,8 +27,8 @@ class RentalOfferController extends BaseController {
                 $this->render('rental_offers/create', ['error' => 'Erreur lors de la création de l\'offre']);
             }
         } else {
-            $vehicleTypes = VehicleType::findAll();
-            $this->render('rental_offers/create', ['vehicleTypes' => $vehicleTypes]);
+            $vehicles = Vehicle::findAll();
+            $this->render('rental_offers/create', ['vehicles' => $vehicles]);
         }
     }
 
@@ -31,17 +38,17 @@ class RentalOfferController extends BaseController {
             $this->renderError(404);
             return;
         }
-
         if ($this->isPost()) {
             $data = $this->getPostData();
+            $data['duration'] = 7; // Assurez-vous que la durée reste 7 jours
             if ($offer->update($data)) {
                 $this->redirect('rental_offers', ['success' => 'Offre mise à jour avec succès']);
             } else {
                 $this->render('rental_offers/edit', ['offer' => $offer, 'error' => 'Erreur lors de la mise à jour de l\'offre']);
             }
         } else {
-            $vehicleTypes = VehicleType::findAll();
-            $this->render('rental_offers/edit', ['offer' => $offer, 'vehicleTypes' => $vehicleTypes]);
+            $vehicles = Vehicle::findAll();
+            $this->render('rental_offers/edit', ['offer' => $offer, 'vehicles' => $vehicles]);
         }
     }
 
@@ -65,6 +72,57 @@ class RentalOfferController extends BaseController {
             $this->redirect('rental_offers', ['success' => 'Statut de l\'offre mis à jour']);
         } else {
             $this->renderError(404);
+        }
+    }
+
+    public function hide($id) {
+        $offer = RentalOffer::findById($id);
+        if ($offer) {
+            $offer->hide();
+            $this->redirect('rental_offers', ['success' => 'Offre masquée avec succès']);
+        } else {
+            $this->renderError(404);
+        }
+    }
+
+    public function listAvailable() {
+        $availableOffers = RentalOffer::findAvailable();
+        $this->render('rental_offers/available', ['offers' => $availableOffers]);
+    }
+
+    public function checkAvailability($id) {
+        $offer = RentalOffer::findById($id);
+        if ($offer) {
+            $isAvailable = $offer->isAvailable();
+            $this->render('rental_offers/availability', ['offer' => $offer, 'isAvailable' => $isAvailable]);
+        } else {
+            $this->renderError(404);
+        }
+    }
+
+    public function listRentedVehicles() {
+        $rentedVehicles = Vehicle::findRented();
+        $this->render('rental_offers/rented_vehicles', ['vehicles' => $rentedVehicles]);
+    }
+
+    public function subscribe($id) {
+        $offer = RentalOffer::findById($id);
+        if (!$offer) {
+            $this->renderError(404);
+            return;
+        }
+        if ($this->isPost()) {
+            $data = $this->getPostData();
+            $data['offer_id'] = $id;
+            $data['duration'] = 7; // Durée fixée à 7 jours
+            $rental = Rental::create($data);
+            if ($rental) {
+                $this->redirect('rentals', ['success' => 'Contrat de location souscrit avec succès']);
+            } else {
+                $this->render('rental_offers/subscribe', ['offer' => $offer, 'error' => 'Erreur lors de la souscription du contrat']);
+            }
+        } else {
+            $this->render('rental_offers/subscribe', ['offer' => $offer]);
         }
     }
 }
