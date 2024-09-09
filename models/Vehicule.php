@@ -117,7 +117,20 @@ class Vehicule {
         $stmt = $conn->query("SELECT * FROM vehicules");
         $vehicules = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat'], $row['categorie'], $row['tarif_journalier']);
+            $vehicules[] = new Vehicule(
+                $row['id'],
+                $row['type_id'],
+                $row['marque'],
+                $row['modele'],
+                $row['numero_serie'],
+                $row['couleur'],
+                $row['immatriculation'],
+                $row['kilometres'],
+                $row['date_achat'],
+                $row['prix_achat'],
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null
+            );
         }
         return $vehicules;
     }
@@ -134,7 +147,20 @@ class Vehicule {
         $stmt->execute([$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if ($row) {
-            return new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat'], $row['categorie'], $row['tarif_journalier']);
+            return new Vehicule(
+                $row['id'],
+                $row['type_id'],
+                $row['marque'],
+                $row['modele'],
+                $row['numero_serie'],
+                $row['couleur'],
+                $row['immatriculation'],
+                $row['kilometres'],
+                $row['date_achat'],
+                $row['prix_achat'],
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null
+            );
         }
         return null;
     }
@@ -154,7 +180,20 @@ class Vehicule {
         $stmt->execute();
         $vehicules = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicules[] = new Vehicule($row['id'], $row['type_id'], $row['marque'], $row['modele'], $row['numero_serie'], $row['couleur'], $row['immatriculation'], $row['kilometres'], $row['date_achat'], $row['prix_achat'], $row['categorie'], $row['tarif_journalier']);
+            $vehicules[] = new Vehicule(
+                $row['id'],
+                $row['type_id'],
+                $row['marque'],
+                $row['modele'],
+                $row['numero_serie'],
+                $row['couleur'],
+                $row['immatriculation'],
+                $row['kilometres'],
+                $row['date_achat'],
+                $row['prix_achat'],
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null
+            );
         }
         return $vehicules;
     }
