@@ -116,7 +116,7 @@ class AdminController extends BaseController {
         }
     }
 
-   public function createOffer() {
+public function createOffer() {
     $this->logger->info("Accès au formulaire de création d'offre");
     try {
         $this->testDatabaseConnection();
@@ -128,6 +128,8 @@ class AdminController extends BaseController {
             $this->logger->debug("Tentative de création d'une nouvelle offre");
             $offerData = $this->sanitizeUserData($_POST);
             $offerData['duree'] = 7; // Durée fixée à 7 jours
+            $offerData['is_active'] = 1;
+            $offerData['is_available'] = 1;
             
             $this->logger->debug("Données de l'offre reçues", $offerData);
             
@@ -139,7 +141,7 @@ class AdminController extends BaseController {
                     if ($offer) {
                         $this->logger->info("Nouvelle offre créée avec succès", ['offerId' => $offer->getId()]);
                         $this->redirect('admin', ['action' => 'dashboard', 'success' => 'Offre créée avec succès']);
-                        return; // Arrêter l'exécution après la redirection
+                        return;
                     } else {
                         $this->logger->error("Échec de la création de l'offre : aucun objet retourné");
                         $errors[] = "Erreur lors de la création de l'offre.";
