@@ -2,8 +2,12 @@
 // Ensure $totalPages and $currentPage are set
 $totalPages = $totalPages ?? 1;
 $currentPage = $currentPage ?? 1;
-?>
 
+// Helper function to safely handle potentially null values
+function safeHtmlSpecialChars($str) {
+    return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -17,19 +21,25 @@ $currentPage = $currentPage ?? 1;
     <div class="container">
         <h1 class="text-center mb-4">Nos Véhicules Électriques</h1>
         <div class="row">
-            <?php foreach ($vehicules as $vehicule): ?>
-                <div class="col-md-4 mb-4">
-                    <div class="card h-100">
-                        <img src="<?= BASE_URL ?>/public/images/vehicules/<?= $vehicule->getId() ?>.jpg" class="card-img-top" alt="<?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>">
-                        <div class="card-body">
-                            <h5 class="card-title"><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h5>
-                            <p class="card-text">Type: <?= htmlspecialchars($vehicule->getType()) ?></p>
-                            <p class="card-text">Catégorie: <?= htmlspecialchars($vehicule->getCategorie()) ?></p>
-                            <a href="index.php?route=vehicules&action=show&id=<?= $vehicule->getId() ?>" class="btn btn-primary">Voir détails</a>
+            <?php if (isset($vehicules) && is_array($vehicules) && !empty($vehicules)): ?>
+                <?php foreach ($vehicules as $vehicule): ?>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100">
+                            <img src="<?= BASE_URL ?>/public/images/vehicules/<?= $vehicule->getId() ?>.jpg" class="card-img-top" alt="<?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>">
+                            <div class="card-body">
+                                <h5 class="card-title"><?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h5>
+                                <p class="card-text">Type: <?= safeHtmlSpecialChars($vehicule->getType()) ?></p>
+                                <p class="card-text">Catégorie: <?= safeHtmlSpecialChars($vehicule->getCategorie()) ?></p>
+                                <a href="index.php?route=vehicules&action=show&id=<?= $vehicule->getId() ?>" class="btn btn-primary">Voir détails</a>
+                            </div>
                         </div>
                     </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="col-12">
+                    <p class="text-center">Aucun véhicule disponible pour le moment.</p>
                 </div>
-            <?php endforeach; ?>
+            <?php endif; ?>
         </div>
         <?php if ($totalPages > 1): ?>
             <nav aria-label="Page navigation">
@@ -43,7 +53,6 @@ $currentPage = $currentPage ?? 1;
             </nav>
         <?php endif; ?>
     </div>
-
     <script src="<?= BASE_URL ?>/public/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
