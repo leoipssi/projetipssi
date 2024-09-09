@@ -65,11 +65,11 @@ class RentalOffer {
         global $conn;
         $stmt = $conn->prepare("UPDATE location_offers SET vehicule_type_id = ?, duree = ?, kilometres = ?, prix = ?, is_active = ? WHERE id = ?");
         $stmt->execute([
-            $data['vehicule_type_id'],
-            $data['duree'],
-            $data['kilometres'],
-            $data['prix'],
-            $data['is_active'],
+            $data['vehicule_type_id'] ?? $this->vehicule_type_id,
+            $data['duree'] ?? $this->duree,
+            $data['kilometres'] ?? $this->kilometres,
+            $data['prix'] ?? $this->prix,
+            $data['is_active'] ?? $this->is_active,
             $this->id
         ]);
         return $stmt->rowCount() > 0;
@@ -83,5 +83,19 @@ class RentalOffer {
             $offers[] = new RentalOffer($row['id'], $row['vehicule_type_id'], $row['duree'], $row['kilometres'], $row['prix'], $row['is_active']);
         }
         return $offers;
+    }
+
+    public function delete() {
+        global $conn;
+        $stmt = $conn->prepare("DELETE FROM location_offers WHERE id = ?");
+        $stmt->execute([$this->id]);
+        return $stmt->rowCount() > 0;
+    }
+
+    public function hasActiveRentals() {
+        global $conn;
+        $stmt = $conn->prepare("SELECT COUNT(*) FROM rentals WHERE offer_id = ? AND status = 'active'");
+        $stmt->execute([$this->id]);
+        return $stmt->fetchColumn() > 0;
     }
 }
