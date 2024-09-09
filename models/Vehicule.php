@@ -13,7 +13,7 @@ class Vehicule {
     private $categorie;
     private $tarif_journalier;
 
-    public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie, $tarif_journalier) {
+    public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie = null, $tarif_journalier = null) {
         $this->id = $id;
         $this->type_id = $type_id;
         $this->marque = $marque;
@@ -144,8 +144,8 @@ class Vehicule {
                 $row['kilometres'],
                 $row['date_achat'],
                 $row['prix_achat'],
-                $row['categorie'],
-                $row['tarif_journalier']
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null
             );
         }
         return $vehicules;
@@ -172,8 +172,8 @@ class Vehicule {
                 $row['kilometres'],
                 $row['date_achat'],
                 $row['prix_achat'],
-                $row['categorie'],
-                $row['tarif_journalier']
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null
             );
         }
         return null;
@@ -203,8 +203,8 @@ class Vehicule {
                 $row['kilometres'],
                 $row['date_achat'],
                 $row['prix_achat'],
-                $row['categorie'],
-                $row['tarif_journalier']
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null
             );
         }
         return $vehicules;
@@ -245,8 +245,8 @@ class Vehicule {
                 $row['kilometres'],
                 $row['date_achat'],
                 $row['prix_achat'],
-                $row['categorie'],
-                $row['tarif_journalier']
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null
             );
         }
         return $vehicules;
