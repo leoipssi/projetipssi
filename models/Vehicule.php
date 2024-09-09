@@ -10,7 +10,7 @@ class Vehicule {
     private $kilometres;
     private $date_achat;
     private $prix_achat;
-    private $categorie; // 'scooter' ou 'voiture'
+    private $categorie;
     private $tarif_journalier;
 
     public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie, $tarif_journalier) {
@@ -54,7 +54,6 @@ class Vehicule {
         return $this->tarif_journalier * $duree;
     }
 
-    // Méthode pour créer un nouveau véhicule
     public static function create($data) {
         global $conn;
         $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat, categorie, tarif_journalier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
@@ -90,7 +89,6 @@ class Vehicule {
         return null;
     }
 
-    // Méthode pour mettre à jour un véhicule existant
     public function update($data) {
         global $conn;
         $stmt = $conn->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ?, categorie = ?, tarif_journalier = ? WHERE id = ?");
@@ -111,7 +109,6 @@ class Vehicule {
         return $stmt->rowCount() > 0;
     }
 
-    // Méthode pour récupérer tous les véhicules
     public static function findAll() {
         global $conn;
         $stmt = $conn->query("SELECT * FROM vehicules");
@@ -128,19 +125,17 @@ class Vehicule {
                 $row['kilometres'],
                 $row['date_achat'],
                 $row['prix_achat'],
-                $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null
+                $row['categorie'],
+                $row['tarif_journalier']
             );
         }
         return $vehicules;
     }
 
-    // Méthode statique pour obtenir tous les véhicules
     public static function getAll() {
         return self::findAll();
     }
 
-    // Méthode pour trouver un véhicule par son ID
     public static function findById($id) {
         global $conn;
         $stmt = $conn->prepare("SELECT * FROM vehicules WHERE id = ?");
@@ -158,21 +153,19 @@ class Vehicule {
                 $row['kilometres'],
                 $row['date_achat'],
                 $row['prix_achat'],
-                $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null
+                $row['categorie'],
+                $row['tarif_journalier']
             );
         }
         return null;
     }
 
-    // Méthode pour compter le nombre total de véhicules
     public static function count() {
         global $conn;
         $stmt = $conn->query("SELECT COUNT(*) FROM vehicules");
         return $stmt->fetchColumn();
     }
 
-    // Méthode pour obtenir les véhicules les plus récents
     public static function getRecentVehicules($limit = 5) {
         global $conn;
         $stmt = $conn->prepare("SELECT * FROM vehicules ORDER BY date_achat DESC LIMIT :limit");
@@ -191,14 +184,13 @@ class Vehicule {
                 $row['kilometres'],
                 $row['date_achat'],
                 $row['prix_achat'],
-                $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null
+                $row['categorie'],
+                $row['tarif_journalier']
             );
         }
         return $vehicules;
     }
 
-    // Méthode pour obtenir les véhicules les plus loués
     public static function getTopRented($limit = 5) {
         global $conn;
         $stmt = $conn->prepare("
@@ -212,5 +204,32 @@ class Vehicule {
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function findAvailableByType($typeId) {
+        global $conn;
+        $rentedVehicules = Rental::getRentedVehicules();
+        $placeholders = implode(',', array_fill(0, count($rentedVehicules), '?'));
+        $sql = "SELECT * FROM vehicules WHERE type_id = ? AND id NOT IN ($placeholders)";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute(array_merge([$typeId], $rentedVehicules));
+        $vehicules = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $vehicules[] = new Vehicule(
+                $row['id'],
+                $row['type_id'],
+                $row['marque'],
+                $row['modele'],
+                $row['numero_serie'],
+                $row['couleur'],
+                $row['immatriculation'],
+                $row['kilometres'],
+                $row['date_achat'],
+                $row['prix_achat'],
+                $row['categorie'],
+                $row['tarif_journalier']
+            );
+        }
+        return $vehicules;
     }
 }
