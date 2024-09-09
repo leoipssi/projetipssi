@@ -27,7 +27,7 @@ class RentalOfferController extends BaseController {
                 $this->render('rental_offers/create', ['error' => 'Erreur lors de la création de l\'offre']);
             }
         } else {
-            $vehicules = Vehicule::findAll();
+            $vehicules = Vehicule::findAvailable();
             $this->render('rental_offers/create', ['vehicules' => $vehicules]);
         }
     }
@@ -94,7 +94,12 @@ class RentalOfferController extends BaseController {
         $offer = RentalOffer::findById($id);
         if ($offer) {
             $isAvailable = $offer->isAvailable();
-            $this->render('rental_offers/availability', ['offer' => $offer, 'isAvailable' => $isAvailable]);
+            $vehicule = Vehicule::findById($offer->getVehiculeId());
+            $this->render('rental_offers/availability', [
+                'offer' => $offer,
+                'isAvailable' => $isAvailable,
+                'vehicule' => $vehicule
+            ]);
         } else {
             $this->renderError(404);
         }
