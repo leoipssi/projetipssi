@@ -59,7 +59,6 @@ function safeHtmlSpecialChars($str) {
             <div class="col-md-6">
                 <h1><?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h1>
                 <p class="lead">Type: <?= safeHtmlSpecialChars($vehicule->getType()) ?></p>
-                <p>Catégorie: <?= safeHtmlSpecialChars($vehicule->getCategorie()) ?></p>
                 <p>Couleur: <?= safeHtmlSpecialChars($vehicule->getCouleur()) ?></p>
                 <p>Immatriculation: <?= safeHtmlSpecialChars($vehicule->getImmatriculation()) ?></p>
                 <p>Kilométrage: <?= safeHtmlSpecialChars($vehicule->getKilometres()) ?> km</p>
