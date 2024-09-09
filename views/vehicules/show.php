@@ -16,12 +16,45 @@ function safeHtmlSpecialChars($str) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?> - E-Motion</title>
     <link rel="stylesheet" href="<?= BASE_URL ?>/public/css/style.css">
+    <style>
+        .vehicle-image-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .vehicle-image {
+            width: 100%;
+            height: auto;
+            cursor: zoom-in;
+        }
+        .zoomed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .zoomed img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            cursor: zoom-out;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="row">
             <div class="col-md-6">
-                <img src="<?= BASE_URL ?>/public/images/vehicules/<?= $vehicule->getId() ?>.png" class="img-fluid rounded" alt="<?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>">
+                <div class="vehicle-image-container">
+                    <img src="<?= BASE_URL ?>/public/images/vehicules/<?= $vehicule->getId() ?>.png" class="vehicle-image" alt="<?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>" onclick="zoomImage(this)">
+                </div>
             </div>
             <div class="col-md-6">
                 <h1><?= safeHtmlSpecialChars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h1>
@@ -64,5 +97,14 @@ function safeHtmlSpecialChars($str) {
         </div>
     </div>
     <script src="<?= BASE_URL ?>/public/js/script.js"></script>
+    <script>
+        function zoomImage(img) {
+            const zoomed = document.createElement('div');
+            zoomed.className = 'zoomed';
+            zoomed.innerHTML = `<img src="${img.src}" alt="${img.alt}">`;
+            zoomed.onclick = () => zoomed.remove();
+            document.body.appendChild(zoomed);
+        }
+    </script>
 </body>
 </html>
