@@ -51,7 +51,7 @@ class Vehicule {
 
     public function getType() {
         global $conn;
-        $stmt = $conn->prepare("SELECT nom FROM vehicle_types WHERE id = ?");
+        $stmt = $conn->prepare("SELECT nom FROM vehicule_types WHERE id = ?");
         $stmt->execute([$this->type_id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
         return $result ? $result['nom'] : 'Type inconnu';
