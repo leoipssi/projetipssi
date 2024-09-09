@@ -56,6 +56,25 @@ class Vehicule {
 
     public static function create($data) {
         global $conn;
+        
+        // Définir des valeurs par défaut pour tous les champs
+        $defaultData = [
+            'type_id' => null,
+            'marque' => '',
+            'modele' => '',
+            'numero_serie' => '',
+            'couleur' => '',
+            'immatriculation' => '',
+            'kilometres' => 0,
+            'date_achat' => date('Y-m-d'), // Date actuelle par défaut
+            'prix_achat' => 0,
+            'categorie' => null,
+            'tarif_journalier' => null
+        ];
+        
+        // Fusionner les données fournies avec les valeurs par défaut
+        $data = array_merge($defaultData, $data);
+
         $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat, categorie, tarif_journalier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['type_id'],
@@ -67,8 +86,8 @@ class Vehicule {
             $data['kilometres'],
             $data['date_achat'],
             $data['prix_achat'],
-            $data['categorie'] ?? null,
-            $data['tarif_journalier'] ?? null
+            $data['categorie'],
+            $data['tarif_journalier']
         ]);
         if ($stmt->rowCount() > 0) {
             return new Vehicule(
@@ -82,8 +101,8 @@ class Vehicule {
                 $data['kilometres'],
                 $data['date_achat'],
                 $data['prix_achat'],
-                $data['categorie'] ?? null,
-                $data['tarif_journalier'] ?? null
+                $data['categorie'],
+                $data['tarif_journalier']
             );
         }
         return null;
@@ -93,15 +112,15 @@ class Vehicule {
         global $conn;
         $stmt = $conn->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ?, categorie = ?, tarif_journalier = ? WHERE id = ?");
         $stmt->execute([
-            $data['type_id'],
-            $data['marque'],
-            $data['modele'],
-            $data['numero_serie'],
-            $data['couleur'],
-            $data['immatriculation'],
-            $data['kilometres'],
-            $data['date_achat'],
-            $data['prix_achat'],
+            $data['type_id'] ?? $this->type_id,
+            $data['marque'] ?? $this->marque,
+            $data['modele'] ?? $this->modele,
+            $data['numero_serie'] ?? $this->numero_serie,
+            $data['couleur'] ?? $this->couleur,
+            $data['immatriculation'] ?? $this->immatriculation,
+            $data['kilometres'] ?? $this->kilometres,
+            $data['date_achat'] ?? $this->date_achat,
+            $data['prix_achat'] ?? $this->prix_achat,
             $data['categorie'] ?? $this->categorie,
             $data['tarif_journalier'] ?? $this->tarif_journalier,
             $this->id
