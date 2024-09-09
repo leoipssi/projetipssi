@@ -33,21 +33,32 @@ class RentalOffer {
 
     public static function create($data) {
         global $conn;
-        $sql = "INSERT INTO rental_offers (vehicule_id, duree, kilometres, prix, description) VALUES (?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO location_offers (vehicule_id, duree, kilometres, prix, is_active, is_available) 
+                VALUES (?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
         $stmt->execute([
             $data['vehicule_id'],
             $data['duree'],
             $data['kilometres'],
             $data['prix'],
-            $data['description'] ?? ''
+            $data['is_active'] ?? 1,
+            $data['is_available'] ?? 1
         ]);
         
         if ($stmt->rowCount() > 0) {
             $id = $conn->lastInsertId();
-            return new self($id, $data['vehicule_id'], $data['duree'], $data['kilometres'], $data['prix'], $data['description'] ?? '');
+            return new self($id, $data['vehicule_id'], $data['duree'], $data['kilometres'], $data['prix'], 
+                            $data['is_active'] ?? 1, $data['is_available'] ?? 1);
         }
         return null;
+    }
+
+    public static function getOffersForVehicle($vehiculeId) {
+        global $conn;
+        $sql = "SELECT * FROM location_offers WHERE vehicule_id = ? ORDER BY id DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute([$vehiculeId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     public static function findAll() {
