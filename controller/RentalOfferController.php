@@ -15,8 +15,8 @@ class RentalOfferController extends BaseController {
         if ($this->isPost()) {
             $data = $this->getPostData();
             $data['duration'] = 7; // Durée fixée à 7 jours
-            $vehicle = Vehicle::findById($data['vehicle_id']);
-            if (!$vehicle) {
+            $vehicule = Vehicule::findById($data['vehicule_id']);
+            if (!$vehicule) {
                 $this->render('rental_offers/create', ['error' => 'Véhicule non trouvé']);
                 return;
             }
@@ -27,8 +27,8 @@ class RentalOfferController extends BaseController {
                 $this->render('rental_offers/create', ['error' => 'Erreur lors de la création de l\'offre']);
             }
         } else {
-            $vehicles = Vehicle::findAll();
-            $this->render('rental_offers/create', ['vehicles' => $vehicles]);
+            $vehicules = Vehicule::findAll();
+            $this->render('rental_offers/create', ['vehicules' => $vehicules]);
         }
     }
 
@@ -47,8 +47,8 @@ class RentalOfferController extends BaseController {
                 $this->render('rental_offers/edit', ['offer' => $offer, 'error' => 'Erreur lors de la mise à jour de l\'offre']);
             }
         } else {
-            $vehicles = Vehicle::findAll();
-            $this->render('rental_offers/edit', ['offer' => $offer, 'vehicles' => $vehicles]);
+            $vehicules = Vehicule::findAll();
+            $this->render('rental_offers/edit', ['offer' => $offer, 'vehicules' => $vehicules]);
         }
     }
 
@@ -100,9 +100,9 @@ class RentalOfferController extends BaseController {
         }
     }
 
-    public function listRentedVehicles() {
-        $rentedVehicles = Vehicle::findRented();
-        $this->render('rental_offers/rented_vehicles', ['vehicles' => $rentedVehicles]);
+    public function listRentedVehicules() {
+        $rentedVehicules = Vehicule::findRented();
+        $this->render('rental_offers/rented_vehicules', ['vehicules' => $rentedVehicules]);
     }
 
     public function subscribe($id) {
