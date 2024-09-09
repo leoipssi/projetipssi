@@ -2,6 +2,9 @@
 if (!$this->isAdmin()) {
     $this->redirect('home');
 }
+
+// Assurez-vous d'avoir récupéré la liste des véhicules disponibles
+$vehicules = $this->getVehicules(); // Méthode à implémenter pour récupérer les véhicules de la base de données
 ?>
 <h1>Créer une nouvelle offre de location</h1>
 <?php if (isset($error)): ?>
@@ -9,12 +12,12 @@ if (!$this->isAdmin()) {
 <?php endif; ?>
 <form action="<?= $this->url('admin', ['action' => 'createOffer']) ?>" method="post">
     <div class="form-group">
-        <label for="vehicule">Véhicule:</label>
+        <label for="vehicule">Sélectionner un véhicule:</label>
         <select id="vehicule" name="vehicule_id" required class="form-control">
-            <option value="">Sélectionnez un véhicule</option>
+            <option value="">Choisissez un véhicule</option>
             <?php foreach ($vehicules as $vehicule): ?>
                 <option value="<?= $vehicule->getId() ?>">
-                    <?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele() . ' (' . $vehicule->getImmatriculation() . ')') ?>
+                    <?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele() . ' - ' . $vehicule->getImmatriculation()) ?>
                 </option>
             <?php endforeach; ?>
         </select>
