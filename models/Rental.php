@@ -211,12 +211,26 @@ class Rental {
         return ceil($total / $perPage);
     }
 
-    // Méthodes supplémentaires pour obtenir le nom du client et du véhicule
     public function getClientName() {
         return $this->client_name ?? '';
     }
 
     public function getVehiculeName() {
         return $this->vehicule_name ?? '';
+    }
+
+    public static function getRentedVehicules() {
+        global $conn;
+        $stmt = $conn->prepare("SELECT DISTINCT vehicule_id FROM rentals WHERE status = 'active'");
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    public function cancel() {
+        if ($this->status === 'active') {
+            $this->status = 'cancelled';
+            return $this->update(['status' => 'cancelled']);
+        }
+        return false;
     }
 }
