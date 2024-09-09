@@ -94,7 +94,7 @@ class RentalController extends BaseController {
         }
     }
 
-    public function returnVehicle($id) {
+    public function returnVehicule($id) {
         $this->requireLogin();
         $rental = Rental::findById($id);
         if ($rental && $rental->getClientId() == $this->getCurrentUser()->getId() && $rental->getStatus() == 'En cours') {
