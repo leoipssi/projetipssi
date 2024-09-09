@@ -9,12 +9,24 @@ if (!$this->isAdmin()) {
 <?php endif; ?>
 <form action="<?= $this->url('admin', ['action' => 'createOffer']) ?>" method="post">
     <div class="form-group">
-        <label for="vehicule">Véhicule:</label>
-        <select id="vehicule" name="vehicule_id" required class="form-control">
-            <?php foreach ($vehicules as $vehicule): ?>
-                <option value="<?= $vehicule->getId() ?>"><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele() . ' (' . $vehicule->getImmatriculation() . ')') ?></option>
+        <label for="vehicule_type">Type de véhicule:</label>
+        <select id="vehicule_type" name="vehicule_id" required class="form-control">
+            <?php foreach ($vehiculeTypes as $type): ?>
+                <option value="<?= $type->getId() ?>"><?= htmlspecialchars($type->getNom()) ?></option>
             <?php endforeach; ?>
         </select>
+    </div>
+    <div class="form-group">
+        <label for="marque">Marque:</label>
+        <input type="text" id="marque" name="marque" required class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="modele">Modèle:</label>
+        <input type="text" id="modele" name="modele" required class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="immatriculation">Immatriculation:</label>
+        <input type="text" id="immatriculation" name="immatriculation" required class="form-control">
     </div>
     <div class="form-group">
         <label for="duree">Durée:</label>
