@@ -68,11 +68,24 @@ class Vehicule {
             $data['kilometres'],
             $data['date_achat'],
             $data['prix_achat'],
-            $data['categorie'] ?? null, // Vérification pour éviter l'erreur
-            $data['tarif_journalier'] ?? null // Vérification pour éviter l'erreur
+            $data['categorie'] ?? null,
+            $data['tarif_journalier'] ?? null
         ]);
         if ($stmt->rowCount() > 0) {
-            return new Vehicule($conn->lastInsertId(), $data['type_id'], $data['marque'], $data['modele'], $data['numero_serie'], $data['couleur'], $data['immatriculation'], $data['kilometres'], $data['date_achat'], $data['prix_achat'], $data['categorie'] ?? null, $data['tarif_journalier'] ?? null);
+            return new Vehicule(
+                $conn->lastInsertId(),
+                $data['type_id'],
+                $data['marque'],
+                $data['modele'],
+                $data['numero_serie'],
+                $data['couleur'],
+                $data['immatriculation'],
+                $data['kilometres'],
+                $data['date_achat'],
+                $data['prix_achat'],
+                $data['categorie'] ?? null,
+                $data['tarif_journalier'] ?? null
+            );
         }
         return null;
     }
@@ -91,8 +104,8 @@ class Vehicule {
             $data['kilometres'],
             $data['date_achat'],
             $data['prix_achat'],
-            $data['categorie'] ?? $this->categorie, // Utilise la valeur existante si null
-            $data['tarif_journalier'] ?? $this->tarif_journalier, // Utilise la valeur existante si null
+            $data['categorie'] ?? $this->categorie,
+            $data['tarif_journalier'] ?? $this->tarif_journalier,
             $this->id
         ]);
         return $stmt->rowCount() > 0;
