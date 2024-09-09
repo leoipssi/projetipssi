@@ -9,11 +9,10 @@ class Vehicule {
     private $immatriculation;
     private $kilometres;
     private $date_achat;
-    private $prix_achat;
     private $categorie; // 'scooter' ou 'voiture'
     private $tarif_journalier;
 
-    public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie, $tarif_journalier) {
+    public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $categorie, $tarif_journalier) {
         $this->id = $id;
         $this->type_id = $type_id;
         $this->marque = $marque;
@@ -23,7 +22,6 @@ class Vehicule {
         $this->immatriculation = $immatriculation;
         $this->kilometres = $kilometres;
         $this->date_achat = $date_achat;
-        $this->prix_achat = $prix_achat;
         $this->categorie = $categorie;
         $this->tarif_journalier = $tarif_journalier;
     }
@@ -38,7 +36,6 @@ class Vehicule {
     public function getImmatriculation() { return $this->immatriculation; }
     public function getKilometres() { return $this->kilometres; }
     public function getDateAchat() { return $this->date_achat; }
-    public function getPrixAchat() { return $this->prix_achat; }
     public function getCategorie() { return $this->categorie; }
     public function getTarifJournalier() { return $this->tarif_journalier; }
 
@@ -57,7 +54,7 @@ class Vehicule {
     // Méthode pour créer un nouveau véhicule
     public static function create($data) {
         global $conn;
-        $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat, categorie, tarif_journalier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, categorie, tarif_journalier) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
             $data['type_id'],
             $data['marque'],
@@ -67,7 +64,6 @@ class Vehicule {
             $data['immatriculation'],
             $data['kilometres'],
             $data['date_achat'],
-            $data['prix_achat'],
             $data['categorie'] ?? null,
             $data['tarif_journalier'] ?? null
         ]);
@@ -82,7 +78,6 @@ class Vehicule {
                 $data['immatriculation'],
                 $data['kilometres'],
                 $data['date_achat'],
-                $data['prix_achat'],
                 $data['categorie'] ?? null,
                 $data['tarif_journalier'] ?? null
             );
@@ -93,7 +88,7 @@ class Vehicule {
     // Méthode pour mettre à jour un véhicule existant
     public function update($data) {
         global $conn;
-        $stmt = $conn->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ?, categorie = ?, tarif_journalier = ? WHERE id = ?");
+        $stmt = $conn->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, categorie = ?, tarif_journalier = ? WHERE id = ?");
         $stmt->execute([
             $data['type_id'],
             $data['marque'],
@@ -103,7 +98,6 @@ class Vehicule {
             $data['immatriculation'],
             $data['kilometres'],
             $data['date_achat'],
-            $data['prix_achat'],
             $data['categorie'] ?? $this->categorie,
             $data['tarif_journalier'] ?? $this->tarif_journalier,
             $this->id
@@ -127,7 +121,6 @@ class Vehicule {
                 $row['immatriculation'],
                 $row['kilometres'],
                 $row['date_achat'],
-                $row['prix_achat'],
                 $row['categorie'] ?? null,
                 $row['tarif_journalier'] ?? null
             );
@@ -157,7 +150,6 @@ class Vehicule {
                 $row['immatriculation'],
                 $row['kilometres'],
                 $row['date_achat'],
-                $row['prix_achat'],
                 $row['categorie'] ?? null,
                 $row['tarif_journalier'] ?? null
             );
@@ -190,7 +182,6 @@ class Vehicule {
                 $row['immatriculation'],
                 $row['kilometres'],
                 $row['date_achat'],
-                $row['prix_achat'],
                 $row['categorie'] ?? null,
                 $row['tarif_journalier'] ?? null
             );
