@@ -2,14 +2,18 @@
 if (!$this->isAdmin()) {
     $this->redirect('home');
 }
-
-// Assurez-vous d'avoir récupéré la liste des véhicules disponibles
-$vehicules = $this->getVehicules(); // Méthode à implémenter pour récupérer les véhicules de la base de données
 ?>
 <h1>Créer une nouvelle offre de location</h1>
-<?php if (isset($error)): ?>
-    <div class="alert alert-danger"><?= $error ?></div>
+<?php if (!empty($errors)): ?>
+    <div class="alert alert-danger">
+        <ul>
+            <?php foreach ($errors as $error): ?>
+                <li><?= htmlspecialchars($error) ?></li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
 <?php endif; ?>
+
 <form action="<?= $this->url('admin', ['action' => 'createOffer']) ?>" method="post">
     <div class="form-group">
         <label for="vehicule">Sélectionner un véhicule:</label>
@@ -17,7 +21,7 @@ $vehicules = $this->getVehicules(); // Méthode à implémenter pour récupérer
             <option value="">Choisissez un véhicule</option>
             <?php foreach ($vehicules as $vehicule): ?>
                 <option value="<?= $vehicule->getId() ?>">
-                    <?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele() . ' - ' . $vehicule->getImmatriculation()) ?>
+                    <?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele() . ' (' . $vehicule->getImmatriculation() . ')') ?>
                 </option>
             <?php endforeach; ?>
         </select>
@@ -41,27 +45,3 @@ $vehicules = $this->getVehicules(); // Méthode à implémenter pour récupérer
     <button type="submit" class="btn btn-primary">Créer l'offre</button>
 </form>
 <a href="<?= $this->url('admin', ['action' => 'dashboard']) ?>" class="btn btn-secondary">Retour au tableau de bord</a>
-<style>
-    .form-group {
-        margin-bottom: 15px;
-    }
-    .form-control {
-        width: 100%;
-        padding: 8px;
-        border: 1px solid #ddd;
-        border-radius: 4px;
-    }
-    .btn {
-        display: inline-block;
-        padding: 10px 15px;
-        background-color: #007bff;
-        color: white;
-        text-decoration: none;
-        border-radius: 5px;
-        border: none;
-        cursor: pointer;
-    }
-    .btn-secondary {
-        background-color: #6c757d;
-    }
-</style>
