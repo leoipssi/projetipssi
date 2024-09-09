@@ -116,54 +116,40 @@ class AdminController extends BaseController {
         }
     }
 
-   public function createOffer() {
-    $this->logger->info("Accès au formulaire de création d'offre");
-    try {
-        $this->testDatabaseConnection();
-        
-        $vehicules = Vehicule::findAvailable(); // Récupère tous les véhicules disponibles
-        $errors = [];
+    public function createOffer() {
+        $this->logger->info("Accès au formulaire de création d'offre");
+        try {
+            $this->testDatabaseConnection();
+            
+            $vehicules = Vehicule::findAvailable(); // Récupère tous les véhicules disponibles
+            $errors = [];
 
-        if ($this->isPost()) {
-            $this->logger->debug("Tentative de création d'une nouvelle offre");
-            $offerData = $this->sanitizeUserData($_POST);
-            $offerData['duree'] = 7; // Durée fixée à 7 jours
-            $errors = $this->validateOfferInput($offerData);
+            if ($this->isPost()) {
+                $this->logger->debug("Tentative de création d'une nouvelle offre");
+                $offerData = $this->sanitizeUserData($_POST);
+                $offerData['duree'] = 7; // Durée fixée à 7 jours
+                $errors = $this->validateOfferInput($offerData);
 
-            if (empty($errors)) {
-                $offer = RentalOffer::create($offerData);
-                if ($offer) {
-                    $this->logger->info("Nouvelle offre créée avec succès", ['offerId' => $offer->getId()]);
-                    $this->redirect('admin', ['action' => 'dashboard', 'success' => 'Offre créée avec succès']);
-                } else {
-                    $this->logger->error("Échec de la création de l'offre");
-                    $errors[] = "Erreur lors de la création de l'offre.";
+                if (empty($errors)) {
+                    $offer = RentalOffer::create($offerData);
+                    if ($offer) {
+                        $this->logger->info("Nouvelle offre créée avec succès", ['offerId' => $offer->getId()]);
+                        $this->redirect('admin', ['action' => 'dashboard', 'success' => 'Offre créée avec succès']);
+                    } else {
+                        $this->logger->error("Échec de la création de l'offre");
+                        $errors[] = "Erreur lors de la création de l'offre.";
+                    }
                 }
             }
+
+            $this->render('admin/createOffer', [
+                'vehicules' => $vehicules,
+                'errors' => $errors
+            ]);
+        } catch (Exception $e) {
+            $this->handleError($e, 'Erreur dans createOffer');
         }
-
-        $this->render('admin/createOffer', [
-            'vehicules' => $vehicules,
-            'errors' => $errors
-        ]);
-    } catch (Exception $e) {
-        $this->handleError($e, 'Erreur dans createOffer');
     }
-}
-
-private function validateOfferInput($data) {
-    $errors = [];
-    if (empty($data['vehicule_id'])) {
-        $errors[] = "Le véhicule est requis.";
-    }
-    if (empty($data['prix'])) {
-        $errors[] = "Le prix de l'offre est requis.";
-    }
-    if (!isset($data['kilometres'])) {
-        $errors[] = "Le kilométrage inclus est requis.";
-    }
-    return $errors;
-}
 
     public function users() {
         $this->redirect('admin', ['action' => 'manageUsers']);
@@ -268,11 +254,14 @@ private function validateOfferInput($data) {
 
     private function validateOfferInput($data) {
         $errors = [];
-        if (empty($data['titre'])) {
-            $errors[] = "Le titre de l'offre est requis.";
+        if (empty($data['vehicule_id'])) {
+            $errors[] = "Le véhicule est requis.";
         }
         if (empty($data['prix'])) {
             $errors[] = "Le prix de l'offre est requis.";
+        }
+        if (!isset($data['kilometres'])) {
+            $errors[] = "Le kilométrage inclus est requis.";
         }
         return $errors;
     }
