@@ -54,17 +54,14 @@ $logger = new \Monolog\Logger('app');
 $logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/app.log', \Monolog\Logger::DEBUG));
 
 // Vérification de la connexion à la base de données
-if (!function_exists('is_db_connected')) {
-    $logger->error("La fonction is_db_connected n'est pas définie. Vérifiez le fichier database.php.");
-    die("Erreur : La fonction de vérification de la base de données n'est pas définie.");
+try {
+    $db = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
+    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $logger->info("Connexion à la base de données établie avec succès.");
+} catch (PDOException $e) {
+    $logger->error("Erreur de connexion à la base de données : " . $e->getMessage());
+    die("Erreur : La connexion à la base de données n'a pas pu être établie. Vérifiez le fichier database.php et les logs pour plus de détails.");
 }
-
-if (!is_db_connected()) {
-    $logger->error("La connexion à la base de données n'est pas établie.");
-    die("Erreur : La connexion à la base de données n'est pas établie. Vérifiez le fichier database.php et les logs pour plus de détails.");
-}
-
-$logger->info("Connexion à la base de données vérifiée avec succès.");
 
 // Autoloader personnalisé
 spl_autoload_register(function($class) use ($logger) {
