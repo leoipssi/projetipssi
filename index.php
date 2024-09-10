@@ -28,7 +28,7 @@ custom_log('Session ID: ' . session_id());
 custom_log('Session Data: ' . json_encode($_SESSION));
 
 // Vérification des fichiers requis
-$required_files = ['config.php', 'helpers.php', 'vendor/autoload.php', 'Database.php'];
+$required_files = ['config.php', 'helpers.php', 'vendor/autoload.php', 'database.php'];
 foreach ($required_files as $file) {
     if (!file_exists($file)) {
         die("Fichier requis manquant: $file");
