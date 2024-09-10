@@ -9,6 +9,11 @@ function custom_log($message) {
     error_log(date('Y-m-d H:i:s') . ': ' . $message . "\n", 3, 'debug.log');
 }
 
+// Fonction de nettoyage des entrées
+function sanitize_input($input) {
+    return htmlspecialchars(strip_tags($input), ENT_QUOTES, 'UTF-8');
+}
+
 // Logging du démarrage du script
 custom_log("Script started");
 
@@ -19,7 +24,7 @@ ini_set('session.use_only_cookies', 1);
 ini_set('session.use_strict_mode', 1);
 ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', 1); // Uniquement si HTTPS est utilisé
-ini_set('session.cookie_samesite', 'Lax'); // Ajout de la protection SameSite
+ini_set('session.cookie_samesite', 'Lax');
 
 // Démarrage de la session
 session_start();
@@ -77,7 +82,7 @@ spl_autoload_register(function($class) use ($logger) {
 });
 
 // Détermine la route actuelle
-$route = filter_input(INPUT_GET, 'route', FILTER_SANITIZE_STRING) ?? 'home';
+$route = isset($_GET['route']) ? sanitize_input($_GET['route']) : 'home';
 
 // Créer une instance de AuthController
 $authController = new AuthController($logger);
@@ -105,7 +110,7 @@ try {
             break;
         case 'vehicles':
             $controller = new VehicleController($logger);
-            $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING) ?? 'index';
+            $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
             if (method_exists($controller, $action)) {
                 $controller->$action($_POST ?? null);
             } else {
@@ -121,7 +126,7 @@ try {
             }
             $logger->info("Accès à la page de locations autorisé.");
             $controller = new RentalController($logger);
-            $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING) ?? 'index';
+            $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
             if (method_exists($controller, $action)) {
                 $controller->$action($_POST ?? null);
             } else {
