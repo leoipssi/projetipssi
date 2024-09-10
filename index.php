@@ -45,13 +45,17 @@ if (!class_exists('\Monolog\Logger')) {
 $logger = new \Monolog\Logger('app');
 $logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/app.log', \Monolog\Logger::DEBUG));
 
-// Initialisation de la connexion à la base de données
+// Vérification de la connexion à la base de données
+if (!isset($db)) {
+    $logger->error("La variable de connexion à la base de données n'est pas définie.");
+    die("Erreur de connexion à la base de données : La variable de connexion n'est pas définie.");
+}
+
 try {
-    $db = Database::getInstance()->getConnection();
     $db->query("SELECT 1");
-    $logger->info("Connexion à la base de données établie avec succès.");
+    $logger->info("Connexion à la base de données vérifiée avec succès.");
 } catch (PDOException $e) {
-    $logger->error("Erreur lors de la connexion à la base de données : " . $e->getMessage());
+    $logger->error("Erreur lors de la vérification de la connexion à la base de données : " . $e->getMessage());
     die("Erreur de connexion à la base de données : " . $e->getMessage());
 }
 
