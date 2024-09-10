@@ -1,5 +1,5 @@
 <?php
-$host = 'localhost';
+$host = 'localhost'; // ou l'adresse de votre serveur de base de données
 $db   = 'e_motion';
 $user = 'emotion_user';
 $pass = 'IPSSI2024';
@@ -15,7 +15,7 @@ $options = [
 try {
     $db = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    // Ici, nous allons afficher l'erreur au lieu de la relancer
-    echo "Erreur de connexion : " . $e->getMessage();
-    exit;
+    // Ici, nous allons logger l'erreur au lieu de la relancer
+    error_log("Erreur de connexion PDO : " . $e->getMessage());
+    // Nous ne définissons pas $db en cas d'erreur
 }
