@@ -34,15 +34,21 @@ class BaseController {
         }
     }
 
-    protected function layout($layout, $data = []) {
-        extract($data);
-        include "emotion/layouts/{$layout}.php";
-    }
-
     protected function e($value) {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
     }
 
+    protected function url($route, $params = []) {
+        $url = BASE_URL . '/index.php?route=' . urlencode($route);
+        foreach ($params as $key => $value) {
+            $url .= '&' . urlencode($key) . '=' . urlencode($value);
+        }
+        return $url;
+    }
+
+    protected function isAdmin() {
+        return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Administrateur';
+    }
     protected function asset($path) {
         return '/assets/' . $path;
     }
