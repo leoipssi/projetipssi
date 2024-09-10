@@ -68,7 +68,7 @@ $logger->info("Connexion à la base de données vérifiée avec succès.");
 
 // Autoloader personnalisé
 spl_autoload_register(function($class) use ($logger) {
-    $directories = ['models', 'controllers'];
+    $directories = ['models', 'controlleur'];
     foreach ($directories as $directory) {
         $file = $directory . '/' . $class . '.php';
         if (file_exists($file)) {
