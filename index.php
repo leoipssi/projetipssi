@@ -1,5 +1,5 @@
 <?php
-// Forcer l'affichage des erreurs pour le débogage
+// Forcer l'affichage des erreurs pour le débogage (à désactiver en production)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -19,6 +19,7 @@ ini_set('session.use_only_cookies', 1);
 ini_set('session.use_strict_mode', 1);
 ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', 1); // Uniquement si HTTPS est utilisé
+ini_set('session.cookie_samesite', 'Lax'); // Ajout de la protection SameSite
 
 // Démarrage de la session
 session_start();
@@ -31,6 +32,7 @@ custom_log('Session Data: ' . json_encode($_SESSION));
 $required_files = ['config.php', 'helpers.php', 'vendor/autoload.php', 'database.php'];
 foreach ($required_files as $file) {
     if (!file_exists($file)) {
+        custom_log("Fichier requis manquant: $file");
         die("Fichier requis manquant: $file");
     }
     require_once $file;
@@ -38,6 +40,7 @@ foreach ($required_files as $file) {
 
 // Vérification de l'installation de Monolog
 if (!class_exists('\Monolog\Logger')) {
+    custom_log("Monolog n'est pas installé.");
     die("Monolog n'est pas installé. Veuillez exécuter 'composer install'.");
 }
 
@@ -74,7 +77,7 @@ spl_autoload_register(function($class) use ($logger) {
 });
 
 // Détermine la route actuelle
-$route = $_GET['route'] ?? 'home';
+$route = filter_input(INPUT_GET, 'route', FILTER_SANITIZE_STRING) ?? 'home';
 
 // Créer une instance de AuthController
 $authController = new AuthController($logger);
@@ -102,7 +105,7 @@ try {
             break;
         case 'vehicles':
             $controller = new VehicleController($logger);
-            $action = $_GET['action'] ?? 'index';
+            $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING) ?? 'index';
             if (method_exists($controller, $action)) {
                 $controller->$action($_POST ?? null);
             } else {
@@ -118,7 +121,7 @@ try {
             }
             $logger->info("Accès à la page de locations autorisé.");
             $controller = new RentalController($logger);
-            $action = $_GET['action'] ?? 'index';
+            $action = filter_input(INPUT_GET, 'action', FILTER_SANITIZE_STRING) ?? 'index';
             if (method_exists($controller, $action)) {
                 $controller->$action($_POST ?? null);
             } else {
