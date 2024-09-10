@@ -1,5 +1,3 @@
-<?php $this->layout('layout', ['title' => $vehicule->getMarque() . ' ' . $vehicule->getModele()]) ?>
-
 <div class="container">
     <h1><?= $this->e($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h1>
 
