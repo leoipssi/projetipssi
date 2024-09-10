@@ -16,15 +16,15 @@ class BaseController {
             extract($data);
             
             ob_start();
-            $viewPath = "views/{$view}.php";
+            $viewPath = "emotion/views/{$view}.php";
             if (!file_exists($viewPath)) {
                 throw new Exception("Vue non trouvée : {$view}");
             }
             include $viewPath;
             $content = ob_get_clean();
             
-            if ($layout && file_exists("views/layouts/{$layout}.php")) {
-                include "views/layouts/{$layout}.php";
+            if ($layout && file_exists("emotion/layouts/{$layout}.php")) {
+                include "emotion/layouts/{$layout}.php";
             } else {
                 echo $content;
             }
@@ -34,12 +34,19 @@ class BaseController {
         }
     }
 
-    protected function layout($view, $data = []) {
+    protected function layout($layout, $data = []) {
         extract($data);
-        include "views/layouts/{$view}.php";
+        include "emotion/layouts/{$layout}.php";
     }
 
-    
+    protected function e($value) {
+        return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+    }
+
+    protected function asset($path) {
+        return '/assets/' . $path;
+    }
+
     protected function verifyCsrfToken() {
         if ($this->isPost()) {
             if (!isset($_POST['csrf_token'])) {
