@@ -49,9 +49,16 @@ $logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/app.log', \Monolog
 if (file_exists('database.php')) {
     require_once 'database.php';
     // Assurez-vous que la variable $db est définie dans database.php
-    if (!isset($db) || !$db->connect()) {
-        $logger->error("Impossible de se connecter à la base de données.");
+    if (!isset($db)) {
+        $logger->error("La connexion à la base de données n'a pas été établie.");
         die("Erreur de connexion à la base de données.");
+    }
+    // Vérifiez la connexion en exécutant une requête simple
+    try {
+        $db->query("SELECT 1");
+    } catch (PDOException $e) {
+        $logger->error("Erreur lors de la vérification de la connexion à la base de données : " . $e->getMessage());
+        die("Erreur de connexion à la base de données : " . $e->getMessage());
     }
 } else {
     $logger->error("Le fichier de configuration de la base de données est manquant.");
