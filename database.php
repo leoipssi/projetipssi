@@ -1,13 +1,21 @@
 <?php
-$servername = "localhost";
-$username = "emotion_user";
-$password = "IPSSI2024";
-$database = "e_motion";
+$host = 'localhost';
+$db   = 'e_motion';
+$user = 'emotion_user';
+$pass = 'IPSSI2024';
+$charset = 'utf8mb4';
+
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
 
 try {
-    $db = new PDO("mysql:host=$servername;dbname=$database;charset=utf8", $username, $password);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    echo "Connexion réussie à la base de données.";
-} catch(PDOException $e) {
-    die("Erreur de connexion : " . $e->getMessage());
+    $db = new PDO($dsn, $user, $pass, $options);
+} catch (\PDOException $e) {
+    // Ici, nous allons afficher l'erreur au lieu de la relancer
+    echo "Erreur de connexion : " . $e->getMessage();
+    exit;
 }
