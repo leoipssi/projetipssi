@@ -52,7 +52,7 @@ class BaseController {
         return BASE_URL . '/public/' . $path;
     }
 
-    protected function isAdmin() {
+    public function isAdmin() {
         return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Administrateur';
     }
 
@@ -80,7 +80,7 @@ class BaseController {
         return $_GET[$key] ?? $default;
     }
 
-    protected function isLoggedIn() {
+    public function isLoggedIn() {
         return isset($_SESSION['user_id']);
     }
 
