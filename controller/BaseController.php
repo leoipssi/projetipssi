@@ -39,45 +39,6 @@ class BaseController {
     }
 
     protected function url($route, $params = []) {
-        $url = BASE_URL . '/index.php?route=' . urlencode($route);
-        foreach ($params as $key => $value) {
-            $url .= '&' . urlencode($key) . '=' . urlencode($value);
-        }
-        return $url;
-    }
-
-    protected function isAdmin() {
-        return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Administrateur';
-    }
-    protected function asset($path) {
-        return '/assets/' . $path;
-    }
-
-    protected function verifyCsrfToken() {
-        if ($this->isPost()) {
-            if (!isset($_POST['csrf_token'])) {
-                throw new Exception('Jeton CSRF manquant dans la requête POST');
-            }
-            if (!isset($_SESSION['csrf_token'])) {
-                throw new Exception('Jeton CSRF manquant dans la session');
-            }
-            if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
-                throw new Exception('Les jetons CSRF ne correspondent pas');
-            }
-        }
-    }
-
-    protected function isPost() {
-        return $_SERVER['REQUEST_METHOD'] === 'POST';
-    }
-    
-    protected function redirect($route, $params = []) {
-        $url = $this->url($route, $params);
-        header("Location: $url");
-        exit;
-    }
-
-    protected function url($route, $params = []) {
         $url = BASE_URL . "/index.php?route=" . urlencode($route);
         if (!empty($params)) {
             foreach ($params as $key => $value) {
@@ -85,6 +46,24 @@ class BaseController {
             }
         }
         return $url;
+    }
+
+    protected function asset($path) {
+        return BASE_URL . '/public/' . $path;
+    }
+
+    protected function isAdmin() {
+        return isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'Administrateur';
+    }
+
+    protected function isPost() {
+        return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
+
+    protected function redirect($route, $params = []) {
+        $url = $this->url($route, $params);
+        header("Location: $url");
+        exit;
     }
 
     protected function json($data) {
@@ -144,6 +123,27 @@ class BaseController {
     protected function log($level, $message, array $context = []) {
         if ($this->logger) {
             $this->logger->log($level, $message, $context);
+        }
+    }
+
+    protected function csrf_token() {
+        if (!isset($_SESSION['csrf_token'])) {
+            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        }
+        return $_SESSION['csrf_token'];
+    }
+
+    protected function verifyCsrfToken() {
+        if ($this->isPost()) {
+            if (!isset($_POST['csrf_token'])) {
+                throw new Exception('Jeton CSRF manquant dans la requête POST');
+            }
+            if (!isset($_SESSION['csrf_token'])) {
+                throw new Exception('Jeton CSRF manquant dans la session');
+            }
+            if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+                throw new Exception('Les jetons CSRF ne correspondent pas');
+            }
         }
     }
 }
