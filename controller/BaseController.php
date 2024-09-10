@@ -4,7 +4,6 @@ class BaseController {
 
     public function __construct($logger = null) {
         if ($logger === null) {
-            // Créer un logger par défaut si aucun n'est fourni
             $this->logger = new \Monolog\Logger('base');
             $this->logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/base.log', \Monolog\Logger::DEBUG));
         } else {
@@ -34,6 +33,12 @@ class BaseController {
             echo "Une erreur est survenue lors de l'affichage de la page. Veuillez réessayer plus tard.";
         }
     }
+
+    protected function layout($view, $data = []) {
+        extract($data);
+        include "views/layouts/{$view}.php";
+    }
+
     
     protected function verifyCsrfToken() {
         if ($this->isPost()) {
