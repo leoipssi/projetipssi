@@ -14,10 +14,17 @@ class VehiculeController extends BaseController {
             'totalPages' => $totalPages
         ]);
     }
+
     public function show($id) {
         $vehicule = Vehicule::findById($id);
         if ($vehicule) {
-            $this->render('vehicules/show', ['vehicule' => $vehicule]);
+            // Récupérer les offres actives pour ce véhicule
+            $offresActives = RentalOffer::findActiveByVehiculeId($id);
+            
+            $this->render('vehicules/show', [
+                'vehicule' => $vehicule,
+                'offresActives' => $offresActives
+            ]);
         } else {
             $this->renderError(404);
         }
@@ -47,7 +54,6 @@ class VehiculeController extends BaseController {
             $this->renderError(404);
             return;
         }
-
         if ($this->isPost()) {
             $data = $this->getPostData();
             if ($vehicule->update($data)) {
