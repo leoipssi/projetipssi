@@ -15,16 +15,16 @@ protected function render($view, $data = [], $layout = 'main') {
     try {
         extract($data);
         
-        ob_start();
-        $viewPath = "emotion/views/{$view}.php";
+        ob_start();  
+        $viewPath = __DIR__ . "/../views/home.php";
         if (!file_exists($viewPath)) {
             throw new Exception("Vue non trouvée : {$view}");
         }
         include $viewPath;
-        $content = ob_get_clean();
+        $content = ob_get_clean(); 
         
-        if ($layout && file_exists("emotion/layouts/{$layout}.php")) {
-            include "emotion/layouts/{$layout}.php";
+        if ($layout && file_exists(__DIR__ . "/../layouts/main.php")) {
+            include __DIR__ . "/../layouts/main.php";
         } else {
             echo $content;
         }
@@ -35,6 +35,7 @@ protected function render($view, $data = [], $layout = 'main') {
         echo "<br>Trace : <pre>" . $e->getTraceAsString() . "</pre>";
     }
 }
+
 
     protected function e($value) {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
