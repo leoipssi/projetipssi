@@ -56,7 +56,7 @@ $logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/app.log', \Monolog
 // Vérification de la connexion à la base de données
 if (!isset($db)) {
     $logger->error("La variable de connexion à la base de données n'est pas définie.");
-    die("Erreur de connexion à la base de données : La variable de connexion n'est pas définie.");
+    die("Erreur de connexion à la base de données : La variable de connexion n'est pas définie. Vérifiez le fichier database.php.");
 }
 
 try {
@@ -64,7 +64,7 @@ try {
     $logger->info("Connexion à la base de données vérifiée avec succès.");
 } catch (PDOException $e) {
     $logger->error("Erreur lors de la vérification de la connexion à la base de données : " . $e->getMessage());
-    die("Erreur de connexion à la base de données : " . $e->getMessage());
+    die("Erreur de connexion à la base de données : " . $e->getMessage() . ". Vérifiez les paramètres de connexion dans database.php.");
 }
 
 // Autoloader personnalisé
