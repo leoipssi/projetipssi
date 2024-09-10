@@ -1,5 +1,9 @@
 <?php
-$host = 'localhost'; // ou l'adresse de votre serveur de base de données
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+$host = 'localhost';
 $db   = 'e_motion';
 $user = 'emotion_user';
 $pass = 'IPSSI2024';
@@ -14,13 +18,9 @@ $options = [
 
 try {
     $db = new PDO($dsn, $user, $pass, $options);
-    // Ajout d'un message de succès
-    error_log("Connexion à la base de données réussie");
+    echo "Connexion à la base de données réussie<br>";
 } catch (\PDOException $e) {
-    // Loggez l'erreur
+    echo "Erreur de connexion PDO : " . $e->getMessage() . "<br>";
     error_log("Erreur de connexion PDO : " . $e->getMessage());
-    // Affichez l'erreur (à retirer en production)
-    echo "Erreur de connexion à la base de données : " . $e->getMessage();
-    // Ne définissez pas $db en cas d'erreur
     $db = null;
 }
