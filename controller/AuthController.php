@@ -2,7 +2,6 @@
 class AuthController extends BaseController {
     public function __construct($logger = null) {
         parent::__construct($logger);
-        // Vous pouvez ajouter ici une logique spécifique à AuthController si nécessaire
     }
 
     public function register() {
@@ -99,17 +98,6 @@ class AuthController extends BaseController {
             $this->logger->info("Utilisateur déconnecté: ID {$userId}");
         }
         $this->redirect('home');
-    }
-
-    public static function isAdmin() {
-        if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
-            return $_SESSION['user_role'] === 'Administrateur';
-        }
-        return false;
-    }
-
-    public static function checkLoggedIn() {
-        return isset($_SESSION['user_id']);
     }
 
     protected function validateRegistrationInput($data) {
