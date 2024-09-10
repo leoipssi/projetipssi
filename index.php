@@ -28,7 +28,7 @@ custom_log('Session ID: ' . session_id());
 custom_log('Session Data: ' . json_encode($_SESSION));
 
 // Vérification des fichiers requis
-$required_files = ['config.php', 'helpers.php', 'vendor/autoload.php'];
+$required_files = ['config.php', 'helpers.php', 'vendor/autoload.php', 'Database.php'];
 foreach ($required_files as $file) {
     if (!file_exists($file)) {
         die("Fichier requis manquant: $file");
@@ -45,24 +45,14 @@ if (!class_exists('\Monolog\Logger')) {
 $logger = new \Monolog\Logger('app');
 $logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/app.log', \Monolog\Logger::DEBUG));
 
-// Vérification et inclusion de la configuration de la base de données
-if (file_exists('database.php')) {
-    require_once 'database.php';
-    // Assurez-vous que la variable $db est définie dans database.php
-    if (!isset($db)) {
-        $logger->error("La connexion à la base de données n'a pas été établie.");
-        die("Erreur de connexion à la base de données.");
-    }
-    // Vérifiez la connexion en exécutant une requête simple
-    try {
-        $db->query("SELECT 1");
-    } catch (PDOException $e) {
-        $logger->error("Erreur lors de la vérification de la connexion à la base de données : " . $e->getMessage());
-        die("Erreur de connexion à la base de données : " . $e->getMessage());
-    }
-} else {
-    $logger->error("Le fichier de configuration de la base de données est manquant.");
-    die("Le fichier de configuration de la base de données est manquant.");
+// Initialisation de la connexion à la base de données
+try {
+    $db = Database::getInstance()->getConnection();
+    $db->query("SELECT 1");
+    $logger->info("Connexion à la base de données établie avec succès.");
+} catch (PDOException $e) {
+    $logger->error("Erreur lors de la connexion à la base de données : " . $e->getMessage());
+    die("Erreur de connexion à la base de données : " . $e->getMessage());
 }
 
 // Autoloader personnalisé
