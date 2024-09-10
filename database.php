@@ -14,8 +14,13 @@ $options = [
 
 try {
     $db = new PDO($dsn, $user, $pass, $options);
+    // Ajout d'un message de succès
+    error_log("Connexion à la base de données réussie");
 } catch (\PDOException $e) {
-    // Ici, nous allons logger l'erreur au lieu de la relancer
+    // Loggez l'erreur
     error_log("Erreur de connexion PDO : " . $e->getMessage());
-    // Nous ne définissons pas $db en cas d'erreur
+    // Affichez l'erreur (à retirer en production)
+    echo "Erreur de connexion à la base de données : " . $e->getMessage();
+    // Ne définissez pas $db en cas d'erreur
+    $db = null;
 }
