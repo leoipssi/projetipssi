@@ -9,10 +9,15 @@ function safeHtmlSpecialChars($str) {
     return htmlspecialchars($str ?? '', ENT_QUOTES, 'UTF-8');
 }
 
-// Récupérer l'offre spéciale si elle existe
-$offreSpeciale = null;
-if (isset($offres) && is_array($offres) && !empty($offres)) {
-    $offreSpeciale = $offres[0]; // On prend la première offre comme offre spéciale
+// Rechercher l'offre rattachée à ce véhicule
+$offreRattachee = null;
+if (isset($offres) && is_array($offres)) {
+    foreach ($offres as $offre) {
+        if ($offre->getVehiculeId() == $vehicule->getId()) {
+            $offreRattachee = $offre;
+            break;
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -52,7 +57,7 @@ if (isset($offres) && is_array($offres) && !empty($offres)) {
             object-fit: contain;
             cursor: zoom-out;
         }
-        .offre-speciale {
+        .offre-rattachee {
             background-color: #f8f9fa;
             border: 2px solid #28a745;
             border-radius: 10px;
@@ -77,17 +82,21 @@ if (isset($offres) && is_array($offres) && !empty($offres)) {
                 <p>Kilométrage: <?= safeHtmlSpecialChars($vehicule->getKilometres()) ?> km</p>
                 <p>Date d'achat: <?= safeHtmlSpecialChars($vehicule->getDateAchat()) ?></p>
                 
-                <?php if ($offreSpeciale): ?>
-                    <div class="offre-speciale">
+                <?php if ($offreRattachee): ?>
+                    <div class="offre-rattachee">
                         <h2>Offre Spéciale</h2>
-                        <p>Durée: <?= safeHtmlSpecialChars($offreSpeciale->getDuree()) ?> jours</p>
-                        <p>Prix total: <?= safeHtmlSpecialChars($offreSpeciale->getPrix()) ?> €</p>
-                        <p>Tarif journalier: <?= number_format($offreSpeciale->getPrix() / $offreSpeciale->getDuree(), 2) ?> €</p>
-                        <a href="index.php?route=rentals&action=create&offer_id=<?= $offreSpeciale->getId() ?>" class="btn btn-success btn-lg mt-3">Réserver cette offre</a>
+                        <p>Durée: <?= safeHtmlSpecialChars($offreRattachee->getDuree()) ?></p>
+                        <p>Prix total: <?= safeHtmlSpecialChars($offreRattachee->getPrix()) ?> €</p>
+                        <p>Kilométrage inclus: <?= safeHtmlSpecialChars($offreRattachee->getKilometres()) ?> km</p>
+                        <p>Tarif journalier: <?= number_format($offreRattachee->getPrix() / 7, 2) ?> €</p>
+                        <?php if ($offreRattachee->getDescription()): ?>
+                            <p>Description: <?= safeHtmlSpecialChars($offreRattachee->getDescription()) ?></p>
+                        <?php endif; ?>
+                        <a href="<?= $this->url('rentals', ['action' => 'create', 'offer_id' => $offreRattachee->getId()]) ?>" class="btn btn-success btn-lg mt-3">Réserver cette offre</a>
                     </div>
                 <?php else: ?>
                     <h3 class="mt-4">Tarif journalier: <?= safeHtmlSpecialChars($vehicule->getTarifJournalier()) ?> €</h3>
-                    <a href="index.php?route=rentals&action=create&vehicule_id=<?= $vehicule->getId() ?>" class="btn btn-success btn-lg mt-3">Réserver ce véhicule</a>
+                    <a href="<?= $this->url('rentals', ['action' => 'create', 'vehicule_id' => $vehicule->getId()]) ?>" class="btn btn-success btn-lg mt-3">Réserver ce véhicule</a>
                 <?php endif; ?>
             </div>
         </div>
