@@ -11,31 +11,30 @@ class BaseController {
         }
     }
 
-protected function render($view, $data = [], $layout = 'main') {
-    try {
-        extract($data);
-        
-        ob_start();  
-        $viewPath = __DIR__ . "/../views/home.php";
-        if (!file_exists($viewPath)) {
-            throw new Exception("Vue non trouvée : {$view}");
+    protected function render($view, $data = [], $layout = 'main') {
+        try {
+            extract($data);
+            
+            ob_start();  
+            $viewPath = __DIR__ . "/../views/home.php";
+            if (!file_exists($viewPath)) {
+                throw new Exception("Vue non trouvée : {$view}");
+            }
+            include $viewPath;
+            $content = ob_get_clean(); 
+            
+            if ($layout && file_exists(__DIR__ . "/../layouts/main.php")) {
+                include __DIR__ . "/../layouts/main.php";
+            } else {
+                echo $content;
+            }
+        } catch (Exception $e) {
+            $this->logger->error('Erreur lors du rendu de la vue: ' . $e->getMessage());
+            echo "Une erreur est survenue lors de l'affichage de la page. Détails : " . $e->getMessage();
+            echo "<br>Fichier : " . $e->getFile() . " à la ligne " . $e->getLine();
+            echo "<br>Trace : <pre>" . $e->getTraceAsString() . "</pre>";
         }
-        include $viewPath;
-        $content = ob_get_clean(); 
-        
-        if ($layout && file_exists(__DIR__ . "/../layouts/main.php")) {
-            include __DIR__ . "/../layouts/main.php";
-        } else {
-            echo $content;
-        }
-    } catch (Exception $e) {
-        $this->logger->error('Erreur lors du rendu de la vue: ' . $e->getMessage());
-        echo "Une erreur est survenue lors de l'affichage de la page. Détails : " . $e->getMessage();
-        echo "<br>Fichier : " . $e->getFile() . " à la ligne " . $e->getLine();
-        echo "<br>Trace : <pre>" . $e->getTraceAsString() . "</pre>";
     }
-}
-
 
     protected function e($value) {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
