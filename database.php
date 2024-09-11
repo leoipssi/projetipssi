@@ -23,10 +23,19 @@ try {
     error_log("Erreur de connexion PDO : " . $e->getMessage());
     error_log("Code d'erreur PDO : " . $e->getCode());
     error_log("Trace : " . $e->getTraceAsString());
-    die("Erreur : La connexion à la base de données n'a pas pu être établie. Détails : " . $e->getMessage());
+    // Ne pas utiliser die() ici, laissez le script continuer
+    $db = null; // Assurez-vous que $db est null en cas d'échec
 }
 
 function is_db_connected() {
     global $db;
-    return ($db instanceof PDO);
+    try {
+        if ($db instanceof PDO) {
+            $db->query("SELECT 1");
+            return true;
+        }
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la vérification de la connexion : " . $e->getMessage());
+    }
+    return false;
 }
