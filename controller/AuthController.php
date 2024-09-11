@@ -4,6 +4,7 @@ class AuthController extends BaseController {
         parent::__construct($logger);
         // Vous pouvez ajouter ici une logique spécifique à AuthController si nécessaire
     }
+
     public function register() {
         $errors = [];
         $csrfToken = $this->generateCsrfToken();
@@ -45,6 +46,7 @@ class AuthController extends BaseController {
         $this->logger->debug("Rendering registration view with CSRF token: " . $csrfToken);
         $this->render('auth/register', ['errors' => $errors, 'csrfToken' => $csrfToken]);
     }
+
     public function login() {
         $error = null;
         $csrfToken = $this->generateCsrfToken();
@@ -79,6 +81,7 @@ class AuthController extends BaseController {
         $this->logger->debug("Rendering login view with CSRF token: " . $csrfToken);
         $this->render('auth/login', ['error' => $error, 'csrfToken' => $csrfToken]);
     }
+
     public function logout() {
         $userId = $_SESSION['user_id'] ?? null;
         session_unset();
@@ -88,12 +91,14 @@ class AuthController extends BaseController {
         }
         $this->redirect('home');
     }
+
     public static function isAdmin() {
         if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
             return $_SESSION['user_role'] === 'Administrateur';
         }
         return false;
     }
+
     public static function checkLoggedIn() {
         return isset($_SESSION['user_id']);
     }
@@ -134,7 +139,6 @@ class AuthController extends BaseController {
         return $errors;
     }
 
-    private function generateCsrfToken() {
     public function generateCsrfToken() {
         if (empty($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -145,7 +149,6 @@ class AuthController extends BaseController {
         return $_SESSION['csrf_token'];
     }
 
-    private function initializeUserSession($user) {
     protected function initializeUserSession($user) {
         session_regenerate_id(true);
         $_SESSION['user_id'] = $user->getId();
