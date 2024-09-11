@@ -2,24 +2,20 @@
 class AuthController extends BaseController {
     public function __construct($logger = null) {
         parent::__construct($logger);
+        // Vous pouvez ajouter ici une logique spécifique à AuthController si nécessaire
     }
-
     public function register() {
         $errors = [];
         $csrfToken = $this->generateCsrfToken();
         $this->logger->debug("Generated CSRF Token for registration: " . $csrfToken);
-
         if ($this->isPost()) {
             $this->logger->debug("POST request detected for registration");
             $this->logger->debug("POST data received for registration: " . json_encode($_POST));
-
             try {
                 $this->verifyCsrfToken();
                 $this->logger->debug("CSRF verification passed for registration");
-
                 $userData = $this->sanitizeUserData($_POST);
                 $errors = $this->validateRegistrationInput($userData);
-
                 if (empty($errors)) {
                     try {
                         if (User::findByUsername($userData['username'])) {
@@ -46,26 +42,21 @@ class AuthController extends BaseController {
                 $this->logger->warning("CSRF verification failed for registration: " . $e->getMessage());
             }
         }
-
         $this->logger->debug("Rendering registration view with CSRF token: " . $csrfToken);
         $this->render('auth/register', ['errors' => $errors, 'csrfToken' => $csrfToken]);
     }
-
     public function login() {
         $error = null;
         $csrfToken = $this->generateCsrfToken();
         $this->logger->debug("Generated CSRF Token for login: " . $csrfToken);
-
         if ($this->isPost()) {
             $this->logger->debug("POST request detected for login");
             
             try {
                 $this->verifyCsrfToken();
                 $this->logger->debug("CSRF verification passed for login");
-
                 $username = $this->getPostData()['username'] ?? '';
                 $password = $this->getPostData()['password'] ?? '';
-
                 try {
                     $user = User::authenticate($username, $password);
                     if ($user) {
@@ -85,11 +76,9 @@ class AuthController extends BaseController {
                 $this->logger->warning("CSRF verification failed for login: " . $e->getMessage());
             }
         }
-
         $this->logger->debug("Rendering login view with CSRF token: " . $csrfToken);
         $this->render('auth/login', ['error' => $error, 'csrfToken' => $csrfToken]);
     }
-
     public function logout() {
         $userId = $_SESSION['user_id'] ?? null;
         session_unset();
@@ -99,7 +88,21 @@ class AuthController extends BaseController {
         }
         $this->redirect('home');
     }
+    public static function isAdmin() {
+        if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
+            return $_SESSION['user_role'] === 'Administrateur';
+        }
+        return false;
+    }
+    public static function checkLoggedIn() {
+        return isset($_SESSION['user_id']);
+    }
 
+    private function sanitizeUserData($data) {
+        return array_map('trim', array_map('htmlspecialchars', $data));
+    }
+
+    private function validateRegistrationInput($data) {
     protected function validateRegistrationInput($data) {
         $errors = [];
         if (strlen($data['username']) < 3 || strlen($data['username']) > 50) {
@@ -132,6 +135,7 @@ class AuthController extends BaseController {
         return $errors;
     }
 
+    private function generateCsrfToken() {
     protected function generateCsrfToken() {
         if (empty($_SESSION['csrf_token'])) {
             $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -142,6 +146,7 @@ class AuthController extends BaseController {
         return $_SESSION['csrf_token'];
     }
 
+    private function initializeUserSession($user) {
     protected function initializeUserSession($user) {
         session_regenerate_id(true);
         $_SESSION['user_id'] = $user->getId();
