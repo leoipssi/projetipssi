@@ -56,7 +56,7 @@ if (!is_db_connected()) {
 
 // Autoloader personnalisé
 spl_autoload_register(function($class) use ($logger) {
-    $directories = ['models', 'controlleur'];
+    $directories = ['models', 'controller'];
     foreach ($directories as $directory) {
         $file = $directory . '/' . $class . '.php';
         if (file_exists($file)) {
