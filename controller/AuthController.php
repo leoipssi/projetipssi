@@ -103,10 +103,6 @@ class AuthController extends BaseController {
         return isset($_SESSION['user_id']);
     }
 
-    public static function checkLoggedIn() {
-        return isset($_SESSION['user_id']);
-    }
-
     private function sanitizeUserData($data) {
         return array_map('trim', array_map('htmlspecialchars', $data));
     }
