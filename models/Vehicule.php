@@ -345,14 +345,13 @@ class Vehicule {
         }
     }
 
-private static function checkDbConnection() {
+    private static function checkDbConnection() {
         if (!self::$db instanceof PDO) {
             error_log("La connexion à la base de données n'est pas établie dans la classe Vehicule");
             throw new Exception("La connexion à la base de données n'est pas établie. Assurez-vous d'appeler Vehicule::setDB() avec une instance PDO valide avant d'utiliser la classe.");
         }
     }
 
-    // Méthode pour supprimer un véhicule
     public function delete() {
         self::checkDbConnection();
         try {
@@ -365,7 +364,6 @@ private static function checkDbConnection() {
         }
     }
 
-    // Méthode pour rechercher des véhicules
     public static function search($criteria) {
         self::checkDbConnection();
         $sql = "SELECT * FROM vehicules WHERE 1=1";
