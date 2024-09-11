@@ -1,40 +1,110 @@
 <?php
+
 class HomeController extends BaseController {
+    private $vehiculeModel;
+    private $rentalOfferModel;
+
+    public function __construct($logger = null) {
+        parent::__construct($logger);
+        $this->vehiculeModel = new Vehicule();
+        $this->rentalOfferModel = new RentalOffer();
+    }
+
     public function index() {
         global $db;
-
-        // Vérification de la connexion à la base de données
-        if (!$db instanceof PDO) {
-            error_log("La connexion à la base de données n'est pas disponible dans HomeController");
-            // Gérer l'erreur appropriée ici, par exemple :
-            $this->render('error', ['message' => 'Erreur de connexion à la base de données']);
-            return;
-        }
-
+        
         try {
-            // Définir la connexion pour la classe Vehicule
-            Vehicule::setDB($db);
-            
-            // Récupérer les véhicules récents
-            $recentVehicules = Vehicule::getRecentVehicules(5);
-            error_log("Véhicules récents récupérés avec succès : " . count($recentVehicules));
+            $this->checkDatabaseConnection($db);
 
-            // Définir la connexion pour la classe RentalOffer si nécessaire
-            // RentalOffer::setDB($db);  // Décommentez si nécessaire
+            $this->vehiculeModel::setDB($db);
+            $this->rentalOfferModel::setDB($db);
             
-            // Récupérer les offres actives
-            $activeOffers = RentalOffer::getActiveOffers(3);
-            error_log("Offres actives récupérées avec succès : " . count($activeOffers));
+            $recentVehicules = $this->getRecentVehicules();
+            $activeOffers = $this->getActiveOffers();
 
-            // Rendre la vue
             $this->render('home', [
                 'recentVehicules' => $recentVehicules,
                 'activeOffers' => $activeOffers
             ]);
         } catch (Exception $e) {
-            error_log("Erreur dans HomeController::index : " . $e->getMessage());
-            // Gérer l'erreur appropriée ici, par exemple :
-            $this->render('error', ['message' => 'Une erreur est survenue lors du chargement de la page d\'accueil']);
+            $this->handleError($e);
         }
+    }
+
+    private function checkDatabaseConnection($db) {
+        if (!$db instanceof PDO) {
+            throw new Exception("La connexion à la base de données n'est pas disponible");
+        }
+    }
+
+    private function getRecentVehicules() {
+        try {
+            $recentVehicules = $this->vehiculeModel::getRecentVehicules(5);
+            $this->logger->info("Véhicules récents récupérés avec succès", ['count' => count($recentVehicules)]);
+            return $recentVehicules;
+        } catch (Exception $e) {
+            $this->logger->error("Erreur lors de la récupération des véhicules récents", ['error' => $e->getMessage()]);
+            throw new Exception("Impossible de récupérer les véhicules récents");
+        }
+    }
+
+    private function getActiveOffers() {
+        try {
+            $activeOffers = $this->rentalOfferModel::getActiveOffers(3);
+            $this->logger->info("Offres actives récupérées avec succès", ['count' => count($activeOffers)]);
+            return $activeOffers;
+        } catch (Exception $e) {
+            $this->logger->error("Erreur lors de la récupération des offres actives", ['error' => $e->getMessage()]);
+            throw new Exception("Impossible de récupérer les offres actives");
+        }
+    }
+
+    private function handleError(Exception $e) {
+        $this->logger->error("Erreur dans HomeController::index", [
+            'message' => $e->getMessage(),
+            'file' => $e->getFile(),
+            'line' => $e->getLine()
+        ]);
+        $this->render('error', ['message' => 'Une erreur est survenue lors du chargement de la page d\'accueil']);
+    }
+
+    public function about() {
+        $this->render('about', ['title' => 'À propos de nous']);
+    }
+
+    public function contact() {
+        if ($this->isPost()) {
+            $this->handleContactForm();
+        } else {
+            $this->render('contact', ['title' => 'Contactez-nous']);
+        }
+    }
+
+    private function handleContactForm() {
+        $name = $_POST['name'] ?? '';
+        $email = $_POST['email'] ?? '';
+        $message = $_POST['message'] ?? '';
+
+        // Validation des données du formulaire
+        if (empty($name) || empty($email) || empty($message)) {
+            $this->render('contact', [
+                'title' => 'Contactez-nous',
+                'error' => 'Veuillez remplir tous les champs.'
+            ]);
+            return;
+        }
+
+        $this->render('contact', [
+            'title' => 'Contactez-nous',
+            'success' => 'Votre message a été envoyé avec succès.'
+        ]);
+    }
+
+    public function terms() {
+        $this->render('terms', ['title' => 'Conditions d\'utilisation']);
+    }
+
+    public function privacy() {
+        $this->render('privacy', ['title' => 'Politique de confidentialité']);
     }
 }
