@@ -12,11 +12,17 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
+error_log("Tentative de connexion à la base de données...");
+error_log("DSN: $dsn");
+error_log("Utilisateur: $user");
+
 try {
     $db = new PDO($dsn, $user, $pass, $options);
     error_log("Connexion à la base de données réussie");
 } catch (\PDOException $e) {
     error_log("Erreur de connexion PDO : " . $e->getMessage());
+    error_log("Code d'erreur PDO : " . $e->getCode());
+    error_log("Trace : " . $e->getTraceAsString());
     die("Erreur : La connexion à la base de données n'a pas pu être établie. Détails : " . $e->getMessage());
 }
 
