@@ -102,7 +102,6 @@ class AuthController extends BaseController {
         return array_map('trim', array_map('htmlspecialchars', $data));
     }
 
-    private function validateRegistrationInput($data) {
     protected function validateRegistrationInput($data) {
         $errors = [];
         if (strlen($data['username']) < 3 || strlen($data['username']) > 50) {
