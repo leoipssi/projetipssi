@@ -103,7 +103,8 @@ class AuthController extends BaseController {
         return isset($_SESSION['user_id']);
     }
 
-    private function sanitizeUserData($data) {
+    // Changé de private à protected pour correspondre à la classe parente
+    protected function sanitizeUserData($data) {
         return array_map('trim', array_map('htmlspecialchars', $data));
     }
 
