@@ -195,35 +195,49 @@ class Vehicule {
         }
     }
 
-    public static function findById($id) {
-        self::checkDbConnection();
-        try {
-            $stmt = self::$db->prepare("SELECT * FROM vehicules WHERE id = ?");
-            $stmt->execute([$id]);
-            $row = $stmt->fetch(PDO::FETCH_ASSOC);
-            if ($row) {
-                return new Vehicule(
-                    $row['id'],
-                    $row['type_id'],
-                    $row['marque'],
-                    $row['modele'],
-                    $row['numero_serie'],
-                    $row['couleur'],
-                    $row['immatriculation'],
-                    $row['kilometres'],
-                    $row['date_achat'],
-                    $row['prix_achat'],
-                    $row['categorie'] ?? null,
-                    $row['tarif_journalier'] ?? null,
-                    $row['is_available']
-                );
+public static function findById($id) {
+    self::checkDbConnection();
+    try {
+        $stmt = self::$db->prepare("SELECT * FROM vehicules WHERE id = ?");
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($row) {
+            // Vérifions chaque champ pour nous assurer qu'il n'y a pas de tableau inattendu
+            foreach ($row as $key => $value) {
+                if (is_array($value)) {
+                    error_log("Champ inattendu de type array dans vehicules pour l'ID $id : $key");
+                    $row[$key] = json_encode($value); // Convertir le tableau en JSON si nécessaire
+                }
             }
-        } catch (PDOException $e) {
-            error_log("Erreur lors de la recherche du véhicule par ID : " . $e->getMessage());
-            throw new Exception("Impossible de trouver le véhicule spécifié.");
+            
+            return new Vehicule(
+                $row['id'],
+                $row['type_id'],
+                $row['marque'],
+                $row['modele'],
+                $row['numero_serie'],
+                $row['couleur'],
+                $row['immatriculation'],
+                $row['kilometres'],
+                $row['date_achat'],
+                $row['prix_achat'],
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null,
+                $row['is_available']
+            );
+        } else {
+            error_log("Aucun véhicule trouvé avec l'ID : $id");
+            return null;
         }
-        return null;
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la recherche du véhicule par ID : " . $e->getMessage());
+        throw new Exception("Impossible de trouver le véhicule spécifié.");
+    } catch (Exception $e) {
+        error_log("Erreur inattendue lors de la recherche du véhicule par ID : " . $e->getMessage());
+        throw $e;
     }
+}
 
     public static function findAvailable() {
         self::checkDbConnection();
