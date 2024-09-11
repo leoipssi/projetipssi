@@ -2,7 +2,8 @@
 class AuthController extends BaseController {
     public function __construct($logger = null) {
         parent::__construct($logger);
-        // Vous pouvez ajouter ici une logique spécifique à AuthController si nécessaire
+        // Assurez-vous que User::setLogger() est appelé quelque part dans votre application
+        User::setLogger($this->logger);
     }
 
     public function register() {
@@ -48,29 +49,33 @@ class AuthController extends BaseController {
     }
 
     public function login() {
+        $this->logger->debug("Début de la méthode login");
         $error = null;
         $csrfToken = $this->generateCsrfToken();
         $this->logger->debug("Generated CSRF Token for login: " . $csrfToken);
         if ($this->isPost()) {
             $this->logger->debug("POST request detected for login");
+            $this->logger->debug("POST data received for login: " . json_encode($_POST));
             
             try {
                 $this->verifyCsrfToken();
                 $this->logger->debug("CSRF verification passed for login");
                 $username = $this->getPostData()['username'] ?? '';
                 $password = $this->getPostData()['password'] ?? '';
+                $this->logger->debug("Attempting authentication for user: " . $username);
                 try {
                     $user = User::authenticate($username, $password);
                     if ($user) {
                         $this->initializeUserSession($user);
                         $this->logger->info("Connexion réussie: {$username}");
+                        $this->logger->debug("Redirecting to home page after successful login");
                         $this->redirect('home');
                     } else {
                         $this->logger->warning("Tentative de connexion échouée pour l'utilisateur: {$username}");
                         $error = "Nom d'utilisateur ou mot de passe incorrect.";
                     }
                 } catch (Exception $e) {
-                    $this->logger->error("Erreur lors de la connexion: " . $e->getMessage());
+                    $this->logger->error("Erreur détaillée lors de la connexion: " . $e->getMessage());
                     $error = "Une erreur est survenue lors de la connexion.";
                 }
             } catch (Exception $e) {
@@ -103,7 +108,6 @@ class AuthController extends BaseController {
         return isset($_SESSION['user_id']);
     }
 
-    // Changé de private à protected pour correspondre à la classe parente
     protected function sanitizeUserData($data) {
         return array_map('trim', array_map('htmlspecialchars', $data));
     }
@@ -155,5 +159,32 @@ class AuthController extends BaseController {
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_role'] = $user->getRole();
         $this->logger->debug("User session initialized. User ID: {$user->getId()}, Role: {$user->getRole()}");
+    }
+
+    protected function verifyCsrfToken() {
+        $token = $_POST['csrf_token'] ?? '';
+        if (!hash_equals($_SESSION['csrf_token'], $token)) {
+            throw new Exception('Invalid CSRF token');
+        }
+    }
+
+    protected function getPostData() {
+        return $_POST;
+    }
+
+    protected function isPost() {
+        return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
+
+    protected function redirect($path) {
+        header("Location: /{$path}");
+        exit();
+    }
+
+    protected function render($view, $data = []) {
+        // Implémentez votre logique de rendu ici
+        // Par exemple :
+        extract($data);
+        include "views/home.php";
     }
 }
