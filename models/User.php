@@ -1,5 +1,4 @@
 <?php
-
 class User {
     private $id;
     private $nom;
@@ -14,6 +13,8 @@ class User {
     private $telephone;
     private $created_at;
 
+    private static $db;
+
     public function __construct($id, $nom, $prenom, $username, $password, $email, $role, $adresse, $code_postal, $ville, $telephone, $created_at) {
         $this->id = $id;
         $this->nom = $nom;
@@ -27,6 +28,20 @@ class User {
         $this->ville = $ville;
         $this->telephone = $telephone;
         $this->created_at = $created_at;
+    }
+
+    public static function setDB($db) {
+        if (!$db instanceof PDO) {
+            throw new Exception("L'objet de base de données fourni n'est pas une instance valide de PDO.");
+        }
+        self::$db = $db;
+    }
+
+    private static function getDB() {
+        if (!self::$db instanceof PDO) {
+            throw new Exception("La connexion à la base de données n'est pas établie.");
+        }
+        return self::$db;
     }
 
     // Getters
@@ -46,10 +61,10 @@ class User {
     public function getCreatedAt() { return $this->created_at; }
 
     public static function create($userData) {
-        global $conn;
+        $db = self::getDB();
         $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
         try {
-            $stmt = $conn->prepare("INSERT INTO users (nom, prenom, username, password, email, role, adresse, code_postal, ville, telephone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = $db->prepare("INSERT INTO users (nom, prenom, username, password, email, role, adresse, code_postal, ville, telephone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $userData['nom'],
                 $userData['prenom'],
@@ -64,7 +79,7 @@ class User {
             ]);
             if ($stmt->rowCount() > 0) {
                 return new User(
-                    $conn->lastInsertId(),
+                    $db->lastInsertId(),
                     $userData['nom'],
                     $userData['prenom'],
                     $userData['username'],
@@ -79,41 +94,41 @@ class User {
                 );
             }
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la création de l'utilisateur.");
+            throw new Exception("Erreur lors de la création de l'utilisateur: " . $e->getMessage());
         }
         return null;
     }
 
     public static function findById($id) {
-        global $conn;
+        $db = self::getDB();
         try {
-            $stmt = $conn->prepare("SELECT * FROM users WHERE id = ?");
+            $stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
             $stmt->execute([$id]);
             return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la recherche de l'utilisateur.");
+            throw new Exception("Erreur lors de la recherche de l'utilisateur: " . $e->getMessage());
         }
     }
 
     public static function findByUsername($username) {
-        global $conn;
+        $db = self::getDB();
         try {
-            $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+            $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
             $stmt->execute([$username]);
             return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la recherche de l'utilisateur.");
+            throw new Exception("Erreur lors de la recherche de l'utilisateur: " . $e->getMessage());
         }
     }
 
     public static function findByEmail($email) {
-        global $conn;
+        $db = self::getDB();
         try {
-            $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+            $stmt = $db->prepare("SELECT * FROM users WHERE email = ?");
             $stmt->execute([$email]);
             return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la recherche de l'utilisateur.");
+            throw new Exception("Erreur lors de la recherche de l'utilisateur: " . $e->getMessage());
         }
     }
 
@@ -144,12 +159,12 @@ class User {
     }
 
     public static function count() {
-        global $conn;
+        $db = self::getDB();
         try {
-            $stmt = $conn->query("SELECT COUNT(*) FROM users");
+            $stmt = $db->query("SELECT COUNT(*) FROM users");
             return $stmt->fetchColumn();
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors du comptage des utilisateurs.");
+            throw new Exception("Erreur lors du comptage des utilisateurs: " . $e->getMessage());
         }
     }
 
@@ -165,7 +180,7 @@ class User {
     }
 
     public static function findFiltered($search, $role, $sortBy, $sortOrder, $page, $perPage) {
-        global $conn;
+        $db = self::getDB();
         $offset = ($page - 1) * $perPage;
         $allowedSortFields = ['id', 'username', 'email', 'role', 'created_at'];
         $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
@@ -188,7 +203,7 @@ class User {
         $sql = "SELECT * FROM users $whereClause ORDER BY $sortBy $sortOrder LIMIT $perPage OFFSET $offset";
 
         try {
-            $stmt = $conn->prepare($sql);
+            $stmt = $db->prepare($sql);
             if (!empty($params)) {
                 $stmt->execute($params);
             } else {
@@ -200,12 +215,12 @@ class User {
             }
             return $users;
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la recherche des utilisateurs.");
+            throw new Exception("Erreur lors de la recherche des utilisateurs: " . $e->getMessage());
         }
     }
 
     public static function countFiltered($search, $role) {
-        global $conn;
+        $db = self::getDB();
         $where = [];
         $params = [];
         if ($search) {
@@ -223,11 +238,11 @@ class User {
         $sql = "SELECT COUNT(*) FROM users $whereClause";
 
         try {
-            $stmt = $conn->prepare($sql);
+            $stmt = $db->prepare($sql);
             $stmt->execute($params);
             return $stmt->fetchColumn();
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors du comptage des utilisateurs.");
+            throw new Exception("Erreur lors du comptage des utilisateurs: " . $e->getMessage());
         }
     }
 
@@ -243,7 +258,7 @@ class User {
     }
 
     public function update($data) {
-        global $conn;
+        $db = self::getDB();
         $allowedFields = ['nom', 'prenom', 'username', 'email', 'role', 'adresse', 'code_postal', 'ville', 'telephone'];
         $updates = [];
         $values = [];
@@ -260,10 +275,10 @@ class User {
             $values[] = $this->id;
             $sql = "UPDATE users SET " . implode(', ', $updates) . " WHERE id = ?";
             try {
-                $stmt = $conn->prepare($sql);
+                $stmt = $db->prepare($sql);
                 return $stmt->execute($values);
             } catch (PDOException $e) {
-                throw new Exception("Erreur lors de la mise à jour de l'utilisateur.");
+                throw new Exception("Erreur lors de la mise à jour de l'utilisateur: " . $e->getMessage());
             }
         }
 
@@ -271,17 +286,17 @@ class User {
     }
 
     public function changePassword($newPassword) {
-        global $conn;
+        $db = self::getDB();
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         try {
-            $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $stmt = $db->prepare("UPDATE users SET password = ? WHERE id = ?");
             $result = $stmt->execute([$hashedPassword, $this->id]);
             if ($result) {
                 $this->password = $hashedPassword;
                 return true;
             }
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors du changement de mot de passe.");
+            throw new Exception("Erreur lors du changement de mot de passe: " . $e->getMessage());
         }
         return false;
     }
@@ -295,9 +310,9 @@ class User {
     }
 
     public static function findAllClients() {
-        global $conn;
+        $db = self::getDB();
         try {
-            $stmt = $conn->prepare("SELECT * FROM users WHERE role = 'Utilisateur'");
+            $stmt = $db->prepare("SELECT * FROM users WHERE role = 'Utilisateur'");
             $stmt->execute();
             $clients = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -305,7 +320,7 @@ class User {
             }
             return $clients;
         } catch (PDOException $e) {
-            throw new Exception("Erreur lors de la récupération des clients.");
+            throw new Exception("Erreur lors de la récupération des clients: " . $e->getMessage());
         }
     }
 }
