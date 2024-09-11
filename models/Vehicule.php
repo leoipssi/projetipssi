@@ -40,8 +40,20 @@ class Vehicule {
         $this->is_available = $is_available;
     }
 
-    // Getters (inchangés)
-    // ...
+    // Getters
+    public function getId() { return $this->id; }
+    public function getTypeId() { return $this->type_id; }
+    public function getMarque() { return $this->marque; }
+    public function getModele() { return $this->modele; }
+    public function getNumeroSerie() { return $this->numero_serie; }
+    public function getCouleur() { return $this->couleur; }
+    public function getImmatriculation() { return $this->immatriculation; }
+    public function getKilometres() { return $this->kilometres; }
+    public function getDateAchat() { return $this->date_achat; }
+    public function getPrixAchat() { return $this->prix_achat; }
+    public function getCategorie() { return $this->categorie; }
+    public function getTarifJournalier() { return $this->tarif_journalier; }
+    public function isAvailable() { return $this->is_available; }
 
     public function setAvailable($available) {
         $this->is_available = $available;
@@ -150,38 +162,38 @@ class Vehicule {
         }
     }
 
-public static function findAll($page = 1, $perPage = 10) {
-    self::checkDbConnection();
-    $offset = ($page - 1) * $perPage;
-    try {
-        $stmt = self::$db->prepare("SELECT * FROM vehicules LIMIT :limit OFFSET :offset");
-        $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $stmt->execute();
-        $vehicules = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicules[] = new Vehicule(
-                $row['id'],
-                $row['type_id'],
-                $row['marque'],
-                $row['modele'],
-                $row['numero_serie'],
-                $row['couleur'],
-                $row['immatriculation'],
-                $row['kilometres'],
-                $row['date_achat'],
-                $row['prix_achat'],
-                $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null,
-                $row['is_available']
-            );
+    public static function findAll($page = 1, $perPage = 10) {
+        self::checkDbConnection();
+        $offset = ($page - 1) * $perPage;
+        try {
+            $stmt = self::$db->prepare("SELECT * FROM vehicules LIMIT :limit OFFSET :offset");
+            $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+            $vehicules = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $vehicules[] = new Vehicule(
+                    $row['id'],
+                    $row['type_id'],
+                    $row['marque'],
+                    $row['modele'],
+                    $row['numero_serie'],
+                    $row['couleur'],
+                    $row['immatriculation'],
+                    $row['kilometres'],
+                    $row['date_achat'],
+                    $row['prix_achat'],
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    $row['is_available']
+                );
+            }
+            return $vehicules;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la récupération de tous les véhicules : " . $e->getMessage());
+            throw new Exception("Impossible de récupérer la liste des véhicules.");
         }
-        return $vehicules;
-    } catch (PDOException $e) {
-        error_log("Erreur lors de la récupération de tous les véhicules : " . $e->getMessage());
-        throw new Exception("Impossible de récupérer la liste des véhicules.");
     }
-}
 
     public static function findById($id) {
         self::checkDbConnection();
@@ -336,7 +348,4 @@ public static function findAll($page = 1, $perPage = 10) {
     private static function checkDbConnection() {
         if (!self::$db instanceof PDO) {
             error_log("La connexion à la base de données n'est pas établie dans la classe Vehicule");
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
-    }
-}
+            throw new Exception("La connexion à la base de données n'est pas établie. Assurez-vous d'appeler Vehicule::setDB() avec une instance PDO valide
