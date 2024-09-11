@@ -14,6 +14,7 @@ class User {
     private $created_at;
 
     private static $db;
+    private static $logger;
 
     public function __construct($id, $nom, $prenom, $username, $password, $email, $role, $adresse, $code_postal, $ville, $telephone, $created_at) {
         $this->id = $id;
@@ -37,6 +38,10 @@ class User {
         self::$db = $db;
     }
 
+    public static function setLogger($logger) {
+        self::$logger = $logger;
+    }
+
     private static function getDB() {
         if (!self::$db instanceof PDO) {
             throw new Exception("La connexion à la base de données n'est pas établie.");
@@ -44,26 +49,13 @@ class User {
         return self::$db;
     }
 
-    // Getters
-    public function getId() { return $this->id; }
-    public function getNom() { return $this->nom; }
-    public function getPrenom() { return $this->prenom; }
-    public function getUsername() { return $this->username; }
-    public function getEmail() { return $this->email; }
-    public function getRole() { 
-        $validRoles = ['Administrateur', 'Utilisateur', 'Gestionnaire'];
-        return in_array($this->role, $validRoles) ? $this->role : 'Utilisateur';
-    }
-    public function getAdresse() { return $this->adresse; }
-    public function getCodePostal() { return $this->code_postal; }
-    public function getVille() { return $this->ville; }
-    public function getTelephone() { return $this->telephone; }
-    public function getCreatedAt() { return $this->created_at; }
+    // Getters (non modifiés)
 
     public static function create($userData) {
         $db = self::getDB();
         $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
         try {
+            self::$logger->debug("Tentative de création d'un nouvel utilisateur: " . $userData['username']);
             $stmt = $db->prepare("INSERT INTO users (nom, prenom, username, password, email, role, adresse, code_postal, ville, telephone) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $userData['nom'],
@@ -78,6 +70,7 @@ class User {
                 $userData['telephone']
             ]);
             if ($stmt->rowCount() > 0) {
+                self::$logger->info("Nouvel utilisateur créé avec succès: " . $userData['username']);
                 return new User(
                     $db->lastInsertId(),
                     $userData['nom'],
@@ -94,6 +87,7 @@ class User {
                 );
             }
         } catch (PDOException $e) {
+            self::$logger->error("Erreur lors de la création de l'utilisateur: " . $e->getMessage());
             throw new Exception("Erreur lors de la création de l'utilisateur: " . $e->getMessage());
         }
         return null;
@@ -102,10 +96,18 @@ class User {
     public static function findById($id) {
         $db = self::getDB();
         try {
+            self::$logger->debug("Recherche de l'utilisateur par ID: " . $id);
             $stmt = $db->prepare("SELECT * FROM users WHERE id = ?");
             $stmt->execute([$id]);
-            return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
+            $user = self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
+            if ($user) {
+                self::$logger->debug("Utilisateur trouvé par ID: " . $id);
+            } else {
+                self::$logger->debug("Aucun utilisateur trouvé pour l'ID: " . $id);
+            }
+            return $user;
         } catch (PDOException $e) {
+            self::$logger->error("Erreur lors de la recherche de l'utilisateur par ID: " . $e->getMessage());
             throw new Exception("Erreur lors de la recherche de l'utilisateur: " . $e->getMessage());
         }
     }
@@ -113,10 +115,18 @@ class User {
     public static function findByUsername($username) {
         $db = self::getDB();
         try {
+            self::$logger->debug("Recherche de l'utilisateur par nom d'utilisateur: " . $username);
             $stmt = $db->prepare("SELECT * FROM users WHERE username = ?");
             $stmt->execute([$username]);
-            return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
+            $user = self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
+            if ($user) {
+                self::$logger->debug("Utilisateur trouvé par nom d'utilisateur: " . $username);
+            } else {
+                self::$logger->debug("Aucun utilisateur trouvé pour le nom d'utilisateur: " . $username);
+            }
+            return $user;
         } catch (PDOException $e) {
+            self::$logger->error("Erreur lors de la recherche de l'utilisateur par nom d'utilisateur: " . $e->getMessage());
             throw new Exception("Erreur lors de la recherche de l'utilisateur: " . $e->getMessage());
         }
     }
@@ -124,10 +134,18 @@ class User {
     public static function findByEmail($email) {
         $db = self::getDB();
         try {
+            self::$logger->debug("Recherche de l'utilisateur par email: " . $email);
             $stmt = $db->prepare("SELECT * FROM users WHERE email = ?");
             $stmt->execute([$email]);
-            return self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
+            $user = self::createFromRow($stmt->fetch(PDO::FETCH_ASSOC));
+            if ($user) {
+                self::$logger->debug("Utilisateur trouvé par email: " . $email);
+            } else {
+                self::$logger->debug("Aucun utilisateur trouvé pour l'email: " . $email);
+            }
+            return $user;
         } catch (PDOException $e) {
+            self::$logger->error("Erreur lors de la recherche de l'utilisateur par email: " . $e->getMessage());
             throw new Exception("Erreur lors de la recherche de l'utilisateur: " . $e->getMessage());
         }
     }
@@ -151,10 +169,13 @@ class User {
     }
 
     public static function authenticate($username, $password) {
+        self::$logger->debug("Tentative d'authentification pour: " . $username);
         $user = self::findByUsername($username);
         if ($user && password_verify($password, $user->password)) {
+            self::$logger->debug("Authentification réussie pour: " . $username);
             return $user;
         }
+        self::$logger->debug("Échec de l'authentification pour: " . $username);
         return null;
     }
 
