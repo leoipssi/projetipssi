@@ -345,7 +345,70 @@ class Vehicule {
         }
     }
 
-    private static function checkDbConnection() {
+private static function checkDbConnection() {
         if (!self::$db instanceof PDO) {
             error_log("La connexion à la base de données n'est pas établie dans la classe Vehicule");
-            throw new Exception("La connexion à la base de données n'est pas établie. Assurez-vous d'appeler Vehicule::setDB() avec une instance PDO valide
+            throw new Exception("La connexion à la base de données n'est pas établie. Assurez-vous d'appeler Vehicule::setDB() avec une instance PDO valide avant d'utiliser la classe.");
+        }
+    }
+
+    // Méthode pour supprimer un véhicule
+    public function delete() {
+        self::checkDbConnection();
+        try {
+            $stmt = self::$db->prepare("DELETE FROM vehicules WHERE id = ?");
+            $stmt->execute([$this->id]);
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la suppression du véhicule : " . $e->getMessage());
+            throw new Exception("Impossible de supprimer le véhicule.");
+        }
+    }
+
+    // Méthode pour rechercher des véhicules
+    public static function search($criteria) {
+        self::checkDbConnection();
+        $sql = "SELECT * FROM vehicules WHERE 1=1";
+        $params = [];
+
+        if (!empty($criteria['marque'])) {
+            $sql .= " AND marque LIKE ?";
+            $params[] = '%' . $criteria['marque'] . '%';
+        }
+        if (!empty($criteria['modele'])) {
+            $sql .= " AND modele LIKE ?";
+            $params[] = '%' . $criteria['modele'] . '%';
+        }
+        if (isset($criteria['is_available'])) {
+            $sql .= " AND is_available = ?";
+            $params[] = $criteria['is_available'];
+        }
+
+        try {
+            $stmt = self::$db->prepare($sql);
+            $stmt->execute($params);
+            $vehicules = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $vehicules[] = new Vehicule(
+                    $row['id'],
+                    $row['type_id'],
+                    $row['marque'],
+                    $row['modele'],
+                    $row['numero_serie'],
+                    $row['couleur'],
+                    $row['immatriculation'],
+                    $row['kilometres'],
+                    $row['date_achat'],
+                    $row['prix_achat'],
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    $row['is_available']
+                );
+            }
+            return $vehicules;
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la recherche de véhicules : " . $e->getMessage());
+            throw new Exception("Impossible de rechercher les véhicules.");
+        }
+    }
+}
