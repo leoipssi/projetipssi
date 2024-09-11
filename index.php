@@ -121,17 +121,17 @@ try {
             $controller->index();
             break;
         case 'vehicules':
-            echo "Exécution de la route 'vehicules'<br>";
-            $controller = new VehiculeController($logger);
-            $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
-            echo "Action de véhicule : $action<br>";
-            if (method_exists($controller, $action)) {
-                $controller->$action($_POST ?? null);
-            } else {
-                $logger->warning("Action de véhicule non trouvée : {$action}");
-                throw new Exception("Action de véhicule non trouvée", 404);
-            }
-            break;
+    echo "Exécution de la route 'vehicules'<br>";
+    $controller = new VehiculeController($logger);
+    $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
+    echo "Action de véhicule : $action<br>";
+    if (method_exists($controller, $action)) {
+        $controller->$action($_POST ?? null);
+    } else {
+        $logger->warning("Action de véhicule non trouvée : {$action}");
+        throw new Exception("Action de véhicule non trouvée", 404);
+    }
+    break;
         case 'rentals':
             echo "Exécution de la route 'rentals'<br>";
             if (!$authController->isLoggedIn()) {
