@@ -150,35 +150,38 @@ class Vehicule {
         }
     }
 
-    public static function findAll() {
-        self::checkDbConnection();
-        try {
-            $stmt = self::$db->query("SELECT * FROM vehicules");
-            $vehicules = [];
-            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $vehicules[] = new Vehicule(
-                    $row['id'],
-                    $row['type_id'],
-                    $row['marque'],
-                    $row['modele'],
-                    $row['numero_serie'],
-                    $row['couleur'],
-                    $row['immatriculation'],
-                    $row['kilometres'],
-                    $row['date_achat'],
-                    $row['prix_achat'],
-                    $row['categorie'] ?? null,
-                    $row['tarif_journalier'] ?? null,
-                    $row['is_available']
-                );
-            }
-            error_log("Trouvé " . count($vehicules) . " véhicules");
-            return $vehicules;
-        } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération de tous les véhicules : " . $e->getMessage());
-            throw new Exception("Impossible de récupérer la liste des véhicules.");
+public static function findAll($page = 1, $perPage = 10) {
+    self::checkDbConnection();
+    $offset = ($page - 1) * $perPage;
+    try {
+        $stmt = self::$db->prepare("SELECT * FROM vehicules LIMIT :limit OFFSET :offset");
+        $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $vehicules = [];
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            $vehicules[] = new Vehicule(
+                $row['id'],
+                $row['type_id'],
+                $row['marque'],
+                $row['modele'],
+                $row['numero_serie'],
+                $row['couleur'],
+                $row['immatriculation'],
+                $row['kilometres'],
+                $row['date_achat'],
+                $row['prix_achat'],
+                $row['categorie'] ?? null,
+                $row['tarif_journalier'] ?? null,
+                $row['is_available']
+            );
         }
+        return $vehicules;
+    } catch (PDOException $e) {
+        error_log("Erreur lors de la récupération de tous les véhicules : " . $e->getMessage());
+        throw new Exception("Impossible de récupérer la liste des véhicules.");
     }
+}
 
     public static function findById($id) {
         self::checkDbConnection();
