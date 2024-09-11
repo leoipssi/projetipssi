@@ -2,13 +2,12 @@
 class AuthController extends BaseController {
     public function __construct($logger = null) {
         parent::__construct($logger);
-        // Assurez-vous que User::setLogger() est appelé quelque part dans votre application
         User::setLogger($this->logger);
     }
 
     public function register() {
         $errors = [];
-        $csrfToken = $this->generateCsrfToken();
+        $csrfToken = $this->csrf_token();
         $this->logger->debug("Generated CSRF Token for registration: " . $csrfToken);
         if ($this->isPost()) {
             $this->logger->debug("POST request detected for registration");
@@ -51,7 +50,7 @@ class AuthController extends BaseController {
     public function login() {
         $this->logger->debug("Début de la méthode login");
         $error = null;
-        $csrfToken = $this->generateCsrfToken();
+        $csrfToken = $this->csrf_token();
         $this->logger->debug("Generated CSRF Token for login: " . $csrfToken);
         if ($this->isPost()) {
             $this->logger->debug("POST request detected for login");
@@ -97,21 +96,6 @@ class AuthController extends BaseController {
         $this->redirect('home');
     }
 
-    public function isAdmin() {
-        if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
-            return $_SESSION['user_role'] === 'Administrateur';
-        }
-        return false;
-    }
-
-    public function checkLoggedIn() {
-        return isset($_SESSION['user_id']);
-    }
-
-    protected function sanitizeUserData($data) {
-        return array_map('trim', array_map('htmlspecialchars', $data));
-    }
-
     protected function validateRegistrationInput($data) {
         $errors = [];
         if (strlen($data['username']) < 3 || strlen($data['username']) > 50) {
@@ -144,47 +128,10 @@ class AuthController extends BaseController {
         return $errors;
     }
 
-    public function generateCsrfToken() {
-        if (empty($_SESSION['csrf_token'])) {
-            $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-            $this->logger->debug("New CSRF token generated: " . $_SESSION['csrf_token']);
-        } else {
-            $this->logger->debug("Existing CSRF token used: " . $_SESSION['csrf_token']);
-        }
-        return $_SESSION['csrf_token'];
-    }
-
     protected function initializeUserSession($user) {
         session_regenerate_id(true);
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_role'] = $user->getRole();
         $this->logger->debug("User session initialized. User ID: {$user->getId()}, Role: {$user->getRole()}");
-    }
-
-    protected function verifyCsrfToken() {
-        $token = $_POST['csrf_token'] ?? '';
-        if (!hash_equals($_SESSION['csrf_token'], $token)) {
-            throw new Exception('Invalid CSRF token');
-        }
-    }
-
-    protected function getPostData() {
-        return $_POST;
-    }
-
-    protected function isPost() {
-        return $_SERVER['REQUEST_METHOD'] === 'POST';
-    }
-
-    protected function redirect($path) {
-        header("Location: /{$path}");
-        exit();
-    }
-
-    protected function render($view, $data = []) {
-        // Implémentez votre logique de rendu ici
-        // Par exemple :
-        extract($data);
-        include "views/home.php";
     }
 }
