@@ -28,7 +28,34 @@ class RentalOffer {
         $this->is_available = $is_available;
     }
 
-    // Getters restent inchangés
+    // Getters
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getVehiculeId() {
+        return $this->vehicule_id;
+    }
+
+    public function getDuree() {
+        return $this->duree;
+    }
+
+    public function getKilometres() {
+        return $this->kilometres;
+    }
+
+    public function getPrix() {
+        return $this->prix;
+    }
+
+    public function isActive() {
+        return $this->is_active;
+    }
+
+    public function isAvailable() {
+        return $this->is_available;
+    }
 
     public function setAvailable($available) {
         $this->is_available = $available;
