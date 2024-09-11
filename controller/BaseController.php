@@ -17,7 +17,7 @@ class BaseController {
         }
         
         $viewsPath = __DIR__ . "/../views";
-        $layoutsPath = __DIR__ . "/../layouts";
+        $layoutsPath = __DIR__ . "/../views/layouts";
         
         if (!is_dir($viewsPath)) {
             $this->logger->error('Views directory not found: ' . $viewsPath);
