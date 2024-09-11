@@ -120,9 +120,9 @@ try {
             $controller = new AdminController($logger);
             $controller->index();
             break;
-        case 'vehicles':
-            echo "Exécution de la route 'vehicles'<br>";
-            $controller = new VehicleController($logger);
+        case 'vehicules':
+            echo "Exécution de la route 'vehicules'<br>";
+            $controller = new VehiculeController($logger);
             $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
             echo "Action de véhicule : $action<br>";
             if (method_exists($controller, $action)) {
