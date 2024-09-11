@@ -9,25 +9,46 @@ class BaseController {
         } else {
             $this->logger = $logger;
         }
+        $this->logger->info('BaseController initialized');
+
+        if (!defined('BASE_URL')) {
+            $this->logger->error('BASE_URL is not defined');
+            die('Configuration error: BASE_URL is not defined');
+        }
+        
+        $viewsPath = __DIR__ . "/../views";
+        $layoutsPath = __DIR__ . "/../layouts";
+        
+        if (!is_dir($viewsPath)) {
+            $this->logger->error('Views directory not found: ' . $viewsPath);
+            die('Configuration error: Views directory not found');
+        }
+        
+        if (!is_dir($layoutsPath)) {
+            $this->logger->error('Layouts directory not found: ' . $layoutsPath);
+            die('Configuration error: Layouts directory not found');
+        }
     }
 
     protected function render($view, $data = [], $layout = 'main') {
         try {
+            $this->logger->info("Rendering view: $view");
             extract($data);
             
             ob_start();  
-            $viewPath = __DIR__ . "/../views/home.php";
+            $viewPath = __DIR__ . "/../views/{$view}.php";
             if (!file_exists($viewPath)) {
                 throw new Exception("Vue non trouvée : {$view}");
             }
             include $viewPath;
             $content = ob_get_clean(); 
             
-            if ($layout && file_exists(__DIR__ . "/../layouts/main.php")) {
-                include __DIR__ . "/../layouts/main.php";
+            if ($layout && file_exists(__DIR__ . "/../layouts/{$layout}.php")) {
+                include __DIR__ . "/../layouts/{$layout}.php";
             } else {
                 echo $content;
             }
+            $this->logger->info("View rendered successfully: $view");
         } catch (Exception $e) {
             $this->logger->error('Erreur lors du rendu de la vue: ' . $e->getMessage());
             echo "Une erreur est survenue lors de l'affichage de la page. Détails : " . $e->getMessage();
@@ -148,4 +169,15 @@ class BaseController {
             }
         }
     }
+
+    protected function debugInfo() {
+        echo "<pre>";
+        echo "Current PHP version: " . phpversion() . "\n";
+        echo "Loaded PHP extensions: " . implode(', ', get_loaded_extensions()) . "\n";
+        echo "Include path: " . get_include_path() . "\n";
+        echo "Current working directory: " . getcwd() . "\n";
+        echo "Script filename: " . $_SERVER['SCRIPT_FILENAME'] . "\n";
+        echo "</pre>";
+    }
 }
+?>
