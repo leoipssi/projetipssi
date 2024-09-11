@@ -1,23 +1,20 @@
 <?php
 
 class HomeController extends BaseController {
-    private $vehiculeModel;
-    private $rentalOfferModel;
+    private $db;
 
     public function __construct($logger = null) {
         parent::__construct($logger);
-        $this->vehiculeModel = new Vehicule();
-        $this->rentalOfferModel = new RentalOffer();
+        global $db;
+        $this->db = $db;
     }
 
     public function index() {
-        global $db;
-        
         try {
-            $this->checkDatabaseConnection($db);
+            $this->checkDatabaseConnection();
 
-            $this->vehiculeModel::setDB($db);
-            $this->rentalOfferModel::setDB($db);
+            Vehicule::setDB($this->db);
+            RentalOffer::setDB($this->db);
             
             $recentVehicules = $this->getRecentVehicules();
             $activeOffers = $this->getActiveOffers();
@@ -31,15 +28,15 @@ class HomeController extends BaseController {
         }
     }
 
-    private function checkDatabaseConnection($db) {
-        if (!$db instanceof PDO) {
+    private function checkDatabaseConnection() {
+        if (!$this->db instanceof PDO) {
             throw new Exception("La connexion à la base de données n'est pas disponible");
         }
     }
 
     private function getRecentVehicules() {
         try {
-            $recentVehicules = $this->vehiculeModel::getRecentVehicules(5);
+            $recentVehicules = Vehicule::getRecentVehicules(5);
             $this->logger->info("Véhicules récents récupérés avec succès", ['count' => count($recentVehicules)]);
             return $recentVehicules;
         } catch (Exception $e) {
@@ -50,7 +47,7 @@ class HomeController extends BaseController {
 
     private function getActiveOffers() {
         try {
-            $activeOffers = $this->rentalOfferModel::getActiveOffers(3);
+            $activeOffers = RentalOffer::getActiveOffers(3);
             $this->logger->info("Offres actives récupérées avec succès", ['count' => count($activeOffers)]);
             return $activeOffers;
         } catch (Exception $e) {
