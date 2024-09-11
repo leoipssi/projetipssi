@@ -9,11 +9,6 @@ function custom_log($message) {
     error_log(date('Y-m-d H:i:s') . ': ' . $message . "\n", 3, 'debug.log');
 }
 
-// Fonction de nettoyage des entrées
-function sanitize_input($input) {
-    return htmlspecialchars(strip_tags($input), ENT_QUOTES, 'UTF-8');
-}
-
 // Logging du démarrage du script
 custom_log("Script started");
 
@@ -54,13 +49,9 @@ $logger = new \Monolog\Logger('app');
 $logger->pushHandler(new \Monolog\Handler\StreamHandler('logs/app.log', \Monolog\Logger::DEBUG));
 
 // Vérification de la connexion à la base de données
-try {
-    $db = new PDO("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASS);
-    $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $logger->info("Connexion à la base de données établie avec succès.");
-} catch (PDOException $e) {
-    $logger->error("Erreur de connexion à la base de données : " . $e->getMessage());
-    die("Erreur : La connexion à la base de données n'a pas pu être établie. Vérifiez le fichier database.php et les logs pour plus de détails.");
+if (!is_db_connected()) {
+    $logger->error("La connexion à la base de données n'est pas établie.");
+    die("Erreur : La connexion à la base de données n'est pas établie.");
 }
 
 // Autoloader personnalisé
@@ -146,3 +137,4 @@ try {
 }
 
 custom_log("Script ended");
+?>
