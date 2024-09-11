@@ -195,49 +195,49 @@ class Vehicule {
         }
     }
 
-public static function findById($id) {
-    self::checkDbConnection();
-    try {
-        $stmt = self::$db->prepare("SELECT * FROM vehicules WHERE id = ?");
-        $stmt->execute([$id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if ($row) {
-            // Vérifions chaque champ pour nous assurer qu'il n'y a pas de tableau inattendu
-            foreach ($row as $key => $value) {
-                if (is_array($value)) {
-                    error_log("Champ inattendu de type array dans vehicules pour l'ID $id : $key");
-                    $row[$key] = json_encode($value); // Convertir le tableau en JSON si nécessaire
-                }
-            }
+    public static function findById($id) {
+        self::checkDbConnection();
+        try {
+            $stmt = self::$db->prepare("SELECT * FROM vehicules WHERE id = ?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            return new Vehicule(
-                $row['id'],
-                $row['type_id'],
-                $row['marque'],
-                $row['modele'],
-                $row['numero_serie'],
-                $row['couleur'],
-                $row['immatriculation'],
-                $row['kilometres'],
-                $row['date_achat'],
-                $row['prix_achat'],
-                $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null,
-                $row['is_available']
-            );
-        } else {
-            error_log("Aucun véhicule trouvé avec l'ID : $id");
-            return null;
+            if ($row) {
+                // Vérifions chaque champ pour nous assurer qu'il n'y a pas de tableau inattendu
+                foreach ($row as $key => $value) {
+                    if (is_array($value)) {
+                        error_log("Champ inattendu de type array dans vehicules pour l'ID $id : $key");
+                        $row[$key] = json_encode($value); // Convertir le tableau en JSON si nécessaire
+                    }
+                }
+                
+                return new Vehicule(
+                    $row['id'],
+                    $row['type_id'],
+                    $row['marque'],
+                    $row['modele'],
+                    $row['numero_serie'],
+                    $row['couleur'],
+                    $row['immatriculation'],
+                    $row['kilometres'],
+                    $row['date_achat'],
+                    $row['prix_achat'],
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    $row['is_available']
+                );
+            } else {
+                error_log("Aucun véhicule trouvé avec l'ID : $id");
+                return null;
+            }
+        } catch (PDOException $e) {
+            error_log("Erreur lors de la recherche du véhicule par ID : " . $e->getMessage());
+            throw new Exception("Impossible de trouver le véhicule spécifié.");
+        } catch (Exception $e) {
+            error_log("Erreur inattendue lors de la recherche du véhicule par ID : " . $e->getMessage());
+            throw $e;
         }
-    } catch (PDOException $e) {
-        error_log("Erreur lors de la recherche du véhicule par ID : " . $e->getMessage());
-        throw new Exception("Impossible de trouver le véhicule spécifié.");
-    } catch (Exception $e) {
-        error_log("Erreur inattendue lors de la recherche du véhicule par ID : " . $e->getMessage());
-        throw $e;
     }
-}
 
     public static function findAvailable() {
         self::checkDbConnection();
@@ -339,7 +339,7 @@ public static function findById($id) {
         }
     }
 
-    public static function getTopRented($limit = 5) {
+public static function getTopRented($limit = 5) {
         self::checkDbConnection();
         try {
             $stmt = self::$db->prepare("
@@ -352,7 +352,18 @@ public static function findById($id) {
             ");
             $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
             $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Traitement des résultats pour s'assurer qu'il n'y a pas de tableaux
+            foreach ($results as &$row) {
+                foreach ($row as $key => $value) {
+                    if (is_array($value)) {
+                        $row[$key] = json_encode($value);
+                    }
+                }
+            }
+            
+            return $results;
         } catch (PDOException $e) {
             error_log("Erreur lors de la récupération des véhicules les plus loués : " . $e->getMessage());
             throw new Exception("Impossible de récupérer les véhicules les plus loués.");
@@ -424,3 +435,4 @@ public static function findById($id) {
         }
     }
 }
+?>
