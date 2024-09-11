@@ -92,11 +92,15 @@ class AuthController extends BaseController {
         $this->redirect('home');
     }
 
-    public static function isAdmin() {
+    public function isAdmin() {
         if (isset($_SESSION['user_id']) && isset($_SESSION['user_role'])) {
             return $_SESSION['user_role'] === 'Administrateur';
         }
         return false;
+    }
+
+    public function checkLoggedIn() {
+        return isset($_SESSION['user_id']);
     }
 
     public static function checkLoggedIn() {
