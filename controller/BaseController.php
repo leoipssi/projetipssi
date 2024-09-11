@@ -30,32 +30,40 @@ class BaseController {
         }
     }
 
-    protected function render($view, $data = [], $layout = 'main') {
-        try {
-            $this->logger->info("Rendering view: $view");
-            extract($data);
-            
-            ob_start();  
-            $viewPath = __DIR__ . "/../views/{$view}.php";
-            if (!file_exists($viewPath)) {
-                throw new Exception("Vue non trouvée : {$view}");
-            }
-            include $viewPath;
-            $content = ob_get_clean(); 
-            
-            if ($layout && file_exists(__DIR__ . "/../layouts/{$layout}.php")) {
-                include __DIR__ . "/../layouts/{$layout}.php";
-            } else {
-                echo $content;
-            }
-            $this->logger->info("View rendered successfully: $view");
-        } catch (Exception $e) {
-            $this->logger->error('Erreur lors du rendu de la vue: ' . $e->getMessage());
-            echo "Une erreur est survenue lors de l'affichage de la page. Détails : " . $e->getMessage();
-            echo "<br>Fichier : " . $e->getFile() . " à la ligne " . $e->getLine();
-            echo "<br>Trace : <pre>" . $e->getTraceAsString() . "</pre>";
+protected function render($view, $data = [], $layout = 'main') {
+    try {
+        $this->logger->info("Rendering view: $view");
+        extract($data);
+        
+        ob_start();  
+        $viewPath = __DIR__ . "/../views/{$view}.php";
+        if (!file_exists($viewPath)) {
+            throw new Exception("Vue non trouvée : {$view}");
         }
+        include $viewPath;
+        $content = ob_get_clean(); 
+        
+        if ($layout && file_exists(__DIR__ . "/../views/layouts/{$layout}.php")) {
+            include __DIR__ . "/../views/layouts/{$layout}.php";
+        } else {
+            echo $content;
+        }
+        $this->logger->info("View rendered successfully: $view");
+    } catch (Exception $e) {
+        $this->logger->error('Erreur lors du rendu de la vue: ' . $e->getMessage());
+        $this->renderErrorPage($e->getMessage());
     }
+}
+
+protected function renderErrorPage($message) {
+    $errorViewPath = __DIR__ . "/../views/404.php";
+    if (file_exists($errorViewPath)) {
+        extract(['message' => $message]);
+        include $errorViewPath;
+    } else {
+        echo "Une erreur est survenue : " . $this->e($message);
+    }
+}
 
     protected function e($value) {
         return htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
