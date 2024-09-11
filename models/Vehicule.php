@@ -18,6 +18,7 @@ class Vehicule {
 
     public static function setDB($db) {
         self::$db = $db;
+        error_log("Database connection set for Vehicule class");
     }
 
     public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie = null, $tarif_journalier = null, $is_available = true) {
@@ -56,9 +57,7 @@ class Vehicule {
     }
 
     public function getType() {
-        if (!self::$db) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
+        self::checkDbConnection();
         $stmt = self::$db->prepare("SELECT nom FROM vehicule_types WHERE id = ?");
         $stmt->execute([$this->type_id]);
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -70,9 +69,7 @@ class Vehicule {
     }
 
     public static function create($data) {
-        if (!self::$db) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
+        self::checkDbConnection();
         
         $defaultData = [
             'type_id' => null,
@@ -127,9 +124,7 @@ class Vehicule {
     }
 
     public function update($data) {
-        if (!self::$db) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
+        self::checkDbConnection();
         $stmt = self::$db->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ?, categorie = ?, tarif_journalier = ?, is_available = ? WHERE id = ?");
         $stmt->execute([
             $data['type_id'] ?? $this->type_id,
@@ -150,9 +145,8 @@ class Vehicule {
     }
 
     public static function findAll() {
-        if (!self::$db) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
+        self::checkDbConnection();
+        error_log("Attempting to find all vehicles");
         $stmt = self::$db->query("SELECT * FROM vehicules");
         $vehicules = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -172,13 +166,12 @@ class Vehicule {
                 $row['is_available']
             );
         }
+        error_log("Found " . count($vehicules) . " vehicles");
         return $vehicules;
     }
 
     public static function findById($id) {
-        if (!self::$db) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
+        self::checkDbConnection();
         $stmt = self::$db->prepare("SELECT * FROM vehicules WHERE id = ?");
         $stmt->execute([$id]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -203,9 +196,7 @@ class Vehicule {
     }
 
     public static function findAvailable() {
-        if (!self::$db) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
+        self::checkDbConnection();
         $stmt = self::$db->query("SELECT * FROM vehicules WHERE is_available = TRUE");
         $vehicules = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -229,9 +220,7 @@ class Vehicule {
     }
 
     public static function findRented() {
-        if (!self::$db) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
+        self::checkDbConnection();
         $stmt = self::$db->query("SELECT v.* FROM vehicules v JOIN rentals r ON v.id = r.vehicule_id WHERE r.status = 'En cours'");
         $vehicules = [];
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -255,17 +244,13 @@ class Vehicule {
     }
 
     public static function count() {
-        if (!self::$db) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
+        self::checkDbConnection();
         $stmt = self::$db->query("SELECT COUNT(*) FROM vehicules");
         return $stmt->fetchColumn();
     }
 
     public static function getRecentVehicules($limit = 5) {
-        if (!self::$db) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
+        self::checkDbConnection();
         $stmt = self::$db->prepare("SELECT * FROM vehicules ORDER BY date_achat DESC LIMIT :limit");
         $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
@@ -291,9 +276,7 @@ class Vehicule {
     }
 
     public static function getTopRented($limit = 5) {
-        if (!self::$db) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
+        self::checkDbConnection();
         $stmt = self::$db->prepare("
             SELECT v.*, COUNT(r.id) as rental_count, SUM(r.prix_total) as revenue
             FROM vehicules v
@@ -305,5 +288,12 @@ class Vehicule {
         $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    private static function checkDbConnection() {
+        if (!self::$db) {
+            error_log("Database connection not established in Vehicule class");
+            throw new Exception("La connexion à la base de données n'est pas établie.");
+        }
     }
 }
