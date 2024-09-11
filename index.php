@@ -96,8 +96,15 @@ echo "Route actuelle : $route<br>";
 echo "Création de l'instance AuthController<br>";
 $authController = new AuthController($logger);
 
+// Définir les routes valides
+$validRoutes = ['home', 'login', 'register', 'logout', 'admin', 'vehicules', 'rentals'];
+
 // Gestion des erreurs
 try {
+    if (!in_array($route, $validRoutes)) {
+        throw new Exception("Page non trouvée", 404);
+    }
+
     switch ($route) {
         case 'home':
             echo "Exécution de la route 'home'<br>";
@@ -121,17 +128,17 @@ try {
             $controller->index();
             break;
         case 'vehicules':
-    echo "Exécution de la route 'vehicules'<br>";
-    $controller = new VehiculeController($logger);
-    $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
-    echo "Action de véhicule : $action<br>";
-    if (method_exists($controller, $action)) {
-        $controller->$action($_POST ?? null);
-    } else {
-        $logger->warning("Action de véhicule non trouvée : {$action}");
-        throw new Exception("Action de véhicule non trouvée", 404);
-    }
-    break;
+            echo "Exécution de la route 'vehicules'<br>";
+            $controller = new VehiculeController($logger);
+            $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
+            echo "Action de véhicule : $action<br>";
+            if (method_exists($controller, $action)) {
+                $controller->$action($_POST ?? null);
+            } else {
+                $logger->warning("Action de véhicule non trouvée : {$action}");
+                throw new Exception("Action de véhicule non trouvée", 404);
+            }
+            break;
         case 'rentals':
             echo "Exécution de la route 'rentals'<br>";
             if (!$authController->isLoggedIn()) {
@@ -150,19 +157,19 @@ try {
                 throw new Exception("Action de location non trouvée", 404);
             }
             break;
-        default:
-            $logger->warning("Route non trouvée : {$route}");
-            throw new Exception("Page non trouvée", 404);
     }
 } catch (Exception $e) {
     $logger->error($e->getMessage() . ' dans ' . $e->getFile() . ' à la ligne ' . $e->getLine());
     if ($e->getCode() === 404) {
         header("HTTP/1.0 404 Not Found");
         echo "<h1>404 - Page non trouvée</h1>";
+        echo "<p>Désolé, la page que vous recherchez n'existe pas.</p>";
     } else {
         echo "<h1>Une erreur est survenue</h1>";
         echo "<p>" . htmlspecialchars($e->getMessage()) . "</p>";
-        echo "<p>Fichier : " . $e->getFile() . " à la ligne " . $e->getLine() . "</p>";
+        if (defined('DEBUG_MODE') && DEBUG_MODE) {
+            echo "<p>Fichier : " . $e->getFile() . " à la ligne " . $e->getLine() . "</p>";
+        }
     }
 }
 
