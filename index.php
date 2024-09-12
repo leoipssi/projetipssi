@@ -27,7 +27,7 @@ function custom_log($message) {
 custom_log("Script started");
 
 // Vérification des fichiers requis
-$required_files = ['database.php', 'config.php', 'helpers.php', 'vendor/autoload.php'];
+$required_files = ['database.php', 'config.php', 'helpers.php', 'vendor/autoload.php', '/models/Vehicule.php'];
 foreach ($required_files as $file) {
     if (!file_exists($file)) {
         custom_log("Fichier requis manquant: $file");
