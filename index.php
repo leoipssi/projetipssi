@@ -34,6 +34,16 @@ foreach ($required_files as $file) {
     custom_log("Fichier chargé : $file");
 }
 
+// Initialisation de Vehicule::setDB()
+global $db;
+if (class_exists('Vehicule') && is_db_connected()) {
+    custom_log("Tentative d'initialisation de Vehicule::setDB()");
+    Vehicule::setDB($db);
+    custom_log("Vehicule::setDB() initialisé avec succès");
+} else {
+    custom_log("Impossible d'initialiser Vehicule::setDB(). Classe existe: " . (class_exists('Vehicule') ? 'Oui' : 'Non') . ", DB connectée: " . (is_db_connected() ? 'Oui' : 'Non'));
+}
+
 // Appliquer les configurations de session
 configure_session();
 
@@ -115,6 +125,7 @@ try {
             $controller->index();
             break;
         case 'vehicules':
+            custom_log("Vérification de la connexion à la base de données avant d'instancier VehiculeController: " . (Vehicule::isDbConnected() ? "Connecté" : "Non connecté"));
             $controller = new VehiculeController($logger);
             $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
             if (method_exists($controller, $action)) {
