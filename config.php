@@ -1,44 +1,27 @@
 <?php
-global $db;
-$host = 'localhost';
-$db_name = 'e_motion';
-$user = 'emotion_user';
-$pass = 'IPSSI2024';
-$charset = 'utf8mb4';
-$dsn = "mysql:host=$host;dbname=$db_name;charset=$charset";
-$options = [
-    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
-    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-    PDO::ATTR_EMULATE_PREPARES   => false,
-];
+// Assurez-vous que cette ligne est au début du fichier
+require_once 'database.php';
 
-// Fonction de logging personnalisée
-function db_log($message, $level = 'INFO') {
-    if (defined('DEBUG_MODE') && DEBUG_MODE) {
-        error_log("[DB] [$level] $message");
+// Configurations générales de l'application
+define('BASE_URL', 'https://extranet.emotionipssi.com');
+define('SITE_NAME', 'E-Motion');
+
+// Configurations de session
+ini_set('session.gc_maxlifetime', 3600);
+ini_set('session.cookie_lifetime', 3600);
+ini_set('session.use_only_cookies', 1);
+ini_set('session.use_strict_mode', 1);
+ini_set('session.cookie_httponly', 1);
+ini_set('session.cookie_secure', 1); // Uniquement si HTTPS est utilisé
+ini_set('session.cookie_samesite', 'Lax');
+
+// Autres configurations globales
+define('UPLOAD_DIR', __DIR__ . '/uploads');
+define('MAX_FILE_SIZE', 5 * 1024 * 1024); // 5 MB
+
+// Fonction de logging générale
+function app_log($message, $level = 'INFO') {
+    if (DEBUG_MODE) {
+        error_log("[APP] [$level] $message");
     }
-}
-
-db_log("Tentative de connexion à la base de données...", 'DEBUG');
-
-try {
-    $db = new PDO($dsn, $user, $pass, $options);
-    db_log("Connexion à la base de données réussie", 'INFO');
-} catch (\PDOException $e) {
-    db_log("Erreur de connexion PDO : " . $e->getMessage(), 'ERROR');
-    db_log("Code d'erreur PDO : " . $e->getCode(), 'ERROR');
-    $db = null;
-}
-
-function is_db_connected() {
-    global $db;
-    try {
-        if ($db instanceof PDO) {
-            $db->query("SELECT 1");
-            return true;
-        }
-    } catch (PDOException $e) {
-        db_log("Erreur lors de la vérification de la connexion : " . $e->getMessage(), 'ERROR');
-    }
-    return false;
 }
