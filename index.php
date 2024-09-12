@@ -1,4 +1,7 @@
 <?php
+require_once '/views/Vehicule.php';
+Vehicule::setLogLevel('DEBUG');
+
 // Définir DEBUG_MODE (à mettre à false en production)
 define('DEBUG_MODE', true);
 
