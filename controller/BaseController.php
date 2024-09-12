@@ -30,30 +30,35 @@ class BaseController {
         }
     }
 
-    protected function render($view, $data = [], $layout = 'main') {
-        try {
-            $this->logger->info("Rendering view: $view");
-            extract($data);
-            
-            ob_start();  
-            $viewPath = __DIR__ . "/../views/{$view}.php";
-            if (!file_exists($viewPath)) {
-                throw new Exception("Vue non trouvée : {$view}");
-            }
-            include $viewPath;
-            $content = ob_get_clean(); 
-            
-            if ($layout && file_exists(__DIR__ . "/../views/layouts/{$layout}.php")) {
-                include __DIR__ . "/../views/layouts/{$layout}.php";
-            } else {
-                echo $content;
-            }
-            $this->logger->info("View rendered successfully: $view");
-        } catch (Exception $e) {
-            $this->logger->error('Erreur lors du rendu de la vue: ' . $e->getMessage());
-            $this->renderErrorPage($e->getMessage());
+protected function render($view, $data = [], $layout = 'main') {
+    try {
+        $this->logger->info("Début du rendu de la vue : $view");
+        extract($data);
+        
+        ob_start();  
+        $viewPath = __DIR__ . "/../views/{$view}.php";
+        $this->logger->info("Chemin de la vue : $viewPath");
+        if (!file_exists($viewPath)) {
+            throw new Exception("Vue non trouvée : {$view}");
         }
+        include $viewPath;
+        $content = ob_get_clean(); 
+        $this->logger->info("Contenu de la vue capturé, longueur : " . strlen($content));
+        
+        if ($layout && file_exists(__DIR__ . "/../views/layouts/{$layout}.php")) {
+            $layoutPath = __DIR__ . "/../views/layouts/{$layout}.php";
+            $this->logger->info("Utilisation du layout : $layoutPath");
+            include $layoutPath;
+        } else {
+            $this->logger->info("Affichage du contenu sans layout");
+            echo $content;
+        }
+        $this->logger->info("Fin du rendu de la vue : $view");
+    } catch (Exception $e) {
+        $this->logger->error('Erreur lors du rendu de la vue: ' . $e->getMessage());
+        $this->renderErrorPage($e->getMessage());
     }
+}
 
     protected function renderErrorPage($message) {
         $errorViewPath = __DIR__ . "/../views/404.php";
