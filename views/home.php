@@ -1,11 +1,15 @@
-<?php
-$this->logger->debug("Début du fichier home.php");
-$this->logger->debug("Nombre de véhicules récents : " . (isset($recentVehicules) ? count($recentVehicules) : 'non défini'));
-$this->logger->debug("Nombre d'offres actives : " . (isset($activeOffers) ? count($activeOffers) : 'non défini'));
-
-if (!isset($recentVehicules) || !isset($activeOffers)) {
-    $this->logger->error("Les variables recentVehicules ou activeOffers ne sont pas définies dans la vue");
-}
+<?php 
+$vehiculeCount = 0;
+if (isset($recentVehicules) && is_array($recentVehicules)):
+    $this->logger->debug("Type de recentVehicules : " . gettype($recentVehicules));
+    $this->logger->debug("Nombre de véhicules récents : " . count($recentVehicules));
+    foreach ($recentVehicules as $index => $vehicule): 
+        $vehiculeCount++;
+        $this->logger->debug("Traitement du véhicule $index : " . print_r($vehicule, true));
+        if (!is_object($vehicule) || !($vehicule instanceof Vehicule)) {
+            $this->logger->error("Élément non valide trouvé dans recentVehicules", ['index' => $index, 'element' => var_export($vehicule, true)]);
+            continue;
+        }
 ?>
 
 <div class="container mt-4">
@@ -69,10 +73,12 @@ if (!isset($recentVehicules) || !isset($activeOffers)) {
                     </div>
                 </div>
             <?php 
-                endforeach;
-            endif;
-            $this->logger->debug("Nombre d'offres affichées : " . $offerCount);
-            ?>
+    endforeach;
+else:
+    $this->logger->error("recentVehicules n'est pas défini ou n'est pas un tableau");
+endif;
+$this->logger->debug("Nombre de véhicules affichés : " . $vehiculeCount);
+?>
         </div>
     </section>
 </div>
