@@ -1,7 +1,11 @@
 <?php
-$this->logger->info("Début du fichier home.php");
-$this->logger->info("Nombre de véhicules récents : " . count($recentVehicules));
-$this->logger->info("Nombre d'offres actives : " . count($activeOffers));
+$this->logger->debug("Début du fichier home.php");
+$this->logger->debug("Nombre de véhicules récents : " . (isset($recentVehicules) ? count($recentVehicules) : 'non défini'));
+$this->logger->debug("Nombre d'offres actives : " . (isset($activeOffers) ? count($activeOffers) : 'non défini'));
+
+if (!isset($recentVehicules) || !isset($activeOffers)) {
+    $this->logger->error("Les variables recentVehicules ou activeOffers ne sont pas définies dans la vue");
+}
 ?>
 
 <div class="container mt-4">
@@ -10,14 +14,27 @@ $this->logger->info("Nombre d'offres actives : " . count($activeOffers));
         <p class="lead">Découvrez notre sélection de véhicules électriques pour une mobilité durable et économique.</p>
         <a href="<?= BASE_URL ?>/index.php?route=vehicules" class="btn btn-primary btn-lg">Voir nos véhicules</a>
     </div>
-
     <section class="mt-5">
         <h2 class="text-center mb-4">Nos derniers véhicules</h2>
         <div class="row">
-            <?php foreach ($recentVehicules as $vehicule): ?>
+            <?php 
+            $vehiculeCount = 0;
+            if (isset($recentVehicules) && is_array($recentVehicules)):
+                foreach ($recentVehicules as $vehicule): 
+                    $vehiculeCount++;
+            ?>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
-                        <img src="<?= BASE_URL ?>/public/images/vehicules/<?= $vehicule->getId() ?>.jpg" class="card-img-top" alt="<?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>">
+                        <?php
+                        $imagePath = BASE_URL . "/public/images/vehicules/" . $vehicule->getId() . ".jpg";
+                        if (file_exists($_SERVER['DOCUMENT_ROOT'] . parse_url($imagePath, PHP_URL_PATH))) {
+                            $this->logger->debug("L'image existe : " . $imagePath);
+                        } else {
+                            $this->logger->warning("L'image n'existe pas : " . $imagePath);
+                            $imagePath = BASE_URL . "/public/images/placeholder.jpg"; // Image par défaut
+                        }
+                        ?>
+                        <img src="<?= $imagePath ?>" class="card-img-top" alt="<?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?>">
                         <div class="card-body">
                             <h5 class="card-title"><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></h5>
                             <p class="card-text">Type: <?= htmlspecialchars($vehicule->getType()) ?></p>
@@ -25,14 +42,22 @@ $this->logger->info("Nombre d'offres actives : " . count($activeOffers));
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+            <?php 
+                endforeach;
+            endif;
+            $this->logger->debug("Nombre de véhicules affichés : " . $vehiculeCount);
+            ?>
         </div>
     </section>
-
     <section class="mt-5">
         <h2 class="text-center mb-4">Offres spéciales</h2>
         <div class="row">
-            <?php foreach ($activeOffers as $offer): ?>
+            <?php 
+            $offerCount = 0;
+            if (isset($activeOffers) && is_array($activeOffers)):
+                foreach ($activeOffers as $offer): 
+                    $offerCount++;
+            ?>
                 <div class="col-md-4 mb-4">
                     <div class="card h-100">
                         <div class="card-body">
@@ -43,7 +68,11 @@ $this->logger->info("Nombre d'offres actives : " . count($activeOffers));
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
+            <?php 
+                endforeach;
+            endif;
+            $this->logger->debug("Nombre d'offres affichées : " . $offerCount);
+            ?>
         </div>
     </section>
 </div>
