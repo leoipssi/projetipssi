@@ -1,3 +1,9 @@
+<?php
+$this->logger->info("Début du fichier home.php");
+$this->logger->info("Nombre de véhicules récents : " . count($recentVehicules));
+$this->logger->info("Nombre d'offres actives : " . count($activeOffers));
+?>
+
 <div class="container mt-4">
     <div class="jumbotron text-center">
         <h1 class="display-4">Bienvenue sur e-Motion</h1>
