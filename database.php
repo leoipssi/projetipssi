@@ -1,8 +1,17 @@
 <?php
 // Définir DEBUG_MODE si ce n'est pas déjà fait
 if (!defined('DEBUG_MODE')) {
-    define('DEBUG_MODE', false); // Mettez à true pour le débogage
+    define('DEBUG_MODE', true); // Mettre à true pour le débogage
 }
+
+// Fonction de logging personnalisée
+function db_log($message, $level = 'INFO') {
+    if (DEBUG_MODE) {
+        error_log("[DB] [$level] $message");
+    }
+}
+
+db_log("Début de l'initialisation de la base de données", 'DEBUG');
 
 global $db;
 $host = 'localhost';
@@ -17,15 +26,7 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
-// Fonction de logging personnalisée
-function db_log($message, $level = 'INFO') {
-    if (DEBUG_MODE) {
-        error_log("[DB] [$level] $message");
-    }
-}
-
 db_log("Tentative de connexion à la base de données...", 'DEBUG');
-
 try {
     $db = new PDO($dsn, $user, $pass, $options);
     db_log("Connexion à la base de données réussie", 'INFO');
@@ -48,7 +49,24 @@ function is_db_connected() {
     return false;
 }
 
+// Vérification de l'existence de la classe Vehicule
+if (!class_exists('Vehicule')) {
+    db_log("La classe Vehicule n'existe pas. Assurez-vous qu'elle est bien chargée.", 'ERROR');
+} else {
+    db_log("La classe Vehicule existe", 'DEBUG');
+}
+
 // Initialisation de Vehicule::setDB() si nécessaire
 if (class_exists('Vehicule') && is_db_connected()) {
-    Vehicule::setDB($db);
+    db_log("Tentative d'initialisation de Vehicule::setDB()", 'DEBUG');
+    try {
+        Vehicule::setDB($db);
+        db_log("Vehicule::setDB() initialisé avec succès", 'INFO');
+    } catch (Exception $e) {
+        db_log("Erreur lors de l'initialisation de Vehicule::setDB() : " . $e->getMessage(), 'ERROR');
+    }
+} else {
+    db_log("Impossible d'initialiser Vehicule::setDB(). Vérifiez la connexion à la base de données et l'existence de la classe Vehicule.", 'ERROR');
 }
+
+db_log("Fin de l'initialisation de la base de données", 'DEBUG');
