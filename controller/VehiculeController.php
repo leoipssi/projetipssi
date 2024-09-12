@@ -3,10 +3,16 @@ class VehiculeController extends BaseController {
     public function index() {
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
         $perPage = 9; // Nombre de véhicules par page
-        $perPage = 9;
-
         $vehicules = Vehicule::findAll($page, $perPage);
         $totalVehicules = Vehicule::count();
+        
+        $this->render('vehicules/index', [
+            'vehicules' => $vehicules,
+            'totalVehicules' => $totalVehicules,
+            'page' => $page,
+            'perPage' => $perPage
+        ]);
+    }
 
     public function show($id) {
         $vehicule = Vehicule::findById($id);
