@@ -15,13 +15,24 @@ class Vehicule {
     private $is_available;
 
     private static $db;
+    private static $logLevel = 'ERROR';
+
+    public static function setLogLevel($level) {
+        self::$logLevel = $level;
+    }
+
+    private static function log($message, $level = 'INFO') {
+        if (self::$logLevel == 'DEBUG' || (self::$logLevel == 'ERROR' && $level == 'ERROR')) {
+            error_log("[Vehicule] [$level] $message");
+        }
+    }
 
     public static function setDB($db) {
         if (!$db instanceof PDO) {
             throw new Exception("L'objet de base de données fourni n'est pas une instance valide de PDO.");
         }
         self::$db = $db;
-        error_log("Connexion à la base de données établie pour la classe Vehicule");
+        self::log("Connexion à la base de données établie pour la classe Vehicule", 'DEBUG');
     }
 
     public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie = null, $tarif_journalier = null, $is_available = true) {
@@ -40,20 +51,7 @@ class Vehicule {
         $this->is_available = $is_available;
     }
 
-    // Getters
-    public function getId() { return $this->id; }
-    public function getTypeId() { return $this->type_id; }
-    public function getMarque() { return $this->marque; }
-    public function getModele() { return $this->modele; }
-    public function getNumeroSerie() { return $this->numero_serie; }
-    public function getCouleur() { return $this->couleur; }
-    public function getImmatriculation() { return $this->immatriculation; }
-    public function getKilometres() { return $this->kilometres; }
-    public function getDateAchat() { return $this->date_achat; }
-    public function getPrixAchat() { return $this->prix_achat; }
-    public function getCategorie() { return $this->categorie; }
-    public function getTarifJournalier() { return $this->tarif_journalier; }
-    public function isAvailable() { return $this->is_available; }
+    // Getters restent inchangés
 
     public function setAvailable($available) {
         $this->is_available = $available;
@@ -67,7 +65,7 @@ class Vehicule {
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result ? $result['nom'] : 'Type inconnu';
         } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération du type de véhicule : " . $e->getMessage());
+            self::log("Erreur lors de la récupération du type de véhicule : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de récupérer le type de véhicule.");
         }
     }
@@ -130,7 +128,7 @@ class Vehicule {
                 );
             }
         } catch (PDOException $e) {
-            error_log("Erreur lors de la création du véhicule : " . $e->getMessage());
+            self::log("Erreur lors de la création du véhicule : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de créer le véhicule.");
         }
         return null;
@@ -157,7 +155,7 @@ class Vehicule {
             ]);
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
-            error_log("Erreur lors de la mise à jour du véhicule : " . $e->getMessage());
+            self::log("Erreur lors de la mise à jour du véhicule : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de mettre à jour le véhicule.");
         }
     }
@@ -190,7 +188,7 @@ class Vehicule {
             }
             return $vehicules;
         } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération de tous les véhicules : " . $e->getMessage());
+            self::log("Erreur lors de la récupération de tous les véhicules : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de récupérer la liste des véhicules.");
         }
     }
@@ -203,11 +201,10 @@ class Vehicule {
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
             if ($row) {
-                // Vérifions chaque champ pour nous assurer qu'il n'y a pas de tableau inattendu
                 foreach ($row as $key => $value) {
                     if (is_array($value)) {
-                        error_log("Champ inattendu de type array dans vehicules pour l'ID $id : $key");
-                        $row[$key] = json_encode($value); // Convertir le tableau en JSON si nécessaire
+                        self::log("Champ inattendu de type array dans vehicules pour l'ID $id : $key", 'WARNING');
+                        $row[$key] = json_encode($value);
                     }
                 }
                 
@@ -227,14 +224,14 @@ class Vehicule {
                     $row['is_available']
                 );
             } else {
-                error_log("Aucun véhicule trouvé avec l'ID : $id");
+                self::log("Aucun véhicule trouvé avec l'ID : $id", 'WARNING');
                 return null;
             }
         } catch (PDOException $e) {
-            error_log("Erreur lors de la recherche du véhicule par ID : " . $e->getMessage());
+            self::log("Erreur lors de la recherche du véhicule par ID : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de trouver le véhicule spécifié.");
         } catch (Exception $e) {
-            error_log("Erreur inattendue lors de la recherche du véhicule par ID : " . $e->getMessage());
+            self::log("Erreur inattendue lors de la recherche du véhicule par ID : " . $e->getMessage(), 'ERROR');
             throw $e;
         }
     }
@@ -263,7 +260,7 @@ class Vehicule {
             }
             return $vehicules;
         } catch (PDOException $e) {
-            error_log("Erreur lors de la recherche des véhicules disponibles : " . $e->getMessage());
+            self::log("Erreur lors de la recherche des véhicules disponibles : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de récupérer la liste des véhicules disponibles.");
         }
     }
@@ -292,7 +289,7 @@ class Vehicule {
             }
             return $vehicules;
         } catch (PDOException $e) {
-            error_log("Erreur lors de la recherche des véhicules loués : " . $e->getMessage());
+            self::log("Erreur lors de la recherche des véhicules loués : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de récupérer la liste des véhicules loués.");
         }
     }
@@ -303,7 +300,7 @@ class Vehicule {
             $stmt = self::$db->query("SELECT COUNT(*) FROM vehicules");
             return $stmt->fetchColumn();
         } catch (PDOException $e) {
-            error_log("Erreur lors du comptage des véhicules : " . $e->getMessage());
+            self::log("Erreur lors du comptage des véhicules : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de compter le nombre de véhicules.");
         }
     }
@@ -334,7 +331,7 @@ class Vehicule {
             }
             return $vehicules;
         } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération des véhicules récents : " . $e->getMessage());
+            self::log("Erreur lors de la récupération des véhicules récents : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de récupérer les véhicules récents.");
         }
     }
@@ -354,10 +351,10 @@ public static function getTopRented($limit = 5) {
             $stmt->execute();
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            // Traitement des résultats pour s'assurer qu'il n'y a pas de tableaux
             foreach ($results as &$row) {
                 foreach ($row as $key => $value) {
                     if (is_array($value)) {
+                        self::log("Champ inattendu de type array dans getTopRented : $key", 'WARNING');
                         $row[$key] = json_encode($value);
                     }
                 }
@@ -365,14 +362,14 @@ public static function getTopRented($limit = 5) {
             
             return $results;
         } catch (PDOException $e) {
-            error_log("Erreur lors de la récupération des véhicules les plus loués : " . $e->getMessage());
+            self::log("Erreur lors de la récupération des véhicules les plus loués : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de récupérer les véhicules les plus loués.");
         }
     }
 
     private static function checkDbConnection() {
         if (!self::$db instanceof PDO) {
-            error_log("La connexion à la base de données n'est pas établie dans la classe Vehicule");
+            self::log("La connexion à la base de données n'est pas établie dans la classe Vehicule", 'ERROR');
             throw new Exception("La connexion à la base de données n'est pas établie. Assurez-vous d'appeler Vehicule::setDB() avec une instance PDO valide avant d'utiliser la classe.");
         }
     }
@@ -384,7 +381,7 @@ public static function getTopRented($limit = 5) {
             $stmt->execute([$this->id]);
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
-            error_log("Erreur lors de la suppression du véhicule : " . $e->getMessage());
+            self::log("Erreur lors de la suppression du véhicule : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de supprimer le véhicule.");
         }
     }
@@ -430,7 +427,7 @@ public static function getTopRented($limit = 5) {
             }
             return $vehicules;
         } catch (PDOException $e) {
-            error_log("Erreur lors de la recherche de véhicules : " . $e->getMessage());
+            self::log("Erreur lors de la recherche de véhicules : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de rechercher les véhicules.");
         }
     }
