@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
+
 class AuthController extends BaseController {
     public function __construct($logger = null) {
         parent::__construct($logger);
@@ -6,15 +10,16 @@ class AuthController extends BaseController {
     }
 
     public function register() {
+        error_log("Début de la méthode register");
         $errors = [];
         $csrfToken = $this->csrf_token();
-        $this->logger->debug("Generated CSRF Token for registration: " . $csrfToken);
+        error_log("Generated CSRF Token for registration: " . $csrfToken);
         if ($this->isPost()) {
-            $this->logger->debug("POST request detected for registration");
-            $this->logger->debug("POST data received for registration: " . json_encode($_POST));
+            error_log("POST request detected for registration");
+            error_log("POST data received for registration: " . json_encode($_POST));
             try {
                 $this->verifyCsrfToken();
-                $this->logger->debug("CSRF verification passed for registration");
+                error_log("CSRF verification passed for registration");
                 $userData = $this->sanitizeUserData($_POST);
                 $errors = $this->validateRegistrationInput($userData);
                 if (empty($errors)) {
@@ -27,62 +32,62 @@ class AuthController extends BaseController {
                             $user = User::create($userData);
                             if ($user) {
                                 $this->initializeUserSession($user);
-                                $this->logger->info("Nouvel utilisateur enregistré: {$userData['username']}");
+                                error_log("Nouvel utilisateur enregistré: {$userData['username']}");
                                 $this->redirect('home');
                             } else {
                                 $errors[] = "Erreur lors de l'inscription.";
                             }
                         }
                     } catch (Exception $e) {
-                        $this->logger->error("Erreur lors de l'inscription: " . $e->getMessage());
+                        error_log("Erreur lors de l'inscription: " . $e->getMessage());
                         $errors[] = "Une erreur est survenue lors de l'inscription.";
                     }
                 }
             } catch (Exception $e) {
                 $errors[] = "Jeton CSRF invalide : " . $e->getMessage();
-                $this->logger->warning("CSRF verification failed for registration: " . $e->getMessage());
+                error_log("CSRF verification failed for registration: " . $e->getMessage());
             }
         }
-        $this->logger->debug("Rendering registration view with CSRF token: " . $csrfToken);
+        error_log("Rendering registration view with CSRF token: " . $csrfToken);
         $this->render('auth/register', ['errors' => $errors, 'csrfToken' => $csrfToken]);
     }
 
     public function login() {
-        $this->logger->debug("Début de la méthode login");
+        error_log("Début de la méthode login");
         $error = null;
         $csrfToken = $this->csrf_token();
-        $this->logger->debug("Generated CSRF Token for login: " . $csrfToken);
+        error_log("Generated CSRF Token for login: " . $csrfToken);
         if ($this->isPost()) {
-            $this->logger->debug("POST request detected for login");
-            $this->logger->debug("POST data received for login: " . json_encode($_POST));
+            error_log("POST request detected for login");
+            error_log("POST data received for login: " . json_encode($_POST));
             
             try {
                 $this->verifyCsrfToken();
-                $this->logger->debug("CSRF verification passed for login");
+                error_log("CSRF verification passed for login");
                 $username = $this->getPostData()['username'] ?? '';
                 $password = $this->getPostData()['password'] ?? '';
-                $this->logger->debug("Attempting authentication for user: " . $username);
+                error_log("Attempting authentication for user: " . $username);
                 try {
                     $user = User::authenticate($username, $password);
                     if ($user) {
                         $this->initializeUserSession($user);
-                        $this->logger->info("Connexion réussie: {$username}");
-                        $this->logger->debug("Redirecting to home page after successful login");
+                        error_log("Connexion réussie: {$username}");
+                        error_log("Redirecting to home page after successful login");
                         $this->redirect('home');
                     } else {
-                        $this->logger->warning("Tentative de connexion échouée pour l'utilisateur: {$username}");
+                        error_log("Tentative de connexion échouée pour l'utilisateur: {$username}");
                         $error = "Nom d'utilisateur ou mot de passe incorrect.";
                     }
                 } catch (Exception $e) {
-                    $this->logger->error("Erreur détaillée lors de la connexion: " . $e->getMessage());
+                    error_log("Erreur détaillée lors de la connexion: " . $e->getMessage());
                     $error = "Une erreur est survenue lors de la connexion.";
                 }
             } catch (Exception $e) {
                 $error = "Jeton CSRF invalide : " . $e->getMessage();
-                $this->logger->warning("CSRF verification failed for login: " . $e->getMessage());
+                error_log("CSRF verification failed for login: " . $e->getMessage());
             }
         }
-        $this->logger->debug("Rendering login view with CSRF token: " . $csrfToken);
+        error_log("Rendering login view with CSRF token: " . $csrfToken);
         $this->render('auth/login', ['error' => $error, 'csrfToken' => $csrfToken]);
     }
 
@@ -91,7 +96,7 @@ class AuthController extends BaseController {
         session_unset();
         session_destroy();
         if ($userId) {
-            $this->logger->info("Utilisateur déconnecté: ID {$userId}");
+            error_log("Utilisateur déconnecté: ID {$userId}");
         }
         $this->redirect('home');
     }
@@ -132,6 +137,6 @@ class AuthController extends BaseController {
         session_regenerate_id(true);
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_role'] = $user->getRole();
-        $this->logger->debug("User session initialized. User ID: {$user->getId()}, Role: {$user->getRole()}");
+        error_log("User session initialized. User ID: {$user->getId()}, Role: {$user->getRole()}");
     }
 }
