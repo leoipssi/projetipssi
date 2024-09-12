@@ -46,15 +46,23 @@ class HomeController extends BaseController {
     }
 
     private function getRecentVehicules() {
-        try {
-            $recentVehicules = Vehicule::getRecentVehicules(5);
-            $this->logger->info("Véhicules récents récupérés avec succès", ['count' => count($recentVehicules)]);
-            return $recentVehicules;
-        } catch (Exception $e) {
-            $this->logger->error("Erreur lors de la récupération des véhicules récents", ['error' => $e->getMessage()]);
-            throw new Exception("Impossible de récupérer les véhicules récents");
+    try {
+        $this->logger->debug("Tentative de récupération des véhicules récents");
+        $recentVehicules = Vehicule::getRecentVehicules(5);
+        $this->logger->info("Véhicules récents récupérés avec succès", ['count' => count($recentVehicules)]);
+        foreach ($recentVehicules as $index => $vehicule) {
+            if (!is_object($vehicule) || !($vehicule instanceof Vehicule)) {
+                $this->logger->warning("Élément non valide trouvé dans recentVehicules", ['index' => $index, 'element' => var_export($vehicule, true)]);
+            } else {
+                $this->logger->debug("Véhicule récupéré", ['index' => $index, 'id' => $vehicule->getId(), 'marque' => $vehicule->getMarque(), 'modele' => $vehicule->getModele()]);
+            }
         }
+        return $recentVehicules;
+    } catch (Exception $e) {
+        $this->logger->error("Erreur lors de la récupération des véhicules récents", ['error' => $e->getMessage()]);
+        throw new Exception("Impossible de récupérer les véhicules récents");
     }
+}
 
     private function getActiveOffers() {
         try {
