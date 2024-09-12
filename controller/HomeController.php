@@ -23,6 +23,16 @@ class HomeController extends BaseController {
             $this->logger->debug("Tentative de récupération des véhicules récents");
             $recentVehicules = $this->getRecentVehicules();
             $this->logger->debug("Véhicules récents récupérés", ['count' => count($recentVehicules)]);
+
+            // Vérification supplémentaire
+            foreach ($recentVehicules as $index => $vehicule) {
+                $this->logger->debug("Vérification du véhicule", [
+                    'index' => $index,
+                    'is_object' => is_object($vehicule),
+                    'class' => is_object($vehicule) ? get_class($vehicule) : 'N/A',
+                    'has_getId' => is_object($vehicule) && method_exists($vehicule, 'getId')
+                ]);
+            }
             
             $this->logger->debug("Tentative de récupération des offres actives");
             $activeOffers = $this->getActiveOffers();
@@ -46,23 +56,45 @@ class HomeController extends BaseController {
     }
 
     private function getRecentVehicules() {
-    try {
-        $this->logger->debug("Tentative de récupération des véhicules récents");
-        $recentVehicules = Vehicule::getRecentVehicules(5);
-        $this->logger->info("Véhicules récents récupérés avec succès", ['count' => count($recentVehicules)]);
-        foreach ($recentVehicules as $index => $vehicule) {
-            if (!is_object($vehicule) || !($vehicule instanceof Vehicule)) {
-                $this->logger->warning("Élément non valide trouvé dans recentVehicules", ['index' => $index, 'element' => var_export($vehicule, true)]);
-            } else {
-                $this->logger->debug("Véhicule récupéré", ['index' => $index, 'id' => $vehicule->getId(), 'marque' => $vehicule->getMarque(), 'modele' => $vehicule->getModele()]);
+        try {
+            $this->logger->debug("Tentative de récupération des véhicules récents");
+            $recentVehicules = Vehicule::getRecentVehicules(5);
+            $this->logger->info("Véhicules récents récupérés avec succès", ['count' => count($recentVehicules)]);
+            
+            $validVehicules = [];
+            foreach ($recentVehicules as $index => $vehicule) {
+                if (!is_object($vehicule)) {
+                    $this->logger->error("L'élément n'est pas un objet", ['index' => $index, 'type' => gettype($vehicule)]);
+                    continue;
+                }
+                if (!($vehicule instanceof Vehicule)) {
+                    $this->logger->error("L'élément n'est pas une instance de Vehicule", ['index' => $index, 'class' => get_class($vehicule)]);
+                    continue;
+                }
+                if (!method_exists($vehicule, 'getId')) {
+                    $this->logger->error("La méthode getId() n'existe pas pour cet objet", ['index' => $index, 'methods' => get_class_methods($vehicule)]);
+                    continue;
+                }
+                
+                $this->logger->debug("Véhicule valide récupéré", [
+                    'index' => $index, 
+                    'id' => $vehicule->getId(), 
+                    'marque' => $vehicule->getMarque(), 
+                    'modele' => $vehicule->getModele()
+                ]);
+                $validVehicules[] = $vehicule;
             }
+            
+            $this->logger->info("Nombre de véhicules valides : " . count($validVehicules));
+            return $validVehicules;
+        } catch (Exception $e) {
+            $this->logger->error("Erreur lors de la récupération des véhicules récents", [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw new Exception("Impossible de récupérer les véhicules récents: " . $e->getMessage());
         }
-        return $recentVehicules;
-    } catch (Exception $e) {
-        $this->logger->error("Erreur lors de la récupération des véhicules récents", ['error' => $e->getMessage()]);
-        throw new Exception("Impossible de récupérer les véhicules récents");
     }
-}
 
     private function getActiveOffers() {
         try {
@@ -79,12 +111,14 @@ class HomeController extends BaseController {
         $this->logger->error("Erreur dans HomeController::index", [
             'message' => $e->getMessage(),
             'file' => $e->getFile(),
-            'line' => $e->getLine()
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
         ]);
         if (DEBUG_MODE) {
             echo "<h1>Erreur</h1>";
             echo "<p>" . htmlspecialchars($e->getMessage()) . "</p>";
             echo "<p>File: " . htmlspecialchars($e->getFile()) . " at line " . $e->getLine() . "</p>";
+            echo "<pre>" . htmlspecialchars($e->getTraceAsString()) . "</pre>";
         } else {
             $this->render('error', ['message' => 'Une erreur est survenue lors du chargement de la page d\'accueil']);
         }
