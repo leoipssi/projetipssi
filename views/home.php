@@ -10,6 +10,8 @@ if (isset($recentVehicules) && is_array($recentVehicules)):
             $this->logger->error("Élément non valide trouvé dans recentVehicules", ['index' => $index, 'element' => var_export($vehicule, true)]);
             continue;
         }
+    endforeach;
+endif; 
 ?>
 
 <div class="container mt-4">
@@ -73,12 +75,10 @@ if (isset($recentVehicules) && is_array($recentVehicules)):
                     </div>
                 </div>
             <?php 
-    endforeach;
-else:
-    $this->logger->error("recentVehicules n'est pas défini ou n'est pas un tableau");
-endif;
-$this->logger->debug("Nombre de véhicules affichés : " . $vehiculeCount);
-?>
+                endforeach;
+            endif;
+            $this->logger->debug("Nombre de véhicules affichés : " . $vehiculeCount);
+            ?>
         </div>
     </section>
 </div>
