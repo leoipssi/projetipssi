@@ -1,5 +1,4 @@
 <?php
-
 class HomeController extends BaseController {
     private $db;
 
@@ -11,18 +10,30 @@ class HomeController extends BaseController {
 
     public function index() {
         try {
+            $this->logger->debug("Début de la méthode index()");
             $this->checkDatabaseConnection();
-
-            Vehicule::setDB($this->db);
-            RentalOffer::setDB($this->db);
+            $this->logger->debug("Connexion à la base de données vérifiée");
             
+            Vehicule::setDB($this->db);
+            $this->logger->debug("DB configurée pour Vehicule");
+            
+            RentalOffer::setDB($this->db);
+            $this->logger->debug("DB configurée pour RentalOffer");
+            
+            $this->logger->debug("Tentative de récupération des véhicules récents");
             $recentVehicules = $this->getRecentVehicules();
+            $this->logger->debug("Véhicules récents récupérés", ['count' => count($recentVehicules)]);
+            
+            $this->logger->debug("Tentative de récupération des offres actives");
             $activeOffers = $this->getActiveOffers();
-
+            $this->logger->debug("Offres actives récupérées", ['count' => count($activeOffers)]);
+            
+            $this->logger->debug("Appel de la méthode render()");
             $this->render('home', [
                 'recentVehicules' => $recentVehicules,
                 'activeOffers' => $activeOffers
             ]);
+            $this->logger->debug("Fin de la méthode index()");
         } catch (Exception $e) {
             $this->handleError($e);
         }
@@ -62,7 +73,13 @@ class HomeController extends BaseController {
             'file' => $e->getFile(),
             'line' => $e->getLine()
         ]);
-        $this->render('error', ['message' => 'Une erreur est survenue lors du chargement de la page d\'accueil']);
+        if (DEBUG_MODE) {
+            echo "<h1>Erreur</h1>";
+            echo "<p>" . htmlspecialchars($e->getMessage()) . "</p>";
+            echo "<p>File: " . htmlspecialchars($e->getFile()) . " at line " . $e->getLine() . "</p>";
+        } else {
+            $this->render('error', ['message' => 'Une erreur est survenue lors du chargement de la page d\'accueil']);
+        }
     }
 
     public function about() {
@@ -81,7 +98,6 @@ class HomeController extends BaseController {
         $name = $_POST['name'] ?? '';
         $email = $_POST['email'] ?? '';
         $message = $_POST['message'] ?? '';
-
         // Validation des données du formulaire
         if (empty($name) || empty($email) || empty($message)) {
             $this->render('contact', [
@@ -90,7 +106,6 @@ class HomeController extends BaseController {
             ]);
             return;
         }
-
         $this->render('contact', [
             'title' => 'Contactez-nous',
             'success' => 'Votre message a été envoyé avec succès.'
