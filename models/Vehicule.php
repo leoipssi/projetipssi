@@ -28,14 +28,14 @@ class Vehicule {
     }
 
     public static function setDB($db) {
-    if (!$db instanceof PDO) {
-        self::log("L'objet de base de données fourni n'est pas une instance valide de PDO.", 'ERROR');
-        throw new Exception("L'objet de base de données fourni n'est pas une instance valide de PDO.");
+        if (!$db instanceof PDO) {
+            self::log("L'objet de base de données fourni n'est pas une instance valide de PDO.", 'ERROR');
+            throw new Exception("L'objet de base de données fourni n'est pas une instance valide de PDO.");
+        }
+        self::$db = $db;
+        self::log("Connexion à la base de données établie pour la classe Vehicule", 'DEBUG');
+        self::log("État de la connexion après setDB : " . (self::isDbConnected() ? "Connecté" : "Non connecté"), 'DEBUG');
     }
-    self::$db = $db;
-    self::log("Connexion à la base de données établie pour la classe Vehicule", 'DEBUG');
-    self::log("État de la connexion après setDB : " . (self::isDbConnected() ? "Connecté" : "Non connecté"), 'DEBUG');
-}
 
     public static function isDbConnected() {
         return self::$db instanceof PDO;
@@ -57,6 +57,23 @@ class Vehicule {
         $this->is_available = $is_available;
     }
 
+    // Nouvelle méthode getMarque()
+    public function getMarque() {
+        return $this->marque;
+    }
+
+    // Autres getters
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getModele() {
+        return $this->modele;
+    }
+
+    public function getTypeId() {
+        return $this->type_id;
+    }
 
     public function setAvailable($available) {
         $this->is_available = $available;
@@ -311,40 +328,40 @@ class Vehicule {
     }
 
     public static function getRecentVehicules($limit = 5) {
-    self::checkDbConnection();
-    try {
-        $stmt = self::$db->prepare("SELECT * FROM vehicules ORDER BY date_achat DESC LIMIT :limit");
-        $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
-        $vehicules = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            self::log("Création d'un objet Vehicule avec ID: " . $row['id'], 'DEBUG');
-            $vehicule = new Vehicule(
-                $row['id'],
-                $row['type_id'],
-                $row['marque'],
-                $row['modele'],
-                $row['numero_serie'],
-                $row['couleur'],
-                $row['immatriculation'],
-                $row['kilometres'],
-                $row['date_achat'],
-                $row['prix_achat'],
-                $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null,
-                $row['is_available']
-            );
-            $vehicules[] = $vehicule;
+        self::checkDbConnection();
+        try {
+            $stmt = self::$db->prepare("SELECT * FROM vehicules ORDER BY date_achat DESC LIMIT :limit");
+            $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            $vehicules = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                self::log("Création d'un objet Vehicule avec ID: " . $row['id'], 'DEBUG');
+                $vehicule = new Vehicule(
+                    $row['id'],
+                    $row['type_id'],
+                    $row['marque'],
+                    $row['modele'],
+                    $row['numero_serie'],
+                    $row['couleur'],
+                    $row['immatriculation'],
+                    $row['kilometres'],
+                    $row['date_achat'],
+                    $row['prix_achat'],
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    $row['is_available']
+                );
+                $vehicules[] = $vehicule;
+            }
+            self::log("Nombre de véhicules récents récupérés : " . count($vehicules), 'DEBUG');
+            return $vehicules;
+        } catch (PDOException $e) {
+            self::log("Erreur lors de la récupération des véhicules récents : " . $e->getMessage(), 'ERROR');
+            throw new Exception("Impossible de récupérer les véhicules récents.");
         }
-        self::log("Nombre de véhicules récents récupérés : " . count($vehicules), 'DEBUG');
-        return $vehicules;
-    } catch (PDOException $e) {
-        self::log("Erreur lors de la récupération des véhicules récents : " . $e->getMessage(), 'ERROR');
-        throw new Exception("Impossible de récupérer les véhicules récents.");
     }
-}
 
-public static function getTopRented($limit = 5) {
+    public static function getTopRented($limit = 5) {
         self::checkDbConnection();
         try {
             $stmt = self::$db->prepare("
