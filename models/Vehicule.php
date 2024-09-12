@@ -35,6 +35,10 @@ class Vehicule {
         self::log("Connexion à la base de données établie pour la classe Vehicule", 'DEBUG');
     }
 
+    public static function isDbConnected() {
+        return self::$db instanceof PDO;
+    }
+
     public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie = null, $tarif_journalier = null, $is_available = true) {
         $this->id = $id;
         $this->type_id = $type_id;
@@ -51,7 +55,6 @@ class Vehicule {
         $this->is_available = $is_available;
     }
 
-    // Getters restent inchangés
 
     public function setAvailable($available) {
         $this->is_available = $available;
@@ -368,7 +371,7 @@ public static function getTopRented($limit = 5) {
     }
 
     private static function checkDbConnection() {
-        if (!self::$db instanceof PDO) {
+        if (!self::isDbConnected()) {
             self::log("La connexion à la base de données n'est pas établie dans la classe Vehicule", 'ERROR');
             throw new Exception("La connexion à la base de données n'est pas établie. Assurez-vous d'appeler Vehicule::setDB() avec une instance PDO valide avant d'utiliser la classe.");
         }
