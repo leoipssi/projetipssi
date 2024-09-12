@@ -28,12 +28,14 @@ class Vehicule {
     }
 
     public static function setDB($db) {
-        if (!$db instanceof PDO) {
-            throw new Exception("L'objet de base de données fourni n'est pas une instance valide de PDO.");
-        }
-        self::$db = $db;
-        self::log("Connexion à la base de données établie pour la classe Vehicule", 'DEBUG');
+    if (!$db instanceof PDO) {
+        self::log("L'objet de base de données fourni n'est pas une instance valide de PDO.", 'ERROR');
+        throw new Exception("L'objet de base de données fourni n'est pas une instance valide de PDO.");
     }
+    self::$db = $db;
+    self::log("Connexion à la base de données établie pour la classe Vehicule", 'DEBUG');
+    self::log("État de la connexion après setDB : " . (self::isDbConnected() ? "Connecté" : "Non connecté"), 'DEBUG');
+}
 
     public static function isDbConnected() {
         return self::$db instanceof PDO;
