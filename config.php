@@ -6,14 +6,16 @@ require_once 'database.php';
 define('BASE_URL', 'https://extranet.emotionipssi.com');
 define('SITE_NAME', 'E-Motion');
 
-// Configurations de session
-ini_set('session.gc_maxlifetime', 3600);
-ini_set('session.cookie_lifetime', 3600);
-ini_set('session.use_only_cookies', 1);
-ini_set('session.use_strict_mode', 1);
-ini_set('session.cookie_httponly', 1);
-ini_set('session.cookie_secure', 1); // Uniquement si HTTPS est utilisé
-ini_set('session.cookie_samesite', 'Lax');
+// Configurations de session (à appliquer avant le démarrage de la session)
+function configure_session() {
+    ini_set('session.gc_maxlifetime', 3600);
+    ini_set('session.cookie_lifetime', 3600);
+    ini_set('session.use_only_cookies', 1);
+    ini_set('session.use_strict_mode', 1);
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_secure', 1); // Uniquement si HTTPS est utilisé
+    ini_set('session.cookie_samesite', 'Lax');
+}
 
 // Autres configurations globales
 define('UPLOAD_DIR', __DIR__ . '/uploads');
