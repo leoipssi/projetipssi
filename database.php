@@ -1,4 +1,9 @@
 <?php
+// Définir DEBUG_MODE si ce n'est pas déjà fait
+if (!defined('DEBUG_MODE')) {
+    define('DEBUG_MODE', false); // Mettez à true pour le débogage
+}
+
 global $db;
 $host = 'localhost';
 $db_name = 'e_motion';
@@ -12,19 +17,22 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
-error_log("Tentative de connexion à la base de données...");
-error_log("DSN: $dsn");
-error_log("Utilisateur: $user");
+// Fonction de logging personnalisée
+function db_log($message, $level = 'INFO') {
+    if (DEBUG_MODE) {
+        error_log("[DB] [$level] $message");
+    }
+}
+
+db_log("Tentative de connexion à la base de données...", 'DEBUG');
 
 try {
     $db = new PDO($dsn, $user, $pass, $options);
-    error_log("Connexion à la base de données réussie");
+    db_log("Connexion à la base de données réussie", 'INFO');
 } catch (\PDOException $e) {
-    error_log("Erreur de connexion PDO : " . $e->getMessage());
-    error_log("Code d'erreur PDO : " . $e->getCode());
-    error_log("Trace : " . $e->getTraceAsString());
-    // Ne pas utiliser die() ici, laissez le script continuer
-    $db = null; // Assurez-vous que $db est null en cas d'échec
+    db_log("Erreur de connexion PDO : " . $e->getMessage(), 'ERROR');
+    db_log("Code d'erreur PDO : " . $e->getCode(), 'ERROR');
+    $db = null;
 }
 
 function is_db_connected() {
@@ -35,7 +43,12 @@ function is_db_connected() {
             return true;
         }
     } catch (PDOException $e) {
-        error_log("Erreur lors de la vérification de la connexion : " . $e->getMessage());
+        db_log("Erreur lors de la vérification de la connexion : " . $e->getMessage(), 'ERROR');
     }
     return false;
+}
+
+// Initialisation de Vehicule::setDB() si nécessaire
+if (class_exists('Vehicule') && is_db_connected()) {
+    Vehicule::setDB($db);
 }
