@@ -37,39 +37,39 @@ class Vehicule {
     }
 
     public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie = null, $tarif_journalier = null, $is_available = true) {
-        $this->id = $id;
-        $this->type_id = $type_id;
-        $this->marque = $marque;
-        $this->modele = $modele;
-        $this->numero_serie = $numero_serie;
-        $this->couleur = $couleur;
-        $this->immatriculation = $immatriculation;
-        $this->kilometres = $kilometres;
-        $this->date_achat = $date_achat;
-        $this->prix_achat = $prix_achat;
-        $this->categorie = $categorie;
-        $this->tarif_journalier = $tarif_journalier;
-        $this->is_available = $is_available;
+        $this->id = (int)$id;
+        $this->type_id = (int)$type_id;
+        $this->marque = (string)$marque;
+        $this->modele = (string)$modele;
+        $this->numero_serie = (string)$numero_serie;
+        $this->couleur = (string)$couleur;
+        $this->immatriculation = (string)$immatriculation;
+        $this->kilometres = (int)$kilometres;
+        $this->date_achat = (string)$date_achat;
+        $this->prix_achat = (float)$prix_achat;
+        $this->categorie = $categorie ? (string)$categorie : null;
+        $this->tarif_journalier = $tarif_journalier ? (float)$tarif_journalier : null;
+        $this->is_available = (bool)$is_available;
     }
 
     public function getMarque() {
-        return $this->marque;
+        return is_array($this->marque) ? json_encode($this->marque) : (string)$this->marque;
     }
 
     public function getId() {
-        return $this->id;
+        return (int)$this->id;
     }
 
     public function getModele() {
-        return $this->modele;
+        return is_array($this->modele) ? json_encode($this->modele) : (string)$this->modele;
     }
 
     public function getTypeId() {
-        return $this->type_id;
+        return (int)$this->type_id;
     }
 
     public function setAvailable($available) {
-        $this->is_available = $available;
+        $this->is_available = (bool)$available;
     }
 
     public function getType() {
@@ -77,7 +77,7 @@ class Vehicule {
             $stmt = self::getDB()->prepare("SELECT nom FROM vehicule_types WHERE id = ?");
             $stmt->execute([$this->type_id]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $result ? $result['nom'] : 'Type inconnu';
+            return $result ? (string)$result['nom'] : 'Type inconnu';
         } catch (PDOException $e) {
             self::log("Erreur lors de la récupération du type de véhicule : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de récupérer le type de véhicule.");
@@ -85,7 +85,7 @@ class Vehicule {
     }
 
     public function calculerTarif($duree) {
-        return $this->tarif_journalier * $duree;
+        return (float)$this->tarif_journalier * (int)$duree;
     }
 
     public static function create($data) {
@@ -182,19 +182,19 @@ class Vehicule {
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $vehicules[] = new self(
-                    $row['id'],
-                    $row['type_id'],
-                    $row['marque'],
-                    $row['modele'],
-                    $row['numero_serie'],
-                    $row['couleur'],
-                    $row['immatriculation'],
-                    $row['kilometres'],
-                    $row['date_achat'],
-                    $row['prix_achat'],
-                    $row['categorie'] ?? null,
-                    $row['tarif_journalier'] ?? null,
-                    $row['is_available']
+                    (int)$row['id'],
+                    (int)$row['type_id'],
+                    (string)$row['marque'],
+                    (string)$row['modele'],
+                    (string)$row['numero_serie'],
+                    (string)$row['couleur'],
+                    (string)$row['immatriculation'],
+                    (int)$row['kilometres'],
+                    (string)$row['date_achat'],
+                    (float)$row['prix_achat'],
+                    $row['categorie'] ? (string)$row['categorie'] : null,
+                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
+                    (bool)$row['is_available']
                 );
             }
             return $vehicules;
@@ -215,24 +215,24 @@ class Vehicule {
                 foreach ($row as $key => $value) {
                     if (is_array($value)) {
                         self::log("Champ inattendu de type array dans vehicules pour l'ID $id : $key", 'WARNING');
-                        $row[$key] = json_encode($value);
+                        $row[$key] = is_array($value) ? json_encode($value) : (string)$value;
                     }
                 }
                 
                 return new self(
-                    $row['id'],
-                    $row['type_id'],
-                    $row['marque'],
-                    $row['modele'],
-                    $row['numero_serie'],
-                    $row['couleur'],
-                    $row['immatriculation'],
-                    $row['kilometres'],
-                    $row['date_achat'],
-                    $row['prix_achat'],
-                    $row['categorie'] ?? null,
-                    $row['tarif_journalier'] ?? null,
-                    $row['is_available']
+                    (int)$row['id'],
+                    (int)$row['type_id'],
+                    (string)$row['marque'],
+                    (string)$row['modele'],
+                    (string)$row['numero_serie'],
+                    (string)$row['couleur'],
+                    (string)$row['immatriculation'],
+                    (int)$row['kilometres'],
+                    (string)$row['date_achat'],
+                    (float)$row['prix_achat'],
+                    $row['categorie'] ? (string)$row['categorie'] : null,
+                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
+                    (bool)$row['is_available']
                 );
             } else {
                 self::log("Aucun véhicule trouvé avec l'ID : $id", 'WARNING');
@@ -250,19 +250,19 @@ class Vehicule {
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $vehicules[] = new self(
-                    $row['id'],
-                    $row['type_id'],
-                    $row['marque'],
-                    $row['modele'],
-                    $row['numero_serie'],
-                    $row['couleur'],
-                    $row['immatriculation'],
-                    $row['kilometres'],
-                    $row['date_achat'],
-                    $row['prix_achat'],
-                    $row['categorie'] ?? null,
-                    $row['tarif_journalier'] ?? null,
-                    $row['is_available']
+                    (int)$row['id'],
+                    (int)$row['type_id'],
+                    (string)$row['marque'],
+                    (string)$row['modele'],
+                    (string)$row['numero_serie'],
+                    (string)$row['couleur'],
+                    (string)$row['immatriculation'],
+                    (int)$row['kilometres'],
+                    (string)$row['date_achat'],
+                    (float)$row['prix_achat'],
+                    $row['categorie'] ? (string)$row['categorie'] : null,
+                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
+                    (bool)$row['is_available']
                 );
             }
             return $vehicules;
@@ -278,18 +278,18 @@ class Vehicule {
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $vehicules[] = new self(
-                    $row['id'],
-                    $row['type_id'],
-                    $row['marque'],
-                    $row['modele'],
-                    $row['numero_serie'],
-                    $row['couleur'],
-                    $row['immatriculation'],
-                    $row['kilometres'],
-                    $row['date_achat'],
-                    $row['prix_achat'],
-                    $row['categorie'] ?? null,
-                    $row['tarif_journalier'] ?? null,
+                    (int)$row['id'],
+                    (int)$row['type_id'],
+                    (string)$row['marque'],
+                    (string)$row['modele'],
+                    (string)$row['numero_serie'],
+                    (string)$row['couleur'],
+                    (string)$row['immatriculation'],
+                    (int)$row['kilometres'],
+                    (string)$row['date_achat'],
+                    (float)$row['prix_achat'],
+                    $row['categorie'] ? (string)$row['categorie'] : null,
+                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
                     false
                 );
             }
@@ -303,7 +303,7 @@ class Vehicule {
     public static function count() {
         try {
             $stmt = self::getDB()->query("SELECT COUNT(*) FROM vehicules");
-            return $stmt->fetchColumn();
+            return (int)$stmt->fetchColumn();
         } catch (PDOException $e) {
             self::log("Erreur lors du comptage des véhicules : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de compter le nombre de véhicules.");
@@ -319,19 +319,19 @@ class Vehicule {
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 self::log("Création d'un objet Vehicule avec ID: " . $row['id'], 'DEBUG');
                 $vehicule = new self(
-                    $row['id'],
-                    $row['type_id'],
-                    $row['marque'],
-                    $row['modele'],
-                    $row['numero_serie'],
-                    $row['couleur'],
-                    $row['immatriculation'],
-                    $row['kilometres'],
-                    $row['date_achat'],
-                    $row['prix_achat'],
-                    $row['categorie'] ?? null,
-                    $row['tarif_journalier'] ?? null,
-                    $row['is_available']
+                    (int)$row['id'],
+                    (int)$row['type_id'],
+                    (string)$row['marque'],
+                    (string)$row['modele'],
+                    (string)$row['numero_serie'],
+                    (string)$row['couleur'],
+                    (string)$row['immatriculation'],
+                    (int)$row['kilometres'],
+                    (string)$row['date_achat'],
+                    (float)$row['prix_achat'],
+                    $row['categorie'] ? (string)$row['categorie'] : null,
+                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
+                    (bool)$row['is_available']
                 );
                 $vehicules[] = $vehicule;
             }
@@ -358,16 +358,35 @@ class Vehicule {
             $stmt->execute();
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            foreach ($results as &$row) {
+            $vehicules = [];
+            foreach ($results as $row) {
                 foreach ($row as $key => $value) {
                     if (is_array($value)) {
                         self::log("Champ inattendu de type array dans getTopRented : $key", 'WARNING');
-                        $row[$key] = json_encode($value);
+                        $row[$key] = is_array($value) ? json_encode($value) : (string)$value;
+                    } else {
+                        // Assurez-vous que toutes les valeurs sont des chaînes
+                        $row[$key] = (string)$value;
                     }
                 }
+                $vehicules[] = new self(
+                    (int)$row['id'],
+                    (int)$row['type_id'],
+                    (string)$row['marque'],
+                    (string)$row['modele'],
+                    (string)$row['numero_serie'],
+                    (string)$row['couleur'],
+                    (string)$row['immatriculation'],
+                    (int)$row['kilometres'],
+                    (string)$row['date_achat'],
+                    (float)$row['prix_achat'],
+                    $row['categorie'] ? (string)$row['categorie'] : null,
+                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
+                    (bool)$row['is_available']
+                );
             }
             
-            return $results;
+            return $vehicules;
         } catch (PDOException $e) {
             self::log("Erreur lors de la récupération des véhicules les plus loués : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de récupérer les véhicules les plus loués.");
@@ -414,20 +433,20 @@ class Vehicule {
             $stmt->execute($params);
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $vehicules[] = new Vehicule(
-                    $row['id'],
-                    $row['type_id'],
-                    $row['marque'],
-                    $row['modele'],
-                    $row['numero_serie'],
-                    $row['couleur'],
-                    $row['immatriculation'],
-                    $row['kilometres'],
-                    $row['date_achat'],
-                    $row['prix_achat'],
-                    $row['categorie'] ?? null,
-                    $row['tarif_journalier'] ?? null,
-                    $row['is_available']
+                $vehicules[] = new self(
+                    (int)$row['id'],
+                    (int)$row['type_id'],
+                    (string)$row['marque'],
+                    (string)$row['modele'],
+                    (string)$row['numero_serie'],
+                    (string)$row['couleur'],
+                    (string)$row['immatriculation'],
+                    (int)$row['kilometres'],
+                    (string)$row['date_achat'],
+                    (float)$row['prix_achat'],
+                    $row['categorie'] ? (string)$row['categorie'] : null,
+                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
+                    (bool)$row['is_available']
                 );
             }
             return $vehicules;
@@ -435,5 +454,38 @@ class Vehicule {
             self::log("Erreur lors de la recherche de véhicules : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de rechercher les véhicules.");
         }
+    }
+
+    // Ajoutez ici d'autres méthodes getter si nécessaire
+    public function getCouleur() {
+        return is_array($this->couleur) ? json_encode($this->couleur) : (string)$this->couleur;
+    }
+
+    public function getImmatriculation() {
+        return is_array($this->immatriculation) ? json_encode($this->immatriculation) : (string)$this->immatriculation;
+    }
+
+    public function getKilometres() {
+        return (int)$this->kilometres;
+    }
+
+    public function getDateAchat() {
+        return (string)$this->date_achat;
+    }
+
+    public function getPrixAchat() {
+        return (float)$this->prix_achat;
+    }
+
+    public function getCategorie() {
+        return $this->categorie ? (string)$this->categorie : null;
+    }
+
+    public function getTarifJournalier() {
+        return $this->tarif_journalier ? (float)$this->tarif_journalier : null;
+    }
+
+    public function isAvailable() {
+        return (bool)$this->is_available;
     }
 }
