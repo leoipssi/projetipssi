@@ -1,10 +1,3 @@
-<?php
-echo "<!-- Début du contenu -->";
-var_dump(strlen($content));
-echo "<!-- Fin du contenu -->";
-?>
-<?= $content ?>
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
