@@ -172,6 +172,7 @@ class Vehicule {
     }
 
     public static function findAll($page = 1, $perPage = 10) {
+        self::log("Tentative de récupération des véhicules. Page: $page, PerPage: $perPage", 'DEBUG');
         $offset = ($page - 1) * $perPage;
         try {
             $stmt = self::getDB()->prepare("SELECT * FROM vehicules LIMIT :limit OFFSET :offset");
@@ -204,6 +205,7 @@ class Vehicule {
     }
 
     public static function findById($id) {
+        self::log("Tentative de récupération du véhicule avec l'ID : $id", 'DEBUG');
         try {
             $stmt = self::getDB()->prepare("SELECT * FROM vehicules WHERE id = ?");
             $stmt->execute([$id]);
@@ -239,9 +241,6 @@ class Vehicule {
         } catch (PDOException $e) {
             self::log("Erreur lors de la recherche du véhicule par ID : " . $e->getMessage(), 'ERROR');
             throw new Exception("Impossible de trouver le véhicule spécifié.");
-        } catch (Exception $e) {
-            self::log("Erreur inattendue lors de la recherche du véhicule par ID : " . $e->getMessage(), 'ERROR');
-            throw $e;
         }
     }
 
@@ -345,6 +344,7 @@ class Vehicule {
     }
 
     public static function getTopRented($limit = 5) {
+        self::log("Tentative de récupération des $limit véhicules les plus loués", 'DEBUG');
         try {
             $stmt = self::getDB()->prepare("
                 SELECT v.*, COUNT(r.id) as rental_count, SUM(r.prix_total) as revenue
@@ -393,47 +393,47 @@ class Vehicule {
     }
 
     public static function search($criteria) {
-    $sql = "SELECT * FROM vehicules WHERE 1=1";
-    $params = [];
+        $sql = "SELECT * FROM vehicules WHERE 1=1";
+        $params = [];
 
-    if (!empty($criteria['marque'])) {
-        $sql .= " AND marque LIKE ?";
-        $params[] = '%' . $criteria['marque'] . '%';
-    }
-    if (!empty($criteria['modele'])) {
-        $sql .= " AND modele LIKE ?";
-        $params[] = '%' . $criteria['modele'] . '%';
-    }
-    if (isset($criteria['is_available'])) {
-        $sql .= " AND is_available = ?";
-        $params[] = $criteria['is_available'];
-    }
-
-    try {
-        $stmt = self::getDB()->prepare($sql);
-        $stmt->execute($params);
-        $vehicules = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $vehicules[] = new Vehicule(
-                $row['id'],
-                $row['type_id'],
-                $row['marque'],
-                $row['modele'],
-                $row['numero_serie'],
-                $row['couleur'],
-                $row['immatriculation'],
-                $row['kilometres'],
-                $row['date_achat'],
-                $row['prix_achat'],
-                $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null,
-                $row['is_available']
-            );
+        if (!empty($criteria['marque'])) {
+            $sql .= " AND marque LIKE ?";
+            $params[] = '%' . $criteria['marque'] . '%';
         }
-        return $vehicules;
-    } catch (PDOException $e) {
-        self::log("Erreur lors de la recherche de véhicules : " . $e->getMessage(), 'ERROR');
-        throw new Exception("Impossible de rechercher les véhicules.");
+        if (!empty($criteria['modele'])) {
+            $sql .= " AND modele LIKE ?";
+            $params[] = '%' . $criteria['modele'] . '%';
+        }
+        if (isset($criteria['is_available'])) {
+            $sql .= " AND is_available = ?";
+            $params[] = $criteria['is_available'];
+        }
+
+        try {
+            $stmt = self::getDB()->prepare($sql);
+            $stmt->execute($params);
+            $vehicules = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $vehicules[] = new Vehicule(
+                    $row['id'],
+                    $row['type_id'],
+                    $row['marque'],
+                    $row['modele'],
+                    $row['numero_serie'],
+                    $row['couleur'],
+                    $row['immatriculation'],
+                    $row['kilometres'],
+                    $row['date_achat'],
+                    $row['prix_achat'],
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    $row['is_available']
+                );
+            }
+            return $vehicules;
+        } catch (PDOException $e) {
+            self::log("Erreur lors de la recherche de véhicules : " . $e->getMessage(), 'ERROR');
+            throw new Exception("Impossible de rechercher les véhicules.");
+        }
     }
 }
-
