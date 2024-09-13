@@ -405,7 +405,7 @@ class Vehicule {
             $params[] = '%' . $criteria['modele'] . '%';
         }
         if (isset($criteria['is_available'])) {
-            $sql .= " AND is_available = ?
+            $sql .= " AND is_available = ?;
             $params[] = $criteria['is_available'];
         }
 
