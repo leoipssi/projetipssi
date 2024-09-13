@@ -169,15 +169,21 @@ class User {
     }
 
     public static function authenticate($username, $password) {
-        self::$logger->debug("Tentative d'authentification pour: " . $username);
-        $user = self::findByUsername($username);
-        if ($user && password_verify($password, $user->password)) {
-            self::$logger->debug("Authentification réussie pour: " . $username);
+    self::$logger->debug("Tentative d'authentification pour: " . $username);
+    $user = self::findByUsername($username);
+    if ($user) {
+        self::$logger->debug("Utilisateur trouvé, vérification du mot de passe");
+        if (password_verify($password, $user->password)) {
+            self::$logger->debug("Mot de passe vérifié avec succès");
             return $user;
+        } else {
+            self::$logger->debug("Échec de la vérification du mot de passe");
         }
-        self::$logger->debug("Échec de l'authentification pour: " . $username);
-        return null;
+    } else {
+        self::$logger->debug("Utilisateur non trouvé");
     }
+    return null;
+}
 
     public static function count() {
         $db = self::getDB();
