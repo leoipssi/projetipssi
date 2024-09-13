@@ -32,6 +32,51 @@ class User {
         $this->created_at = $created_at;
     }
 
+    // Getters
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getNom() {
+        return $this->nom;
+    }
+
+    public function getPrenom() {
+        return $this->prenom;
+    }
+
+    public function getUsername() {
+        return $this->username;
+    }
+
+    public function getEmail() {
+        return $this->email;
+    }
+
+    public function getRole() {
+        return $this->role;
+    }
+
+    public function getAdresse() {
+        return $this->adresse;
+    }
+
+    public function getCodePostal() {
+        return $this->code_postal;
+    }
+
+    public function getVille() {
+        return $this->ville;
+    }
+
+    public function getTelephone() {
+        return $this->telephone;
+    }
+
+    public function getCreatedAt() {
+        return $this->created_at;
+    }
+
     public static function setLogger($logger) {
         self::$logger = $logger;
     }
@@ -39,8 +84,6 @@ class User {
     private static function getDB() {
         return Database::getInstance()->getConnection();
     }
-
-    // Getters (non modifiés)
 
     public static function create($userData) {
         $db = self::getDB();
