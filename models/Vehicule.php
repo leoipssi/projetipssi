@@ -47,25 +47,25 @@ class Vehicule {
         $this->kilometres = (int)$kilometres;
         $this->date_achat = (string)$date_achat;
         $this->prix_achat = (float)$prix_achat;
-        $this->categorie = $categorie ? (string)$categorie : null;
-        $this->tarif_journalier = $tarif_journalier ? (float)$tarif_journalier : null;
+        $this->categorie = $categorie !== null ? (string)$categorie : null;
+        $this->tarif_journalier = $tarif_journalier !== null ? (float)$tarif_journalier : null;
         $this->is_available = (bool)$is_available;
     }
 
     public function getMarque() {
-        return is_array($this->marque) ? json_encode($this->marque) : (string)$this->marque;
+        return $this->marque;
     }
 
     public function getId() {
-        return (int)$this->id;
+        return $this->id;
     }
 
     public function getModele() {
-        return is_array($this->modele) ? json_encode($this->modele) : (string)$this->modele;
+        return $this->modele;
     }
 
     public function getTypeId() {
-        return (int)$this->type_id;
+        return $this->type_id;
     }
 
     public function setAvailable($available) {
@@ -186,15 +186,15 @@ class Vehicule {
                     (int)$row['type_id'],
                     (string)$row['marque'],
                     (string)$row['modele'],
-                    (string)$row['numero_serie'],
-                    (string)$row['couleur'],
-                    (string)$row['immatriculation'],
-                    (int)$row['kilometres'],
-                    (string)$row['date_achat'],
-                    (float)$row['prix_achat'],
-                    $row['categorie'] ? (string)$row['categorie'] : null,
-                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
-                    (bool)$row['is_available']
+                    (string)($row['numero_serie'] ?? ''),
+                    (string)($row['couleur'] ?? ''),
+                    (string)($row['immatriculation'] ?? ''),
+                    (int)($row['kilometres'] ?? 0),
+                    (string)($row['date_achat'] ?? ''),
+                    (float)($row['prix_achat'] ?? 0),
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    (bool)($row['is_available'] ?? false)
                 );
             }
             return $vehicules;
@@ -215,7 +215,7 @@ class Vehicule {
                 foreach ($row as $key => $value) {
                     if (is_array($value)) {
                         self::log("Champ inattendu de type array dans vehicules pour l'ID $id : $key", 'WARNING');
-                        $row[$key] = is_array($value) ? json_encode($value) : (string)$value;
+                        $row[$key] = json_encode($value);
                     }
                 }
                 
@@ -224,15 +224,15 @@ class Vehicule {
                     (int)$row['type_id'],
                     (string)$row['marque'],
                     (string)$row['modele'],
-                    (string)$row['numero_serie'],
-                    (string)$row['couleur'],
-                    (string)$row['immatriculation'],
-                    (int)$row['kilometres'],
-                    (string)$row['date_achat'],
-                    (float)$row['prix_achat'],
-                    $row['categorie'] ? (string)$row['categorie'] : null,
-                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
-                    (bool)$row['is_available']
+                    (string)($row['numero_serie'] ?? ''),
+                    (string)($row['couleur'] ?? ''),
+                    (string)($row['immatriculation'] ?? ''),
+                    (int)($row['kilometres'] ?? 0),
+                    (string)($row['date_achat'] ?? ''),
+                    (float)($row['prix_achat'] ?? 0),
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    (bool)($row['is_available'] ?? false)
                 );
             } else {
                 self::log("Aucun véhicule trouvé avec l'ID : $id", 'WARNING');
@@ -254,15 +254,15 @@ class Vehicule {
                     (int)$row['type_id'],
                     (string)$row['marque'],
                     (string)$row['modele'],
-                    (string)$row['numero_serie'],
-                    (string)$row['couleur'],
-                    (string)$row['immatriculation'],
-                    (int)$row['kilometres'],
-                    (string)$row['date_achat'],
-                    (float)$row['prix_achat'],
-                    $row['categorie'] ? (string)$row['categorie'] : null,
-                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
-                    (bool)$row['is_available']
+                    (string)($row['numero_serie'] ?? ''),
+                    (string)($row['couleur'] ?? ''),
+                    (string)($row['immatriculation'] ?? ''),
+                    (int)($row['kilometres'] ?? 0),
+                    (string)($row['date_achat'] ?? ''),
+                    (float)($row['prix_achat'] ?? 0),
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    (bool)($row['is_available'] ?? false)
                 );
             }
             return $vehicules;
@@ -282,14 +282,14 @@ class Vehicule {
                     (int)$row['type_id'],
                     (string)$row['marque'],
                     (string)$row['modele'],
-                    (string)$row['numero_serie'],
-                    (string)$row['couleur'],
-                    (string)$row['immatriculation'],
-                    (int)$row['kilometres'],
-                    (string)$row['date_achat'],
-                    (float)$row['prix_achat'],
-                    $row['categorie'] ? (string)$row['categorie'] : null,
-                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
+                    (string)($row['numero_serie'] ?? ''),
+                    (string)($row['couleur'] ?? ''),
+                    (string)($row['immatriculation'] ?? ''),
+                    (int)($row['kilometres'] ?? 0),
+                    (string)($row['date_achat'] ?? ''),
+                    (float)($row['prix_achat'] ?? 0),
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
                     false
                 );
             }
@@ -323,15 +323,16 @@ class Vehicule {
                     (int)$row['type_id'],
                     (string)$row['marque'],
                     (string)$row['modele'],
-                    (string)$row['numero_serie'],
-                    (string)$row['couleur'],
-                    (string)$row['immatriculation'],
-                    (int)$row['kilometres'],
-                    (string)$row['date_achat'],
-                    (float)$row['prix_achat'],
-                    $row['categorie'] ? (string)$row['categorie'] : null,
-                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
-                    (bool)$row['is_available']
+                    (string)($row['numero_serie'] ?? ''),
+                    (string)($row['numero_serie'] ?? ''),
+                    (string)($row['couleur'] ?? ''),
+                    (string)($row['immatriculation'] ?? ''),
+                    (int)($row['kilometres'] ?? 0),
+                    (string)($row['date_achat'] ?? ''),
+                    (float)($row['prix_achat'] ?? 0),
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    (bool)($row['is_available'] ?? false)
                 );
                 $vehicules[] = $vehicule;
             }
@@ -363,10 +364,7 @@ class Vehicule {
                 foreach ($row as $key => $value) {
                     if (is_array($value)) {
                         self::log("Champ inattendu de type array dans getTopRented : $key", 'WARNING');
-                        $row[$key] = is_array($value) ? json_encode($value) : (string)$value;
-                    } else {
-                        // Assurez-vous que toutes les valeurs sont des chaînes
-                        $row[$key] = (string)$value;
+                        $row[$key] = json_encode($value);
                     }
                 }
                 $vehicules[] = new self(
@@ -374,15 +372,15 @@ class Vehicule {
                     (int)$row['type_id'],
                     (string)$row['marque'],
                     (string)$row['modele'],
-                    (string)$row['numero_serie'],
-                    (string)$row['couleur'],
-                    (string)$row['immatriculation'],
-                    (int)$row['kilometres'],
-                    (string)$row['date_achat'],
-                    (float)$row['prix_achat'],
-                    $row['categorie'] ? (string)$row['categorie'] : null,
-                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
-                    (bool)$row['is_available']
+                    (string)($row['numero_serie'] ?? ''),
+                    (string)($row['couleur'] ?? ''),
+                    (string)($row['immatriculation'] ?? ''),
+                    (int)($row['kilometres'] ?? 0),
+                    (string)($row['date_achat'] ?? ''),
+                    (float)($row['prix_achat'] ?? 0),
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    (bool)($row['is_available'] ?? false)
                 );
             }
             
@@ -438,15 +436,15 @@ class Vehicule {
                     (int)$row['type_id'],
                     (string)$row['marque'],
                     (string)$row['modele'],
-                    (string)$row['numero_serie'],
-                    (string)$row['couleur'],
-                    (string)$row['immatriculation'],
-                    (int)$row['kilometres'],
-                    (string)$row['date_achat'],
-                    (float)$row['prix_achat'],
-                    $row['categorie'] ? (string)$row['categorie'] : null,
-                    $row['tarif_journalier'] ? (float)$row['tarif_journalier'] : null,
-                    (bool)$row['is_available']
+                    (string)($row['numero_serie'] ?? ''),
+                    (string)($row['couleur'] ?? ''),
+                    (string)($row['immatriculation'] ?? ''),
+                    (int)($row['kilometres'] ?? 0),
+                    (string)($row['date_achat'] ?? ''),
+                    (float)($row['prix_achat'] ?? 0),
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    (bool)($row['is_available'] ?? false)
                 );
             }
             return $vehicules;
@@ -456,36 +454,40 @@ class Vehicule {
         }
     }
 
-    // Ajoutez ici d'autres méthodes getter si nécessaire
+    // Getters
+    public function getNumeroSerie() {
+        return $this->numero_serie;
+    }
+
     public function getCouleur() {
-        return is_array($this->couleur) ? json_encode($this->couleur) : (string)$this->couleur;
+        return $this->couleur;
     }
 
     public function getImmatriculation() {
-        return is_array($this->immatriculation) ? json_encode($this->immatriculation) : (string)$this->immatriculation;
+        return $this->immatriculation;
     }
 
     public function getKilometres() {
-        return (int)$this->kilometres;
+        return $this->kilometres;
     }
 
     public function getDateAchat() {
-        return (string)$this->date_achat;
+        return $this->date_achat;
     }
 
     public function getPrixAchat() {
-        return (float)$this->prix_achat;
+        return $this->prix_achat;
     }
 
     public function getCategorie() {
-        return $this->categorie ? (string)$this->categorie : null;
+        return $this->categorie;
     }
 
     public function getTarifJournalier() {
-        return $this->tarif_journalier ? (float)$this->tarif_journalier : null;
+        return $this->tarif_journalier;
     }
 
     public function isAvailable() {
-        return (bool)$this->is_available;
+        return $this->is_available;
     }
 }
