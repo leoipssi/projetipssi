@@ -123,7 +123,7 @@ class Vehicule {
                 $data['is_available']
             ]);
             if ($stmt->rowCount() > 0) {
-                return new Vehicule(
+                return new self(
                     self::getDB()->lastInsertId(),
                     $data['type_id'],
                     $data['marque'],
@@ -181,7 +181,7 @@ class Vehicule {
             $stmt->execute();
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $vehicules[] = new Vehicule(
+                $vehicules[] = new self(
                     $row['id'],
                     $row['type_id'],
                     $row['marque'],
@@ -219,7 +219,7 @@ class Vehicule {
                     }
                 }
                 
-                return new Vehicule(
+                return new self(
                     $row['id'],
                     $row['type_id'],
                     $row['marque'],
@@ -249,7 +249,7 @@ class Vehicule {
             $stmt = self::getDB()->query("SELECT * FROM vehicules WHERE is_available = TRUE");
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $vehicules[] = new Vehicule(
+                $vehicules[] = new self(
                     $row['id'],
                     $row['type_id'],
                     $row['marque'],
@@ -277,7 +277,7 @@ class Vehicule {
             $stmt = self::getDB()->query("SELECT v.* FROM vehicules v JOIN rentals r ON v.id = r.vehicule_id WHERE r.status = 'En cours'");
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                $vehicules[] = new Vehicule(
+                $vehicules[] = new self(
                     $row['id'],
                     $row['type_id'],
                     $row['marque'],
@@ -318,7 +318,7 @@ class Vehicule {
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 self::log("Création d'un objet Vehicule avec ID: " . $row['id'], 'DEBUG');
-                $vehicule = new Vehicule(
+                $vehicule = new self(
                     $row['id'],
                     $row['type_id'],
                     $row['marque'],
