@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/../models/Database.php';
+require_once __DIR__ . '/Database.php';
 
 class RentalOffer {
     private $id;
@@ -24,7 +24,34 @@ class RentalOffer {
         $this->is_available = $is_available;
     }
 
-    // Getters restent inchangés
+    // Getters
+    public function getId() {
+        return $this->id;
+    }
+
+    public function getVehiculeId() {
+        return $this->vehicule_id;
+    }
+
+    public function getDuree() {
+        return $this->duree;
+    }
+
+    public function getKilometres() {
+        return $this->kilometres;
+    }
+
+    public function getPrix() {
+        return $this->prix;
+    }
+
+    public function isActive() {
+        return $this->is_active;
+    }
+
+    public function isAvailable() {
+        return $this->is_available;
+    }
 
     public function setAvailable($available) {
         $this->is_available = $available;
@@ -33,6 +60,9 @@ class RentalOffer {
     public function getVehicule() {
         return Vehicule::findById($this->vehicule_id);
     }
+
+    // Le reste de la classe reste inchangé...
+}
     
     public static function create($data) {
         $db = self::getDB();
