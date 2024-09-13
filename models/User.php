@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../models/Database.php';
+
 class User {
     private $id;
     private $nom;
@@ -13,7 +15,6 @@ class User {
     private $telephone;
     private $created_at;
 
-    private static $db;
     private static $logger;
 
     public function __construct($id, $nom, $prenom, $username, $password, $email, $role, $adresse, $code_postal, $ville, $telephone, $created_at) {
@@ -31,22 +32,12 @@ class User {
         $this->created_at = $created_at;
     }
 
-    public static function setDB($db) {
-        if (!$db instanceof PDO) {
-            throw new Exception("L'objet de base de données fourni n'est pas une instance valide de PDO.");
-        }
-        self::$db = $db;
-    }
-
     public static function setLogger($logger) {
         self::$logger = $logger;
     }
 
     private static function getDB() {
-        if (!self::$db instanceof PDO) {
-            throw new Exception("La connexion à la base de données n'est pas établie.");
-        }
-        return self::$db;
+        return Database::getInstance()->getConnection();
     }
 
     // Getters (non modifiés)
@@ -169,21 +160,21 @@ class User {
     }
 
     public static function authenticate($username, $password) {
-    self::$logger->debug("Tentative d'authentification pour: " . $username);
-    $user = self::findByUsername($username);
-    if ($user) {
-        self::$logger->debug("Utilisateur trouvé, vérification du mot de passe");
-        if (password_verify($password, $user->password)) {
-            self::$logger->debug("Mot de passe vérifié avec succès");
-            return $user;
+        self::$logger->debug("Tentative d'authentification pour: " . $username);
+        $user = self::findByUsername($username);
+        if ($user) {
+            self::$logger->debug("Utilisateur trouvé, vérification du mot de passe");
+            if (password_verify($password, $user->password)) {
+                self::$logger->debug("Mot de passe vérifié avec succès");
+                return $user;
+            } else {
+                self::$logger->debug("Échec de la vérification du mot de passe");
+            }
         } else {
-            self::$logger->debug("Échec de la vérification du mot de passe");
+            self::$logger->debug("Utilisateur non trouvé");
         }
-    } else {
-        self::$logger->debug("Utilisateur non trouvé");
+        return null;
     }
-    return null;
-}
 
     public static function count() {
         $db = self::getDB();
@@ -274,7 +265,7 @@ class User {
     }
 
     public function hasPermission($action) {
-        switch ($this->getRole()) {
+        switch ($this->role) {
             case 'Administrateur':
                 return true;
             case 'Utilisateur':
@@ -333,7 +324,7 @@ class User {
     }
 
     public function isAdmin() {
-        return $this->getRole() === 'Administrateur';
+        return $this->role === 'Administrateur';
     }
 
     public static function findAllClients() {
