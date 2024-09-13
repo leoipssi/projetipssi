@@ -1,5 +1,5 @@
 <?php
-require_once '/models/Vehicule.php';
+require_once __DIR__ . '/models/Vehicule.php';
 Vehicule::setLogLevel('DEBUG');
 
 // Définir DEBUG_MODE (à mettre à false en production)
@@ -27,7 +27,13 @@ function custom_log($message) {
 custom_log("Script started");
 
 // Vérification des fichiers requis
-$required_files = ['database.php', 'config.php', 'helpers.php', 'vendor/autoload.php', '/models/Vehicule.php'];
+$required_files = [
+    __DIR__ . '/database.php', 
+    __DIR__ . '/config.php', 
+    __DIR__ . '/helpers.php', 
+    __DIR__ . '/vendor/autoload.php', 
+    __DIR__ . '/models/Vehicule.php'
+];
 foreach ($required_files as $file) {
     if (!file_exists($file)) {
         custom_log("Fichier requis manquant: $file");
