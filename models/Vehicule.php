@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../models/Database.php';
+
 class Vehicule {
     private $id;
     private $type_id;
@@ -14,7 +16,6 @@ class Vehicule {
     private $tarif_journalier;
     private $is_available;
 
-    private static $db;
     private static $logLevel = 'ERROR';
 
     public static function setLogLevel($level) {
@@ -27,18 +28,12 @@ class Vehicule {
         }
     }
 
-    public static function setDB($db) {
-        if (!$db instanceof PDO) {
-            self::log("L'objet de base de données fourni n'est pas une instance valide de PDO.", 'ERROR');
-            throw new Exception("L'objet de base de données fourni n'est pas une instance valide de PDO.");
-        }
-        self::$db = $db;
-        self::log("Connexion à la base de données établie pour la classe Vehicule", 'DEBUG');
-        self::log("État de la connexion après setDB : " . (self::isDbConnected() ? "Connecté" : "Non connecté"), 'DEBUG');
+    private static function getDB() {
+        return Database::getInstance()->getConnection();
     }
 
     public static function isDbConnected() {
-        return self::$db instanceof PDO;
+        return Database::getInstance()->getConnection() instanceof PDO;
     }
 
     public function __construct($id, $type_id, $marque, $modele, $numero_serie, $couleur, $immatriculation, $kilometres, $date_achat, $prix_achat, $categorie = null, $tarif_journalier = null, $is_available = true) {
@@ -57,12 +52,10 @@ class Vehicule {
         $this->is_available = $is_available;
     }
 
-    // Nouvelle méthode getMarque()
     public function getMarque() {
         return $this->marque;
     }
 
-    // Autres getters
     public function getId() {
         return $this->id;
     }
@@ -80,9 +73,8 @@ class Vehicule {
     }
 
     public function getType() {
-        self::checkDbConnection();
         try {
-            $stmt = self::$db->prepare("SELECT nom FROM vehicule_types WHERE id = ?");
+            $stmt = self::getDB()->prepare("SELECT nom FROM vehicule_types WHERE id = ?");
             $stmt->execute([$this->type_id]);
             $result = $stmt->fetch(PDO::FETCH_ASSOC);
             return $result ? $result['nom'] : 'Type inconnu';
@@ -97,8 +89,6 @@ class Vehicule {
     }
 
     public static function create($data) {
-        self::checkDbConnection();
-        
         $defaultData = [
             'type_id' => null,
             'marque' => '',
@@ -117,7 +107,7 @@ class Vehicule {
         $data = array_merge($defaultData, $data);
 
         try {
-            $stmt = self::$db->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat, categorie, tarif_journalier, is_available) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt = self::getDB()->prepare("INSERT INTO vehicules (type_id, marque, modele, numero_serie, couleur, immatriculation, kilometres, date_achat, prix_achat, categorie, tarif_journalier, is_available) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             $stmt->execute([
                 $data['type_id'],
                 $data['marque'],
@@ -134,7 +124,7 @@ class Vehicule {
             ]);
             if ($stmt->rowCount() > 0) {
                 return new Vehicule(
-                    self::$db->lastInsertId(),
+                    self::getDB()->lastInsertId(),
                     $data['type_id'],
                     $data['marque'],
                     $data['modele'],
@@ -157,9 +147,8 @@ class Vehicule {
     }
 
     public function update($data) {
-        self::checkDbConnection();
         try {
-            $stmt = self::$db->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ?, categorie = ?, tarif_journalier = ?, is_available = ? WHERE id = ?");
+            $stmt = self::getDB()->prepare("UPDATE vehicules SET type_id = ?, marque = ?, modele = ?, numero_serie = ?, couleur = ?, immatriculation = ?, kilometres = ?, date_achat = ?, prix_achat = ?, categorie = ?, tarif_journalier = ?, is_available = ? WHERE id = ?");
             $stmt->execute([
                 $data['type_id'] ?? $this->type_id,
                 $data['marque'] ?? $this->marque,
@@ -183,10 +172,9 @@ class Vehicule {
     }
 
     public static function findAll($page = 1, $perPage = 10) {
-        self::checkDbConnection();
         $offset = ($page - 1) * $perPage;
         try {
-            $stmt = self::$db->prepare("SELECT * FROM vehicules LIMIT :limit OFFSET :offset");
+            $stmt = self::getDB()->prepare("SELECT * FROM vehicules LIMIT :limit OFFSET :offset");
             $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
             $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
             $stmt->execute();
@@ -216,9 +204,8 @@ class Vehicule {
     }
 
     public static function findById($id) {
-        self::checkDbConnection();
         try {
-            $stmt = self::$db->prepare("SELECT * FROM vehicules WHERE id = ?");
+            $stmt = self::getDB()->prepare("SELECT * FROM vehicules WHERE id = ?");
             $stmt->execute([$id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             
@@ -259,9 +246,8 @@ class Vehicule {
     }
 
     public static function findAvailable() {
-        self::checkDbConnection();
         try {
-            $stmt = self::$db->query("SELECT * FROM vehicules WHERE is_available = TRUE");
+            $stmt = self::getDB()->query("SELECT * FROM vehicules WHERE is_available = TRUE");
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $vehicules[] = new Vehicule(
@@ -288,9 +274,8 @@ class Vehicule {
     }
 
     public static function findRented() {
-        self::checkDbConnection();
         try {
-            $stmt = self::$db->query("SELECT v.* FROM vehicules v JOIN rentals r ON v.id = r.vehicule_id WHERE r.status = 'En cours'");
+            $stmt = self::getDB()->query("SELECT v.* FROM vehicules v JOIN rentals r ON v.id = r.vehicule_id WHERE r.status = 'En cours'");
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
                 $vehicules[] = new Vehicule(
@@ -317,9 +302,8 @@ class Vehicule {
     }
 
     public static function count() {
-        self::checkDbConnection();
         try {
-            $stmt = self::$db->query("SELECT COUNT(*) FROM vehicules");
+            $stmt = self::getDB()->query("SELECT COUNT(*) FROM vehicules");
             return $stmt->fetchColumn();
         } catch (PDOException $e) {
             self::log("Erreur lors du comptage des véhicules : " . $e->getMessage(), 'ERROR');
@@ -328,9 +312,8 @@ class Vehicule {
     }
 
     public static function getRecentVehicules($limit = 5) {
-        self::checkDbConnection();
         try {
-            $stmt = self::$db->prepare("SELECT * FROM vehicules ORDER BY date_achat DESC LIMIT :limit");
+            $stmt = self::getDB()->prepare("SELECT * FROM vehicules ORDER BY date_achat DESC LIMIT :limit");
             $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
             $stmt->execute();
             $vehicules = [];
@@ -362,9 +345,8 @@ class Vehicule {
     }
 
     public static function getTopRented($limit = 5) {
-        self::checkDbConnection();
         try {
-            $stmt = self::$db->prepare("
+            $stmt = self::getDB()->prepare("
                 SELECT v.*, COUNT(r.id) as rental_count, SUM(r.prix_total) as revenue
                 FROM vehicules v
                 LEFT JOIN rentals r ON v.id = r.vehicule_id
@@ -395,14 +377,13 @@ class Vehicule {
     private static function checkDbConnection() {
         if (!self::isDbConnected()) {
             self::log("La connexion à la base de données n'est pas établie dans la classe Vehicule", 'ERROR');
-            throw new Exception("La connexion à la base de données n'est pas établie. Assurez-vous d'appeler Vehicule::setDB() avec une instance PDO valide avant d'utiliser la classe.");
+            throw new Exception("La connexion à la base de données n'est pas établie.");
         }
     }
 
     public function delete() {
-        self::checkDbConnection();
         try {
-            $stmt = self::$db->prepare("DELETE FROM vehicules WHERE id = ?");
+            $stmt = self::getDB()->prepare("DELETE FROM vehicules WHERE id = ?");
             $stmt->execute([$this->id]);
             return $stmt->rowCount() > 0;
         } catch (PDOException $e) {
@@ -412,7 +393,6 @@ class Vehicule {
     }
 
     public static function search($criteria) {
-        self::checkDbConnection();
         $sql = "SELECT * FROM vehicules WHERE 1=1";
         $params = [];
 
@@ -425,12 +405,12 @@ class Vehicule {
             $params[] = '%' . $criteria['modele'] . '%';
         }
         if (isset($criteria['is_available'])) {
-            $sql .= " AND is_available = ?";
+            $sql .= " AND is_available = ?
             $params[] = $criteria['is_available'];
         }
 
         try {
-            $stmt = self::$db->prepare($sql);
+            $stmt = self::getDB()->prepare($sql);
             $stmt->execute($params);
             $vehicules = [];
             while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
