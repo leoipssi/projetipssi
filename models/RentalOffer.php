@@ -10,10 +10,6 @@ class RentalOffer {
     private $is_active;
     private $is_available;
 
-    private static function getDB() {
-        return Database::getInstance()->getConnection();
-    }
-
     public function __construct($id, $vehicule_id, $duree, $kilometres, $prix, $is_active, $is_available) {
         $this->id = $id;
         $this->vehicule_id = $vehicule_id;
@@ -22,6 +18,10 @@ class RentalOffer {
         $this->prix = $prix;
         $this->is_active = $is_active;
         $this->is_available = $is_available;
+    }
+
+    private static function getDB() {
+        return Database::getInstance()->getConnection();
     }
 
     // Getters
@@ -60,9 +60,6 @@ class RentalOffer {
     public function getVehicule() {
         return Vehicule::findById($this->vehicule_id);
     }
-
-    // Le reste de la classe reste inchangé...
-}
     
     public static function create($data) {
         $db = self::getDB();
