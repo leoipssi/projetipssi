@@ -1,11 +1,14 @@
 <?php
+require_once __DIR__ . '/../models/Database.php';
+require_once __DIR__ . '/../models/Vehicule.php';
+require_once __DIR__ . '/../models/RentalOffer.php';
+
 class HomeController extends BaseController {
     private $db;
 
     public function __construct($logger = null) {
         parent::__construct($logger);
-        global $db;
-        $this->db = $db;
+        $this->db = Database::getInstance()->getConnection();
     }
 
     public function index() {
@@ -13,12 +16,6 @@ class HomeController extends BaseController {
             $this->logger->debug("Début de la méthode index()");
             $this->checkDatabaseConnection();
             $this->logger->debug("Connexion à la base de données vérifiée");
-            
-            Vehicule::setDB($this->db);
-            $this->logger->debug("DB configurée pour Vehicule");
-            
-            RentalOffer::setDB($this->db);
-            $this->logger->debug("DB configurée pour RentalOffer");
             
             $this->logger->debug("Tentative de récupération des véhicules récents");
             $recentVehicules = $this->getRecentVehicules();
@@ -162,3 +159,4 @@ class HomeController extends BaseController {
         $this->render('privacy', ['title' => 'Politique de confidentialité']);
     }
 }
+?>
