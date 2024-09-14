@@ -5,11 +5,6 @@ define('ROOT_PATH', realpath(dirname(__FILE__) . '/../../'));
 // Inclure les fichiers nécessaires
 require_once ROOT_PATH . '/models/User.php';
 require_once ROOT_PATH . '/models/Vehicule.php';
-
-// Débogage
-// echo "ROOT_PATH: " . ROOT_PATH . "\n";
-// echo "User.php path: " . ROOT_PATH . '/models/User.php' . "\n";
-// echo "File exists: " . (file_exists(ROOT_PATH . '/models/User.php') ? 'Yes' : 'No') . "\n";
 ?>
 
 <h1>Tableau de bord administrateur</h1>
@@ -93,13 +88,6 @@ require_once ROOT_PATH . '/models/Vehicule.php';
 
     <div class="dashboard-section">
         <h2>Véhicules les plus loués</h2>
-        <?php
-        // Débogage
-        // var_dump($topVehicules);
-        // if (!empty($topVehicules)) {
-        //     var_dump(get_class($topVehicules[0]));
-        // }
-        ?>
         <table class="admin-table">
             <thead>
                 <tr>
@@ -109,11 +97,11 @@ require_once ROOT_PATH . '/models/Vehicule.php';
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($topVehicules as $vehicule): ?>
+                <?php foreach ($topVehicules as $index => $vehicule): ?>
                     <tr>
                         <td><?= htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele()) ?></td>
-                        <td><?= $vehicule->getRentalCount() ?? 0 ?></td>
-                        <td><?= number_format($vehicule->getRevenue() ?? 0, 2) ?> €</td>
+                        <td><?= $rentalCounts[$index] ?? 0 ?></td>
+                        <td><?= number_format($revenues[$index] ?? 0, 2) ?> €</td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
