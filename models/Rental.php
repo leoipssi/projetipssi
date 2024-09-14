@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../models/Database.php';
 
 class Rental {
     private $id;
@@ -11,6 +12,10 @@ class Rental {
     private $status;
     private $client_name;
     private $vehicule_name;
+
+    private static function getDB() {
+        return Database::getInstance()->getConnection();
+    }
 
     public function __construct($id, $client_id, $vehicule_id, $offer_id, $date_debut, $date_fin, $prix_total, $status) {
         $this->id = $id;
@@ -34,181 +39,235 @@ class Rental {
     public function getStatus() { return $this->status; }
 
     public static function create($data) {
-        global $conn;
-        $stmt = $conn->prepare("INSERT INTO rentals (client_id, vehicule_id, offer_id, date_debut, date_fin, prix_total, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([
-            $data['client_id'],
-            $data['vehicule_id'],
-            $data['offer_id'],
-            $data['date_debut'],
-            $data['date_fin'],
-            $data['prix_total'],
-            $data['status']
-        ]);
-        if ($stmt->rowCount() > 0) {
-            return new Rental($conn->lastInsertId(), $data['client_id'], $data['vehicule_id'], $data['offer_id'], $data['date_debut'], $data['date_fin'], $data['prix_total'], $data['status']);
+        try {
+            $conn = self::getDB();
+            $stmt = $conn->prepare("INSERT INTO rentals (client_id, vehicule_id, offer_id, date_debut, date_fin, prix_total, status) VALUES (?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([
+                $data['client_id'],
+                $data['vehicule_id'],
+                $data['offer_id'],
+                $data['date_debut'],
+                $data['date_fin'],
+                $data['prix_total'],
+                $data['status']
+            ]);
+            if ($stmt->rowCount() > 0) {
+                return new Rental($conn->lastInsertId(), $data['client_id'], $data['vehicule_id'], $data['offer_id'], $data['date_debut'], $data['date_fin'], $data['prix_total'], $data['status']);
+            }
+            return null;
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::create : " . $e->getMessage());
+            throw new Exception("Impossible de créer la location.");
         }
-        return null;
     }
 
     public static function findById($id) {
-        global $conn;
-        $stmt = $conn->prepare("SELECT * FROM rentals WHERE id = ?");
-        $stmt->execute([$id]);
-        $row = $stmt->fetch(PDO::FETCH_ASSOC);
-        if ($row) {
-            return new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
+        try {
+            $conn = self::getDB();
+            $stmt = $conn->prepare("SELECT * FROM rentals WHERE id = ?");
+            $stmt->execute([$id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                return new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
+            }
+            return null;
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::findById : " . $e->getMessage());
+            throw new Exception("Impossible de trouver la location.");
         }
-        return null;
     }
 
     public static function findByUserId($userId, $page = 1, $perPage = 10, $status = null) {
-        global $conn;
-        $offset = ($page - 1) * $perPage;
-        $query = "SELECT * FROM rentals WHERE client_id = :userId";
-        $params = [':userId' => $userId];
-        
-        if ($status !== null) {
-            $query .= " AND status = :status";
-            $params[':status'] = $status;
+        try {
+            $conn = self::getDB();
+            $offset = ($page - 1) * $perPage;
+            $query = "SELECT * FROM rentals WHERE client_id = :userId";
+            $params = [':userId' => $userId];
+            
+            if ($status !== null) {
+                $query .= " AND status = :status";
+                $params[':status'] = $status;
+            }
+            
+            $query .= " ORDER BY date_debut DESC LIMIT :limit OFFSET :offset";
+            $params[':limit'] = $perPage;
+            $params[':offset'] = $offset;
+            
+            $stmt = $conn->prepare($query);
+            foreach ($params as $key => &$val) {
+                $stmt->bindParam($key, $val, PDO::PARAM_STR);
+            }
+            $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            
+            $stmt->execute();
+            
+            $rentals = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $rentals[] = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
+            }
+            return $rentals;
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::findByUserId : " . $e->getMessage());
+            throw new Exception("Impossible de récupérer les locations de l'utilisateur.");
         }
-        
-        $query .= " ORDER BY date_debut DESC LIMIT :limit OFFSET :offset";
-        $params[':limit'] = $perPage;
-        $params[':offset'] = $offset;
-        
-        $stmt = $conn->prepare($query);
-        foreach ($params as $key => &$val) {
-            $stmt->bindParam($key, $val, PDO::PARAM_STR);
-        }
-        $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
-        $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
-        
-        $stmt->execute();
-        
-        $rentals = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $rentals[] = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
-        }
-        return $rentals;
     }
 
     public static function countByUserId($userId, $status = null) {
-        global $conn;
-        $query = "SELECT COUNT(*) FROM rentals WHERE client_id = :userId";
-        $params = [':userId' => $userId];
-        
-        if ($status !== null) {
-            $query .= " AND status = :status";
-            $params[':status'] = $status;
+        try {
+            $conn = self::getDB();
+            $query = "SELECT COUNT(*) FROM rentals WHERE client_id = :userId";
+            $params = [':userId' => $userId];
+            
+            if ($status !== null) {
+                $query .= " AND status = :status";
+                $params[':status'] = $status;
+            }
+            
+            $stmt = $conn->prepare($query);
+            $stmt->execute($params);
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::countByUserId : " . $e->getMessage());
+            throw new Exception("Impossible de compter les locations de l'utilisateur.");
         }
-        
-        $stmt = $conn->prepare($query);
-        $stmt->execute($params);
-        return $stmt->fetchColumn();
     }
 
     public function update($data) {
-        global $conn;
-        $stmt = $conn->prepare("UPDATE rentals SET status = ? WHERE id = ?");
-        $stmt->execute([$data['status'], $this->id]);
-        return $stmt->rowCount() > 0;
+        try {
+            $conn = self::getDB();
+            $stmt = $conn->prepare("UPDATE rentals SET status = ? WHERE id = ?");
+            $stmt->execute([$data['status'], $this->id]);
+            return $stmt->rowCount() > 0;
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::update : " . $e->getMessage());
+            throw new Exception("Impossible de mettre à jour la location.");
+        }
     }
 
     public static function count() {
-        global $conn;
-        $stmt = $conn->query("SELECT COUNT(*) FROM rentals");
-        return $stmt->fetchColumn();
+        try {
+            $conn = self::getDB();
+            $stmt = $conn->query("SELECT COUNT(*) FROM rentals");
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::count : " . $e->getMessage());
+            throw new Exception("Impossible de compter les locations.");
+        }
     }
 
     public static function totalRevenue() {
-        global $conn;
-        $stmt = $conn->query("SELECT SUM(prix_total) FROM rentals WHERE status = 'terminée'");
-        return $stmt->fetchColumn();
+        try {
+            $conn = self::getDB();
+            $stmt = $conn->query("SELECT SUM(prix_total) FROM rentals WHERE status = 'terminée'");
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::totalRevenue : " . $e->getMessage());
+            throw new Exception("Impossible de calculer le revenu total.");
+        }
     }
 
     public static function getRecent($limit = 5) {
-        global $conn;
-        $stmt = $conn->prepare("SELECT * FROM rentals ORDER BY date_debut DESC LIMIT :limit");
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
-        $rentals = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $rentals[] = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
+        try {
+            $conn = self::getDB();
+            $stmt = $conn->prepare("SELECT * FROM rentals ORDER BY date_debut DESC LIMIT :limit");
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            $rentals = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $rentals[] = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
+            }
+            return $rentals;
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::getRecent : " . $e->getMessage());
+            throw new Exception("Impossible de récupérer les locations récentes.");
         }
-        return $rentals;
     }
 
     public static function getFiltered($page, $search, $status, $sortBy, $sortOrder) {
-        global $conn;
-        $perPage = 10;
-        $offset = ($page - 1) * $perPage;
+        try {
+            $conn = self::getDB();
+            $perPage = 10;
+            $offset = ($page - 1) * $perPage;
 
-        $sql = "SELECT r.*, u.username as client_name, CONCAT(v.marque, ' ', v.modele) as vehicule_name 
-                FROM rentals r
-                LEFT JOIN users u ON r.client_id = u.id
-                LEFT JOIN vehicules v ON r.vehicule_id = v.id
-                WHERE 1=1";
-        $params = [];
+            $sql = "SELECT r.*, u.username as client_name, CONCAT(v.marque, ' ', v.modele) as vehicule_name 
+                    FROM rentals r
+                    LEFT JOIN users u ON r.client_id = u.id
+                    LEFT JOIN vehicules v ON r.vehicule_id = v.id
+                    WHERE 1=1";
+            $params = [];
 
-        if (!empty($search)) {
-            $sql .= " AND (u.username LIKE :search OR CONCAT(v.marque, ' ', v.modele) LIKE :search)";
-            $params[':search'] = "%$search%";
+            if (!empty($search)) {
+                $sql .= " AND (u.username LIKE :search OR CONCAT(v.marque, ' ', v.modele) LIKE :search)";
+                $params[':search'] = "%$search%";
+            }
+
+            if (!empty($status)) {
+                $sql .= " AND r.status = :status";
+                $params[':status'] = $status;
+            }
+
+            $allowedSortFields = ['id', 'client_name', 'vehicule_name', 'date_debut', 'date_fin', 'prix_total', 'status'];
+            $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
+            $sortOrder = $sortOrder === 'DESC' ? 'DESC' : 'ASC';
+
+            $sql .= " ORDER BY $sortBy $sortOrder LIMIT :limit OFFSET :offset";
+            $params[':limit'] = $perPage;
+            $params[':offset'] = $offset;
+
+            $stmt = $conn->prepare($sql);
+            foreach ($params as $key => &$val) {
+                $stmt->bindParam($key, $val);
+            }
+            $stmt->bindParam(':limit', $perPage, PDO::PARAM_INT);
+            $stmt->bindParam(':offset', $offset, PDO::PARAM_INT);
+            $stmt->execute();
+
+            $rentals = [];
+            while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $rental = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
+                $rental->client_name = $row['client_name'];
+                $rental->vehicule_name = $row['vehicule_name'];
+                $rentals[] = $rental;
+            }
+            return $rentals;
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::getFiltered : " . $e->getMessage());
+            throw new Exception("Impossible de récupérer les locations filtrées.");
         }
-
-        if (!empty($status)) {
-            $sql .= " AND r.status = :status";
-            $params[':status'] = $status;
-        }
-
-        $allowedSortFields = ['id', 'client_name', 'vehicule_name', 'date_debut', 'date_fin', 'prix_total', 'status'];
-        $sortBy = in_array($sortBy, $allowedSortFields) ? $sortBy : 'id';
-        $sortOrder = $sortOrder === 'DESC' ? 'DESC' : 'ASC';
-
-        $sql .= " ORDER BY $sortBy $sortOrder LIMIT $perPage OFFSET $offset";
-
-        $stmt = $conn->prepare($sql);
-        foreach ($params as $key => &$val) {
-            $stmt->bindParam($key, $val);
-        }
-        $stmt->execute();
-
-        $rentals = [];
-        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $rental = new Rental($row['id'], $row['client_id'], $row['vehicule_id'], $row['offer_id'], $row['date_debut'], $row['date_fin'], $row['prix_total'], $row['status']);
-            $rental->client_name = $row['client_name'];
-            $rental->vehicule_name = $row['vehicule_name'];
-            $rentals[] = $rental;
-        }
-        return $rentals;
     }
     
     public static function getTotalPages($search, $status) {
-        global $conn;
-        $perPage = 10;
+        try {
+            $conn = self::getDB();
+            $perPage = 10;
 
-        $sql = "SELECT COUNT(*) 
-                FROM rentals r
-                LEFT JOIN users u ON r.client_id = u.id
-                LEFT JOIN vehicules v ON r.vehicule_id = v.id
-                WHERE 1=1";
-        $params = [];
+            $sql = "SELECT COUNT(*) 
+                    FROM rentals r
+                    LEFT JOIN users u ON r.client_id = u.id
+                    LEFT JOIN vehicules v ON r.vehicule_id = v.id
+                    WHERE 1=1";
+            $params = [];
 
-        if (!empty($search)) {
-            $sql .= " AND (u.username LIKE :search OR CONCAT(v.marque, ' ', v.modele) LIKE :search)";
-            $params[':search'] = "%$search%";
+            if (!empty($search)) {
+                $sql .= " AND (u.username LIKE :search OR CONCAT(v.marque, ' ', v.modele) LIKE :search)";
+                $params[':search'] = "%$search%";
+            }
+
+            if (!empty($status)) {
+                $sql .= " AND r.status = :status";
+                $params[':status'] = $status;
+            }
+
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($params);
+            $total = $stmt->fetchColumn();
+
+            return ceil($total / $perPage);
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::getTotalPages : " . $e->getMessage());
+            throw new Exception("Impossible de calculer le nombre total de pages.");
         }
-
-        if (!empty($status)) {
-            $sql .= " AND r.status = :status";
-            $params[':status'] = $status;
-        }
-
-        $stmt = $conn->prepare($sql);
-        $stmt->execute($params);
-        $total = $stmt->fetchColumn();
-
-        return ceil($total / $perPage);
     }
 
     public function getClientName() {
@@ -220,10 +279,15 @@ class Rental {
     }
 
     public static function getRentedVehicules() {
-        global $conn;
-        $stmt = $conn->prepare("SELECT DISTINCT vehicule_id FROM rentals WHERE status = 'active'");
-        $stmt->execute();
-        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+        try {
+            $conn = self::getDB();
+            $stmt = $conn->prepare("SELECT DISTINCT vehicule_id FROM rentals WHERE status = 'active'");
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_COLUMN);
+        } catch (PDOException $e) {
+            error_log("Erreur dans Rental::getRentedVehicules : " . $e->getMessage());
+            throw new Exception("Impossible de récupérer les véhicules loués.");
+        }
     }
 
     public function cancel() {
