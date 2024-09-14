@@ -2,6 +2,7 @@
 require_once __DIR__ . '/../models/Database.php';
 require_once __DIR__ . '/../models/Vehicule.php';
 require_once __DIR__ . '/../models/RentalOffer.php';
+require_once __DIR__ . '/../models/User.php';
 
 class HomeController extends BaseController {
     private $db;
@@ -35,10 +36,14 @@ class HomeController extends BaseController {
             $activeOffers = $this->getActiveOffers();
             $this->logger->debug("Offres actives récupérées", ['count' => count($activeOffers)]);
             
+            // Récupérer les informations de l'utilisateur connecté
+            $user = $this->getCurrentUser();
+            
             $this->logger->debug("Appel de la méthode render()");
             $this->render('home', [
                 'recentVehicules' => $recentVehicules,
-                'activeOffers' => $activeOffers
+                'activeOffers' => $activeOffers,
+                'user' => $user
             ]);
             $this->logger->debug("Fin de la méthode index()");
         } catch (Exception $e) {
@@ -104,6 +109,13 @@ class HomeController extends BaseController {
         }
     }
 
+    private function getCurrentUser() {
+        if (isset($_SESSION['user_id'])) {
+            return User::findById($_SESSION['user_id']);
+        }
+        return null;
+    }
+
     private function handleError(Exception $e) {
         $this->logger->error("Erreur dans HomeController::index", [
             'message' => $e->getMessage(),
@@ -122,18 +134,20 @@ class HomeController extends BaseController {
     }
 
     public function about() {
-        $this->render('about', ['title' => 'À propos de nous']);
+        $user = $this->getCurrentUser();
+        $this->render('about', ['title' => 'À propos de nous', 'user' => $user]);
     }
 
     public function contact() {
+        $user = $this->getCurrentUser();
         if ($this->isPost()) {
-            $this->handleContactForm();
+            $this->handleContactForm($user);
         } else {
-            $this->render('contact', ['title' => 'Contactez-nous']);
+            $this->render('contact', ['title' => 'Contactez-nous', 'user' => $user]);
         }
     }
 
-    private function handleContactForm() {
+    private function handleContactForm($user) {
         $name = $_POST['name'] ?? '';
         $email = $_POST['email'] ?? '';
         $message = $_POST['message'] ?? '';
@@ -141,22 +155,26 @@ class HomeController extends BaseController {
         if (empty($name) || empty($email) || empty($message)) {
             $this->render('contact', [
                 'title' => 'Contactez-nous',
-                'error' => 'Veuillez remplir tous les champs.'
+                'error' => 'Veuillez remplir tous les champs.',
+                'user' => $user
             ]);
             return;
         }
         $this->render('contact', [
             'title' => 'Contactez-nous',
-            'success' => 'Votre message a été envoyé avec succès.'
+            'success' => 'Votre message a été envoyé avec succès.',
+            'user' => $user
         ]);
     }
 
     public function terms() {
-        $this->render('terms', ['title' => 'Conditions d\'utilisation']);
+        $user = $this->getCurrentUser();
+        $this->render('terms', ['title' => 'Conditions d\'utilisation', 'user' => $user]);
     }
 
     public function privacy() {
-        $this->render('privacy', ['title' => 'Politique de confidentialité']);
+        $user = $this->getCurrentUser();
+        $this->render('privacy', ['title' => 'Politique de confidentialité', 'user' => $user]);
     }
 }
 ?>
