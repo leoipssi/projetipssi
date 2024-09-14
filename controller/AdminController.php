@@ -26,7 +26,7 @@ class AdminController extends BaseController {
         }
     }
 
-    protected function isAdmin() {
+    public function isAdmin() {
         return AuthController::isAdmin();
     }
 
