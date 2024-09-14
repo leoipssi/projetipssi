@@ -30,19 +30,19 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=vehicules">Véhicules</a>
                     </li>
-                    <?php if ($isLoggedIn): ?>
+                    <?php if ($isLoggedIn ?? false): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=mes-locations">Mes locations</a>
                         </li>
                     <?php endif; ?>
-                    <?php if ($isAdmin): ?>
+                    <?php if ($isAdmin ?? false): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=admin">Administration</a>
                         </li>
                     <?php endif; ?>
                 </ul>
                 <ul class="navbar-nav">
-                    <?php if ($isLoggedIn): ?>
+                    <?php if ($isLoggedIn ?? false): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=logout">Déconnexion</a>
                         </li>
@@ -71,10 +71,10 @@
         <h3>Informations de débogage</h3>
         <pre>
         <?php
-        echo "isLoggedIn: " . var_export($isLoggedIn, true) . "\n";
-        echo "isAdmin: " . var_export($isAdmin, true) . "\n";
-        echo "User: " . var_export($user, true) . "\n";
-        echo "Session: " . var_export($_SESSION, true) . "\n";
+        echo "isLoggedIn: " . var_export($isLoggedIn ?? false, true) . "\n";
+        echo "isAdmin: " . var_export($isAdmin ?? false, true) . "\n";
+        echo "User: " . var_export($user ?? null, true) . "\n";
+        echo "Session: " . var_export($_SESSION ?? [], true) . "\n";
         ?>
         </pre>
     </div>
