@@ -1,5 +1,8 @@
 <?php
-require_once __DIR__ . 'helpers.php';
+if (!defined('ROOT_PATH')) {
+    define('ROOT_PATH', realpath(__DIR__ . '/../../'));
+}
+require_once ROOT_PATH . '/helpers.php';
 
 // Initialiser les variables de session
 $isLoggedIn = isLoggedIn();
