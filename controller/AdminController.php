@@ -75,20 +75,6 @@ class AdminController extends BaseController {
         }
     }
 
-    public function vehicules() {
-        $this->logger->info("Accès à la liste des véhicules");
-        try {
-            $this->testDatabaseConnection();
-            $vehicules = Vehicule::getAll();
-            $this->logger->debug("Nombre de véhicules récupérés : " . count($vehicules));
-            $this->render('vehicules/index', [
-                'vehicules' => $vehicules
-            ]);
-        } catch (Exception $e) {
-            $this->handleError($e, 'Erreur dans vehicules');
-        }
-    }
-    
     public function addVehicule() {
         $this->logger->info("Accès au formulaire d'ajout de véhicule");
         try {
@@ -126,58 +112,55 @@ class AdminController extends BaseController {
         }
     }
 
-public function createOffer() {
-    $this->logger->info("Accès au formulaire de création d'offre");
-    try {
-        $this->testDatabaseConnection();
-        
-        $vehicules = Vehicule::findAvailable();
-        $errors = [];
-
-        if ($this->isPost()) {
-            $this->logger->debug("Tentative de création d'une nouvelle offre");
-            $offerData = $this->sanitizeUserData($_POST);
-            $offerData['duree'] = 7; // Durée fixée à 7 jours
-            $offerData['is_active'] = 1;
-            $offerData['is_available'] = 1;
+    public function createOffer() {
+        $this->logger->info("Accès au formulaire de création d'offre");
+        try {
+            $this->testDatabaseConnection();
             
-            $this->logger->debug("Données de l'offre reçues", $offerData);
-            
-            $errors = $this->validateOfferInput($offerData);
+            $vehicules = Vehicule::findAvailable();
+            $errors = [];
 
-            if (empty($errors)) {
-                try {
-                    $offer = RentalOffer::create($offerData);
-                    if ($offer) {
-                        $this->logger->info("Nouvelle offre créée avec succès", ['offerId' => $offer->getId()]);
-                        $this->redirect('admin', ['action' => 'dashboard', 'success' => 'Offre créée avec succès']);
-                        return;
-                    } else {
-                        $this->logger->error("Échec de la création de l'offre : aucun objet retourné");
-                        $errors[] = "Erreur lors de la création de l'offre.";
+            if ($this->isPost()) {
+                $this->logger->debug("Tentative de création d'une nouvelle offre");
+                $offerData = $this->sanitizeUserData($_POST);
+                $offerData['duree'] = 7; // Durée fixée à 7 jours
+                $offerData['is_active'] = 1;
+                $offerData['is_available'] = 1;
+                
+                $this->logger->debug("Données de l'offre reçues", $offerData);
+                
+                $errors = $this->validateOfferInput($offerData);
+
+                if (empty($errors)) {
+                    try {
+                        $offer = RentalOffer::create($offerData);
+                        if ($offer) {
+                            $this->logger->info("Nouvelle offre créée avec succès", ['offerId' => $offer->getId()]);
+                            $this->redirect('admin', ['action' => 'dashboard', 'success' => 'Offre créée avec succès']);
+                            return;
+                        } else {
+                            $this->logger->error("Échec de la création de l'offre : aucun objet retourné");
+                            $errors[] = "Erreur lors de la création de l'offre.";
+                        }
+                    } catch (Exception $e) {
+                        $this->logger->error("Exception lors de la création de l'offre", [
+                            'error' => $e->getMessage(),
+                            'trace' => $e->getTraceAsString()
+                        ]);
+                        $errors[] = "Une erreur est survenue lors de la création de l'offre : " . $e->getMessage();
                     }
-                } catch (Exception $e) {
-                    $this->logger->error("Exception lors de la création de l'offre", [
-                        'error' => $e->getMessage(),
-                        'trace' => $e->getTraceAsString()
-                    ]);
-                    $errors[] = "Une erreur est survenue lors de la création de l'offre : " . $e->getMessage();
+                } else {
+                    $this->logger->warning("Validation de l'offre échouée", ['errors' => $errors]);
                 }
-            } else {
-                $this->logger->warning("Validation de l'offre échouée", ['errors' => $errors]);
             }
-        }
 
-        $this->render('admin/createOffer', [
-            'vehicules' => $vehicules,
-            'errors' => $errors
-        ]);
-    } catch (Exception $e) {
-        $this->handleError($e, 'Erreur dans createOffer');
-    }
-}
-    public function users() {
-        $this->redirect('admin', ['action' => 'manageUsers']);
+            $this->render('admin/createOffer', [
+                'vehicules' => $vehicules,
+                'errors' => $errors
+            ]);
+        } catch (Exception $e) {
+            $this->handleError($e, 'Erreur dans createOffer');
+        }
     }
 
     public function manageUsers() {
