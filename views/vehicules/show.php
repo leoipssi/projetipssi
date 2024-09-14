@@ -1,7 +1,5 @@
 <?php $title = $this->e($vehicule->getMarque() . ' ' . $vehicule->getModele()); ?>
-
 <h1><?= $title ?></h1>
-
 <div class="row">
     <div class="col-md-6">
         <img src="<?= $this->e(BASE_URL . '/public/images/vehicules/' . $vehicule->getId() . '.png') ?>" alt="<?= $title ?>" class="img-fluid">
@@ -10,7 +8,7 @@
         <p><strong>Type:</strong> <?= $this->e($vehicule->getType()) ?></p>
         <p><strong>Couleur:</strong> <?= $this->e($vehicule->getCouleur()) ?></p>
         <p><strong>Immatriculation:</strong> <?= $this->e($vehicule->getImmatriculation()) ?></p>
-        <p><strong>Kilométrage:</strong> <?= number_format($vehicule->getKilometres(), 0, ',', ' ') ?> km</p>
+        <p><strong>Kilométrage:</strong> <?= $vehicule->getKilometres() !== null ? number_format($vehicule->getKilometres(), 0, ',', ' ') . ' km' : 'Non défini' ?></p>
         <p><strong>Date d'achat:</strong> <?= $this->e($vehicule->getDateAchat()) ?></p>
         
         <?php if (!empty($offresActives)): ?>
@@ -27,12 +25,10 @@
         <?php else: ?>
             <p>Aucune offre spéciale n'est actuellement disponible pour ce véhicule.</p>
         <?php endif; ?>
-
-        <h3>Tarif journalier standard: <?= number_format($vehicule->getTarifJournalier(), 2, ',', ' ') ?> €</h3>
+        <h3>Tarif journalier standard: <?= $vehicule->getTarifJournalier() !== null ? number_format($vehicule->getTarifJournalier(), 2, ',', ' ') . ' €' : 'Non défini' ?></h3>
         <a href="<?= $this->url('rentals', ['action' => 'create', 'vehicule_id' => $vehicule->getId()]) ?>" class="btn btn-primary">Réserver ce véhicule</a>
     </div>
 </div>
-
 <?php if ($this->isAdmin()): ?>
 <div class="mt-4">
     <a href="<?= $this->url('vehicules', ['action' => 'edit', 'id' => $vehicule->getId()]) ?>" class="btn btn-warning">Modifier</a>
