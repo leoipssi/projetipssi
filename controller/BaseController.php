@@ -55,7 +55,11 @@ protected function render($view, $data = [], $layout = 'main') {
         }
         $this->logger->info("Fin du rendu de la vue : $view");
     } catch (Exception $e) {
-        $this->logger->error('Erreur lors du rendu de la vue: ' . $e->getMessage());
+        $this->logger->error('Erreur lors du rendu de la vue: ' . $e->getMessage(), [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ]);
         $this->renderErrorPage($e->getMessage());
     }
 }
