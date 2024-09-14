@@ -2,7 +2,6 @@
 require_once 'models/Rental.php';
 require_once 'models/Vehicule.php';
 require_once 'models/RentalOffer.php';
-require_once 'models/Invoice.php';
 
 class RentalController extends BaseController {
     public function index() {
