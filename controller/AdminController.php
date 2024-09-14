@@ -10,15 +10,26 @@ require_once BASE_PATH . '/models/User.php';
 require_once BASE_PATH . '/models/Rental.php';
 require_once BASE_PATH . '/models/VehiculeType.php';
 require_once BASE_PATH . '/models/RentalOffer.php';
+require_once BASE_PATH . '/models/Database.php';
 
 class AdminController extends BaseController {
     protected $logger;
+    protected $db;
 
     public function __construct($logger = null) {
         parent::__construct();
         $this->logger = $logger ?? new \Monolog\Logger('admin');
         $this->logger->pushHandler(new \Monolog\Handler\StreamHandler(BASE_PATH . '/logs/admin.log', \Monolog\Logger::DEBUG));
         
+        // Initialiser la connexion à la base de données
+        try {
+            $this->db = Database::getInstance()->getConnection();
+            $this->logger->info("Connexion à la base de données établie avec succès");
+        } catch (PDOException $e) {
+            $this->logger->error("Erreur de connexion à la base de données: " . $e->getMessage());
+            // Ne pas lever d'exception ici, gérer l'erreur plus tard
+        }
+
         // Vérifie si l'utilisateur est un administrateur
         if (!$this->isAdmin()) {
             $this->logger->warning("Tentative d'accès non autorisé à l'interface admin");
@@ -31,43 +42,19 @@ class AdminController extends BaseController {
     }
 
     public function index() {
-    $this->logger->info("Accès à la page d'accueil de l'administration");
-    try {
-        $this->testDatabaseConnection();
-        $totalVehicules = Vehicule::count();
-        $totalUsers = User::count();
-        $totalRentals = Rental::count();
-        $totalRevenue = Rental::totalRevenue();
-        
-        $totalRevenue = is_null($totalRevenue) ? 0 : $totalRevenue;
-        
-        $recentRentals = Rental::getRecent(5);
-        $topVehicules = Vehicule::getTopRented(5);
-
-        $this->logger->debug("Statistiques récupérées pour le tableau de bord", [
-            'totalVehicules' => $totalVehicules,
-            'totalUsers' => $totalUsers,
-            'totalRentals' => $totalRentals,
-            'totalRevenue' => $totalRevenue
-        ]);
-
-        $this->render('admin/dashboard', [
-            'totalVehicules' => $totalVehicules,
-            'totalUsers' => $totalUsers,
-            'totalRentals' => $totalRentals,
-            'totalRevenue' => $totalRevenue,
-            'recentRentals' => $recentRentals,
-            'topVehicules' => $topVehicules
-        ]);
-    } catch (Exception $e) {
-        $this->logger->error("Erreur dans la méthode index : " . $e->getMessage(), [
-            'file' => $e->getFile(),
-            'line' => $e->getLine(),
-            'trace' => $e->getTraceAsString()
-        ]);
-        $this->handleError($e, 'Erreur dans index');
+        $this->logger->info("Accès à la page d'accueil de l'administration");
+        try {
+            $this->testDatabaseConnection();
+            $this->dashboard();
+        } catch (Exception $e) {
+            $this->logger->error("Erreur dans la méthode index : " . $e->getMessage(), [
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            $this->handleError($e, 'Erreur dans index');
+        }
     }
-}
 
     public function dashboard() {
         $this->logger->info("Accès au tableau de bord administrateur");
@@ -308,25 +295,19 @@ class AdminController extends BaseController {
             'exception' => $e,
             'trace' => $e->getTraceAsString()
         ]);
-        $this->render('error', [
+        $this->render('404', [
             'message' => 'Une erreur est survenue.',
             'details' => $e->getMessage()
         ]);
     }
 
     private function testDatabaseConnection() {
-        try {
-            global $conn;
-            if (!$conn) {
-                throw new Exception("La connexion à la base de données n'est pas établie.");
-            }
-            $result = $conn->query("SELECT 1");
-            if ($result === false) {
-                throw new Exception("Impossible d'exécuter une requête de test sur la base de données.");
-            }
-        } catch (Exception $e) {
-            $this->logger->error("Erreur de connexion à la base de données", ['error' => $e->getMessage()]);
-            throw $e;
+        if (!$this->db) {
+            throw new Exception("La connexion à la base de données n'est pas établie.");
+        }
+        $result = $this->db->query("SELECT 1");
+        if ($result === false) {
+            throw new Exception("Impossible d'exécuter une requête de test sur la base de données.");
         }
     }
 }
