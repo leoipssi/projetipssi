@@ -43,14 +43,17 @@ foreach ($required_files as $file) {
     custom_log("Fichier chargé : $file");
 }
 
-// Initialisation de Vehicule::setDB()
-global $db;
-if (class_exists('Vehicule') && is_db_connected()) {
-    custom_log("Tentative d'initialisation de Vehicule::setDB()");
-    Vehicule::setDB($db);
-    custom_log("Vehicule::setDB() initialisé avec succès");
+// Vérification de la connexion à la base de données
+if (!Database::isConnected()) {
+    custom_log("La connexion à la base de données n'est pas établie.");
+    die("Erreur : La connexion à la base de données n'est pas établie.");
+}
+
+// Vérification de la connexion pour Vehicule
+if (class_exists('Vehicule') && Vehicule::isDbConnected()) {
+    custom_log("La connexion à la base de données est établie pour Vehicule");
 } else {
-    custom_log("Impossible d'initialiser Vehicule::setDB(). Classe existe: " . (class_exists('Vehicule') ? 'Oui' : 'Non') . ", DB connectée: " . (is_db_connected() ? 'Oui' : 'Non'));
+    custom_log("Impossible de vérifier la connexion à la base de données pour Vehicule. Classe existe: " . (class_exists('Vehicule') ? 'Oui' : 'Non'));
 }
 
 // Appliquer les configurations de session
@@ -71,17 +74,6 @@ if (!class_exists('\Monolog\Logger')) {
 // Configuration de Monolog
 $logger = new \Monolog\Logger('app');
 $logger->pushHandler(new \Monolog\Handler\StreamHandler(__DIR__ . '/logs/app.log', \Monolog\Logger::DEBUG));
-
-// Vérification de la connexion à la base de données
-if (!function_exists('is_db_connected')) {
-    custom_log("La fonction is_db_connected() n'est pas définie.");
-    die("Erreur : La fonction is_db_connected() n'est pas définie.");
-}
-
-if (!is_db_connected()) {
-    $logger->error("La connexion à la base de données n'est pas établie.");
-    die("Erreur : La connexion à la base de données n'est pas établie.");
-}
 
 // Autoloader personnalisé
 spl_autoload_register(function($class) use ($logger) {
