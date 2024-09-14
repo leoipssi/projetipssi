@@ -60,10 +60,6 @@ if (class_exists('Vehicule') && Vehicule::isDbConnected()) {
     custom_log("Impossible de vérifier la connexion à la base de données pour Vehicule. Classe existe: " . (class_exists('Vehicule') ? 'Oui' : 'Non'));
 }
 
-// Le reste de votre code...
-
-custom_log("Script ended");
-
 // Appliquer les configurations de session
 configure_session();
 
@@ -131,7 +127,21 @@ try {
                 exit;
             }
             $controller = new AdminController($logger);
-            $controller->index();
+            $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
+            custom_log("Action admin demandée : $action");
+            if (method_exists($controller, $action)) {
+                try {
+                    $controller->$action();
+                } catch (Exception $e) {
+                    $logger->error("Erreur lors de l'exécution de l'action admin '$action': " . $e->getMessage());
+                    custom_log("Erreur dans l'action admin '$action': " . $e->getMessage());
+                    throw $e;
+                }
+            } else {
+                $logger->warning("Action admin non trouvée : {$action}");
+                custom_log("Action admin non trouvée : {$action}");
+                throw new Exception("Action admin non trouvée : {$action}", 404);
+            }
             break;
         case 'vehicules':
             custom_log("Vérification de la connexion à la base de données avant d'instancier VehiculeController: " . (Vehicule::isDbConnected() ? "Connecté" : "Non connecté"));
