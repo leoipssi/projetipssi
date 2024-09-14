@@ -1,7 +1,4 @@
 <?php
-// Définir le chemin racine de l'application
-define('ROOT_PATH', realpath($_SERVER['DOCUMENT_ROOT'] . '/e-motion'));
-
 // Inclure les fichiers nécessaires
 require_once __DIR__ . '/../models/Users.php';
 require_once __DIR__ . '/../models/Vehicule.php';
