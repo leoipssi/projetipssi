@@ -109,13 +109,6 @@ class HomeController extends BaseController {
         }
     }
 
-    private function getCurrentUser() {
-        if (isset($_SESSION['user_id'])) {
-            return User::findById($_SESSION['user_id']);
-        }
-        return null;
-    }
-
     private function handleError(Exception $e) {
         $this->logger->error("Erreur dans HomeController::index", [
             'message' => $e->getMessage(),
