@@ -27,8 +27,8 @@ class AdminController extends BaseController {
     }
 
     public function isAdmin() {
-        return AuthController::isAdmin();
-    }
+    return parent::isAdmin();
+}
 
     public function dashboard() {
         $this->logger->info("Accès au tableau de bord administrateur");
