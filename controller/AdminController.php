@@ -3,8 +3,8 @@
 define('BASE_PATH', '/var/www/html/e-motion');
 
 // Inclure les dépendances nécessaires
-require_once BASE_PATH . '/controllers/BaseController.php';
-require_once BASE_PATH . '/controllers/AuthController.php';
+require_once BASE_PATH . '/controller/BaseController.php';
+require_once BASE_PATH . '/controllerAuthController.php';
 require_once BASE_PATH . '/models/Vehicule.php';
 require_once BASE_PATH . '/models/User.php';
 require_once BASE_PATH . '/models/Rental.php';
