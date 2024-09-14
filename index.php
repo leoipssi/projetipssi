@@ -106,7 +106,7 @@ custom_log("Route actuelle : $route");
 $authController = new AuthController($logger);
 
 // Définir les routes valides
-$validRoutes = ['home', 'login', 'register', 'logout', 'admin', 'vehicules', 'rentals'];
+$validRoutes = ['home', 'login', 'register', 'logout', 'admin', 'vehicules', 'rentals', 'mes-locations'];
 
 // Gestion des erreurs
 try {
@@ -138,13 +138,18 @@ try {
             $controller = new VehiculeController($logger);
             $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
             if (method_exists($controller, $action)) {
-                $controller->$action($_POST ?? null);
+                if ($action === 'show' && isset($_GET['id'])) {
+                    $controller->$action($_GET['id']);
+                } else {
+                    $controller->$action($_POST ?? null);
+                }
             } else {
                 $logger->warning("Action de véhicule non trouvée : {$action}");
                 throw new Exception("Action de véhicule non trouvée", 404);
             }
             break;
         case 'rentals':
+        case 'mes-locations':
             if (!$authController->isLoggedIn()) {
                 $logger->warning("Tentative d'accès à la page de locations sans connexion.");
                 header('Location: index.php?route=login');
@@ -152,7 +157,7 @@ try {
             }
             $logger->info("Accès à la page de locations autorisé.");
             $controller = new RentalController($logger);
-            $action = isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index';
+            $action = $route === 'mes-locations' ? 'index' : (isset($_GET['action']) ? sanitize_input($_GET['action']) : 'index');
             if (method_exists($controller, $action)) {
                 $controller->$action($_POST ?? null);
             } else {
