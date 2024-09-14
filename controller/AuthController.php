@@ -137,6 +137,7 @@ class AuthController extends BaseController {
         session_regenerate_id(true);
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_role'] = $user->getRole();
-        error_log("User session initialized. User ID: {$user->getId()}, Role: {$user->getRole()}");
+        $_SESSION['is_admin'] = $user->isAdmin();
+        error_log("User session initialized. User ID: {$user->getId()}, Role: {$user->getRole()}, Is Admin: " . ($user->isAdmin() ? 'Yes' : 'No'));
     }
 }
