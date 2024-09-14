@@ -27,8 +27,18 @@ class AdminController extends BaseController {
     }
 
     public function isAdmin() {
-    return parent::isAdmin();
-}
+        return parent::isAdmin();
+    }
+
+    public function index() {
+        $this->logger->info("Accès à la page d'accueil de l'administration");
+        try {
+            $this->testDatabaseConnection();
+            $this->dashboard();
+        } catch (Exception $e) {
+            $this->handleError($e, 'Erreur dans index');
+        }
+    }
 
     public function dashboard() {
         $this->logger->info("Accès au tableau de bord administrateur");
