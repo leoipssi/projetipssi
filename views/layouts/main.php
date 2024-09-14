@@ -1,3 +1,11 @@
+<?php
+require_once __DIR__ . '/../helpers.php';
+
+// Initialiser les variables de session
+$isLoggedIn = isLoggedIn();
+$currentUser = getCurrentUser();
+$isAdmin = $currentUser && $currentUser->isAdmin();
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -30,19 +38,19 @@
                     <li class="nav-item">
                         <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=vehicules">Véhicules</a>
                     </li>
-                    <?php if ($isLoggedIn ?? false): ?>
+                    <?php if ($isLoggedIn): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=mes-locations">Mes locations</a>
                         </li>
                     <?php endif; ?>
-                    <?php if ($isAdmin ?? false): ?>
+                    <?php if ($isAdmin): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=admin">Administration</a>
                         </li>
                     <?php endif; ?>
                 </ul>
                 <ul class="navbar-nav">
-                    <?php if ($isLoggedIn ?? false): ?>
+                    <?php if ($isLoggedIn): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="<?= BASE_URL ?>/index.php?route=logout">Déconnexion</a>
                         </li>
@@ -55,26 +63,27 @@
             </div>
         </div>
     </nav>
+
     <main>
         <?= $content ?>
     </main>
+
     <footer class="mt-5 py-3 bg-light">
         <div class="container text-center">
             <p>&copy; <?= date('Y') ?> e-Motion. Tous droits réservés.</p>
         </div>
     </footer>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- Ajout de code de débogage -->
     <?php if (defined('DEBUG_MODE') && DEBUG_MODE): ?>
     <div class="container mt-5">
         <h3>Informations de débogage</h3>
         <pre>
         <?php
-        echo "isLoggedIn: " . var_export($isLoggedIn ?? false, true) . "\n";
-        echo "isAdmin: " . var_export($isAdmin ?? false, true) . "\n";
-        echo "User: " . var_export($user ?? null, true) . "\n";
-        echo "Session: " . var_export($_SESSION ?? [], true) . "\n";
+        echo "isLoggedIn: " . var_export($isLoggedIn, true) . "\n";
+        echo "isAdmin: " . var_export($isAdmin, true) . "\n";
+        echo "Session: " . var_export($_SESSION, true) . "\n";
         ?>
         </pre>
     </div>
