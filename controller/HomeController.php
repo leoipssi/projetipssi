@@ -43,7 +43,9 @@ class HomeController extends BaseController {
             $this->render('home', [
                 'recentVehicules' => $recentVehicules,
                 'activeOffers' => $activeOffers,
-                'user' => $user
+                'user' => $user,
+                'isLoggedIn' => $this->isLoggedIn(),
+                'isAdmin' => $this->isAdmin()
             ]);
             $this->logger->debug("Fin de la méthode index()");
         } catch (Exception $e) {
@@ -128,7 +130,12 @@ class HomeController extends BaseController {
 
     public function about() {
         $user = $this->getCurrentUser();
-        $this->render('about', ['title' => 'À propos de nous', 'user' => $user]);
+        $this->render('about', [
+            'title' => 'À propos de nous', 
+            'user' => $user,
+            'isLoggedIn' => $this->isLoggedIn(),
+            'isAdmin' => $this->isAdmin()
+        ]);
     }
 
     public function contact() {
@@ -136,7 +143,12 @@ class HomeController extends BaseController {
         if ($this->isPost()) {
             $this->handleContactForm($user);
         } else {
-            $this->render('contact', ['title' => 'Contactez-nous', 'user' => $user]);
+            $this->render('contact', [
+                'title' => 'Contactez-nous', 
+                'user' => $user,
+                'isLoggedIn' => $this->isLoggedIn(),
+                'isAdmin' => $this->isAdmin()
+            ]);
         }
     }
 
@@ -149,25 +161,39 @@ class HomeController extends BaseController {
             $this->render('contact', [
                 'title' => 'Contactez-nous',
                 'error' => 'Veuillez remplir tous les champs.',
-                'user' => $user
+                'user' => $user,
+                'isLoggedIn' => $this->isLoggedIn(),
+                'isAdmin' => $this->isAdmin()
             ]);
             return;
         }
         $this->render('contact', [
             'title' => 'Contactez-nous',
             'success' => 'Votre message a été envoyé avec succès.',
-            'user' => $user
+            'user' => $user,
+            'isLoggedIn' => $this->isLoggedIn(),
+            'isAdmin' => $this->isAdmin()
         ]);
     }
 
     public function terms() {
         $user = $this->getCurrentUser();
-        $this->render('terms', ['title' => 'Conditions d\'utilisation', 'user' => $user]);
+        $this->render('terms', [
+            'title' => 'Conditions d\'utilisation', 
+            'user' => $user,
+            'isLoggedIn' => $this->isLoggedIn(),
+            'isAdmin' => $this->isAdmin()
+        ]);
     }
 
     public function privacy() {
         $user = $this->getCurrentUser();
-        $this->render('privacy', ['title' => 'Politique de confidentialité', 'user' => $user]);
+        $this->render('privacy', [
+            'title' => 'Politique de confidentialité', 
+            'user' => $user,
+            'isLoggedIn' => $this->isLoggedIn(),
+            'isAdmin' => $this->isAdmin()
+        ]);
     }
 }
 ?>
