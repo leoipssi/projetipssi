@@ -1,6 +1,10 @@
 <?php
-require_once '../models/User.php';
-require_once '../models/Vehicule.php';
+// Définir le chemin racine de l'application
+define('ROOT_PATH', realpath($_SERVER['DOCUMENT_ROOT'] . '/e-motion'));
+
+// Inclure les fichiers nécessaires
+require_once ROOT_PATH . '/models/User.php';
+require_once ROOT_PATH . '/models/Vehicule.php';
 ?>
 
 <h1>Tableau de bord administrateur</h1>
