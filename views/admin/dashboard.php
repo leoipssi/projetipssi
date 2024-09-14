@@ -1,3 +1,8 @@
+<?php
+require_once '../models/User.php';
+require_once '../models/Vehicule.php';
+?>
+
 <h1>Tableau de bord administrateur</h1>
 
 <div class="dashboard-stats">
@@ -48,8 +53,22 @@
                 <?php foreach ($recentRentals as $rental): ?>
                     <tr>
                         <td><?= $rental->getId() ?></td>
-                        <td><?= htmlspecialchars(User::findById($rental->getClientId())->getUsername()) ?></td>
-                        <td><?= htmlspecialchars(Vehicule::findById($rental->getVehiculeId())->getMarque() . ' ' . Vehicule::findById($rental->getVehiculeId())->getModele()) ?></td>
+                        <td>
+                            <?php
+                            $user = User::findById($rental->getClientId());
+                            echo $user ? htmlspecialchars($user->getUsername()) : 'Utilisateur inconnu';
+                            ?>
+                        </td>
+                        <td>
+                            <?php
+                            $vehicule = Vehicule::findById($rental->getVehiculeId());
+                            if ($vehicule) {
+                                echo htmlspecialchars($vehicule->getMarque() . ' ' . $vehicule->getModele());
+                            } else {
+                                echo "Véhicule non trouvé";
+                            }
+                            ?>
+                        </td>
                         <td><?= $rental->getDateDebut() ?></td>
                         <td><?= $rental->getDateFin() ?></td>
                         <td><span class="status-<?= strtolower($rental->getStatus()) ?>"><?= $rental->getStatus() ?></span></td>
