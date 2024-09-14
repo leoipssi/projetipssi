@@ -8,17 +8,17 @@ class Database {
         $username = "emotion_user";
         $password = "IPSSI2024";
         $database = "e_motion";
-
         $dsn = "mysql:host=$servername;dbname=$database;charset=utf8mb4";
         $options = [
             PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
             PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
             PDO::ATTR_EMULATE_PREPARES   => false,
         ];
-
         try {
             $this->pdo = new PDO($dsn, $username, $password, $options);
+            error_log("Connexion à la base de données réussie");
         } catch (PDOException $e) {
+            error_log("Erreur de connexion à la base de données : " . $e->getMessage());
             throw new PDOException("Connection failed: " . $e->getMessage(), (int)$e->getCode());
         }
     }
