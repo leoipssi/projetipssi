@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/database.php';
 require_once __DIR__ . '/models/Vehicule.php';
 Vehicule::setLogLevel('DEBUG');
 
@@ -44,8 +45,11 @@ foreach ($required_files as $file) {
 }
 
 // Vérification de la connexion à la base de données
-if (!Database::isConnected()) {
-    custom_log("La connexion à la base de données n'est pas établie.");
+try {
+    $db = Database::getInstance()->getConnection();
+    custom_log("La connexion à la base de données est établie.");
+} catch (PDOException $e) {
+    custom_log("Erreur : La connexion à la base de données n'est pas établie. " . $e->getMessage());
     die("Erreur : La connexion à la base de données n'est pas établie.");
 }
 
@@ -55,6 +59,10 @@ if (class_exists('Vehicule') && Vehicule::isDbConnected()) {
 } else {
     custom_log("Impossible de vérifier la connexion à la base de données pour Vehicule. Classe existe: " . (class_exists('Vehicule') ? 'Oui' : 'Non'));
 }
+
+// Le reste de votre code...
+
+custom_log("Script ended");
 
 // Appliquer les configurations de session
 configure_session();
