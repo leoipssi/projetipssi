@@ -345,50 +345,58 @@ class Vehicule {
     }
 
     public static function getTopRented($limit = 5) {
-    self::log("Tentative de récupération des $limit véhicules les plus loués", 'DEBUG');
-    try {
-        $stmt = self::getDB()->prepare("
-            SELECT v.*, COUNT(r.id) as rental_count, SUM(r.prix_total) as revenue
-            FROM vehicules v
-            LEFT JOIN rentals r ON v.id = r.vehicule_id
-            GROUP BY v.id
-            ORDER BY rental_count DESC
-            LIMIT :limit
-        ");
-        $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-        $vehicules = [];
-        foreach ($results as $row) {
-            $vehicule = new self(
-                (int)$row['id'],
-                (int)$row['type_id'],
-                (string)$row['marque'],
-                (string)$row['modele'],
-                (string)($row['numero_serie'] ?? ''),
-                (string)($row['couleur'] ?? ''),
-                (string)($row['immatriculation'] ?? ''),
-                (int)($row['kilometres'] ?? 0),
-                (string)($row['date_achat'] ?? ''),
-                (float)($row['prix_achat'] ?? 0),
-                $row['categorie'] ?? null,
-                $row['tarif_journalier'] ?? null,
-                (bool)($row['is_available'] ?? false)
-            );
-            $vehicules[] = [
-                'vehicule' => $vehicule,
-                'rental_count' => (int)$row['rental_count'],
-                'revenue' => (float)$row['revenue']
-            ];
+        self::log("Tentative de récupération des $limit véhicules les plus loués", 'DEBUG');
+        try {
+            $stmt = self::getDB()->prepare("
+                SELECT v.*, COUNT(r.id) as rental_count, SUM(r.prix_total) as revenue
+                FROM vehicules v
+                LEFT JOIN rentals r ON v.id = r.vehicule_id
+                GROUP BY v.id
+                ORDER BY rental_count DESC
+                LIMIT :limit
+            ");
+            $stmt->bindParam(':limit', $limit, PDO::PARAM_INT);
+            $stmt->execute();
+            $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            $vehicules = [];
+            foreach ($results as $row) {
+                foreach ($row as $key => $value) {
+                    if (is_array($value)) {
+                        self::log("Champ inattendu de type array dans getTopRented : $key", 'WARNING');
+                        $row[$key] = json_encode($value);
+                    }
+                }
+                $vehicules[] = new self(
+                    (int)$row['id'],
+                    (int)$row['type_id'],
+                    (string)$row['marque'],
+                    (string)$row['modele'],
+                    (string)($row['numero_serie'] ?? ''),
+                    (string)($row['couleur'] ?? ''),
+                    (string)($row['immatriculation'] ?? ''),
+                    (int)($row['kilometres'] ?? 0),
+                    (string)($row['date_achat'] ?? ''),
+                    (float)($row['prix_achat'] ?? 0),
+                    $row['categorie'] ?? null,
+                    $row['tarif_journalier'] ?? null,
+                    (bool)($row['is_available'] ?? false)
+                );
+            }
+            
+            return $vehicules;
+        } catch (PDOException $e) {
+            self::log("Erreur lors de la récupération des véhicules les plus loués : " . $e->getMessage(), 'ERROR');
+            throw new Exception("Impossible de récupérer les véhicules les plus loués.");
         }
-        
-        return $vehicules;
-    } catch (PDOException $e) {
-        self::log("Erreur lors de la récupération des véhicules les plus loués : " . $e->getMessage(), 'ERROR');
-        throw new Exception("Impossible de récupérer les véhicules les plus loués.");
     }
-}
+
+    private static function checkDbConnection() {
+        if (!self::isDbConnected()) {
+            self::log("La connexion à la base de données n'est pas établie dans la classe Vehicule", 'ERROR');
+            throw new Exception("La connexion à la base de données n'est pas établie.");
+        }
+    }
 
     public function delete() {
         try {
