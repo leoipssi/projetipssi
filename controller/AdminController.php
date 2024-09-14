@@ -31,14 +31,43 @@ class AdminController extends BaseController {
     }
 
     public function index() {
-        $this->logger->info("Accès à la page d'accueil de l'administration");
-        try {
-            $this->testDatabaseConnection();
-            $this->dashboard();
-        } catch (Exception $e) {
-            $this->handleError($e, 'Erreur dans index');
-        }
+    $this->logger->info("Accès à la page d'accueil de l'administration");
+    try {
+        $this->testDatabaseConnection();
+        $totalVehicules = Vehicule::count();
+        $totalUsers = User::count();
+        $totalRentals = Rental::count();
+        $totalRevenue = Rental::totalRevenue();
+        
+        $totalRevenue = is_null($totalRevenue) ? 0 : $totalRevenue;
+        
+        $recentRentals = Rental::getRecent(5);
+        $topVehicules = Vehicule::getTopRented(5);
+
+        $this->logger->debug("Statistiques récupérées pour le tableau de bord", [
+            'totalVehicules' => $totalVehicules,
+            'totalUsers' => $totalUsers,
+            'totalRentals' => $totalRentals,
+            'totalRevenue' => $totalRevenue
+        ]);
+
+        $this->render('admin/dashboard', [
+            'totalVehicules' => $totalVehicules,
+            'totalUsers' => $totalUsers,
+            'totalRentals' => $totalRentals,
+            'totalRevenue' => $totalRevenue,
+            'recentRentals' => $recentRentals,
+            'topVehicules' => $topVehicules
+        ]);
+    } catch (Exception $e) {
+        $this->logger->error("Erreur dans la méthode index : " . $e->getMessage(), [
+            'file' => $e->getFile(),
+            'line' => $e->getLine(),
+            'trace' => $e->getTraceAsString()
+        ]);
+        $this->handleError($e, 'Erreur dans index');
     }
+}
 
     public function dashboard() {
         $this->logger->info("Accès au tableau de bord administrateur");
