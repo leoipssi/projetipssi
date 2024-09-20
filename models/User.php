@@ -1,3 +1,4 @@
+
 <?php
 require_once __DIR__ . '/../models/Database.php';
 
@@ -16,6 +17,16 @@ class User {
     private $created_at;
 
     private static $logger;
+
+    private static function initLogger() {
+        if (self::$logger === null) {
+            self::$logger = new class {
+                public function debug($message) { error_log("DEBUG: " . $message); }
+                public function info($message) { error_log("INFO: " . $message); }
+                public function error($message) { error_log("ERROR: " . $message); }
+            };
+        }
+    }
 
     public function __construct($id, $nom, $prenom, $username, $password, $email, $role, $adresse, $code_postal, $ville, $telephone, $created_at) {
         $this->id = $id;
@@ -78,6 +89,7 @@ class User {
     }
 
     public static function setLogger($logger) {
+        self::initLogger();
         self::$logger = $logger;
     }
 
@@ -86,6 +98,8 @@ class User {
     }
 
     public static function create($userData) {
+        self::initLogger();
+        
         $db = self::getDB();
         $hashedPassword = password_hash($userData['password'], PASSWORD_DEFAULT);
         try {
@@ -128,6 +142,7 @@ class User {
     }
 
     public static function findById($id) {
+        self::initLogger();
         $db = self::getDB();
         try {
             self::$logger->debug("Recherche de l'utilisateur par ID: " . $id);
@@ -147,6 +162,7 @@ class User {
     }
 
     public static function findByUsername($username) {
+        self::initLogger();
         $db = self::getDB();
         try {
             self::$logger->debug("Recherche de l'utilisateur par nom d'utilisateur: " . $username);
@@ -166,6 +182,7 @@ class User {
     }
 
     public static function findByEmail($email) {
+        self::initLogger();
         $db = self::getDB();
         try {
             self::$logger->debug("Recherche de l'utilisateur par email: " . $email);
@@ -203,6 +220,7 @@ class User {
     }
 
     public static function authenticate($username, $password) {
+        self::initLogger();
         self::$logger->debug("Tentative d'authentification pour: " . $username);
         $user = self::findByUsername($username);
         if ($user) {

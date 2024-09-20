@@ -1,27 +1,28 @@
 <?php
 // Vérification de l'environnement d'exécution
 $isCLI = (php_sapi_name() === 'cli');
-
 if (!$isCLI) {
     if (!in_array($_SERVER['REMOTE_ADDR'], ['127.0.0.1', '::1'])) {
         die("Ce script ne peut être exécuté que localement.");
     }
 }
 
-// Activer l'affichage des erreurs
+// Activer l'affichage des erreurs et le logging
 ini_set('display_errors', 1);
+ini_set('log_errors', 1);
+ini_set('error_log', '/var/log/php/error.log'); // Ajustez ce chemin selon votre configuration
 error_reporting(E_ALL);
 
 echo "Début du script.\n";
 
-// Vérification et inclusion du fichier database.php
-$databaseFile = __DIR__ . '/database.php';
+// Vérification et inclusion du fichier Database.php
+$databaseFile = __DIR__ . '/models/Database.php';
 if (file_exists($databaseFile)) {
-    echo "Inclusion du fichier database.php...\n";
+    echo "Inclusion du fichier Database.php...\n";
     require_once $databaseFile;
-    echo "Fichier database.php inclus avec succès.\n";
+    echo "Fichier Database.php inclus avec succès.\n";
 } else {
-    die("Erreur : Le fichier database.php n'existe pas dans le répertoire " . __DIR__ . "\n");
+    die("Erreur : Le fichier Database.php n'existe pas dans le répertoire " . __DIR__ . "/models/\n");
 }
 
 // Vérification et inclusion du fichier User.php
@@ -34,8 +35,20 @@ if (file_exists($userFile)) {
     die("Erreur : Le fichier User.php n'existe pas dans le répertoire " . __DIR__ . "/models/\n");
 }
 
-// Vérification de la connexion à la base de données
-if (!isset($conn) || !($conn instanceof PDO)) {
+// Établissement de la connexion à la base de données
+try {
+    $db = Database::getInstance();
+    $conn = $db->getConnection();
+    if (!$conn instanceof PDO) {
+        throw new Exception("La connexion n'est pas une instance de PDO.");
+    }
+    echo "Connexion à la base de données établie avec succès.\n";
+} catch (Exception $e) {
+    die("Erreur lors de la connexion à la base de données : " . $e->getMessage() . "\n");
+}
+
+// Vérification supplémentaire de la connexion
+if (!Database::isConnected()) {
     die("Erreur : La connexion à la base de données n'est pas établie correctement.\n");
 }
 

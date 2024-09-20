@@ -1,0 +1,996 @@
+2024-09-15 22:11:16: Script started
+2024-09-15 22:11:16: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:11:16: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:11:16: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:11:16: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:11:16: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:11:16: La connexion à la base de données est établie.
+2024-09-15 22:11:16: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:11:16: Session ID: tnoi3v3b9092b3hdhuubednpog
+2024-09-15 22:11:16: Session Data: []
+2024-09-15 22:11:16: Route actuelle : home
+2024-09-15 22:11:16: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:11:16: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:11:16: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:11:16: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-15 22:11:16: Script ended
+2024-09-15 22:13:57: Script started
+2024-09-15 22:13:57: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:13:57: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:13:57: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:13:57: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:13:57: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:13:57: La connexion à la base de données est établie.
+2024-09-15 22:13:57: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:13:57: Session ID: tnoi3v3b9092b3hdhuubednpog
+2024-09-15 22:13:57: Session Data: []
+2024-09-15 22:13:57: Route actuelle : home
+2024-09-15 22:13:57: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:13:57: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:13:57: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:13:57: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-15 22:13:57: Script ended
+2024-09-15 22:14:02: Script started
+2024-09-15 22:14:02: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:14:02: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:14:02: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:14:02: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:14:02: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:14:02: La connexion à la base de données est établie.
+2024-09-15 22:14:02: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:14:02: Session ID: tnoi3v3b9092b3hdhuubednpog
+2024-09-15 22:14:02: Session Data: []
+2024-09-15 22:14:02: Route actuelle : home
+2024-09-15 22:14:02: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:14:02: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:14:02: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:14:02: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-15 22:14:02: Script ended
+2024-09-15 22:14:05: Script started
+2024-09-15 22:14:05: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:14:05: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:14:05: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:14:05: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:14:05: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:14:05: La connexion à la base de données est établie.
+2024-09-15 22:14:05: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:14:05: Session ID: tnoi3v3b9092b3hdhuubednpog
+2024-09-15 22:14:05: Session Data: []
+2024-09-15 22:14:05: Route actuelle : login
+2024-09-15 22:14:05: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:14:05: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:14:05: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:14:05: Script ended
+2024-09-15 22:15:07: Script started
+2024-09-15 22:15:07: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:15:07: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:15:07: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:15:07: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:15:07: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:15:07: La connexion à la base de données est établie.
+2024-09-15 22:15:07: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:15:07: Session ID: tnoi3v3b9092b3hdhuubednpog
+2024-09-15 22:15:07: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c"}
+2024-09-15 22:15:07: Route actuelle : login
+2024-09-15 22:15:07: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:15:07: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:15:07: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:15:07: Script ended
+2024-09-15 22:38:12: Script started
+2024-09-15 22:38:12: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:12: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:12: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:12: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:12: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:12: La connexion à la base de données est établie.
+2024-09-15 22:38:12: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:12: Session ID: tnoi3v3b9092b3hdhuubednpog
+2024-09-15 22:38:12: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c"}
+2024-09-15 22:38:12: Route actuelle : login
+2024-09-15 22:38:12: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:12: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:12: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:13: Script started
+2024-09-15 22:38:13: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:13: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:13: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:13: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:13: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:13: La connexion à la base de données est établie.
+2024-09-15 22:38:13: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:13: Session ID: ug16o3fta5sr2j8368bsguk1d3
+2024-09-15 22:38:13: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-15 22:38:13: Route actuelle : home
+2024-09-15 22:38:13: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:13: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:13: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:13: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-15 22:38:13: Script ended
+2024-09-15 22:38:16: Script started
+2024-09-15 22:38:16: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:16: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:16: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:16: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:16: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:16: La connexion à la base de données est établie.
+2024-09-15 22:38:16: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:16: Session ID: ug16o3fta5sr2j8368bsguk1d3
+2024-09-15 22:38:16: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-15 22:38:16: Route actuelle : admin
+2024-09-15 22:38:16: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:16: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:16: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:16: Classe AdminController chargée depuis /var/www/html/e-motion/controller/AdminController.php
+2024-09-15 22:38:16: Action admin demandée : index
+2024-09-15 22:38:16: Script ended
+2024-09-15 22:38:19: Script started
+2024-09-15 22:38:19: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:19: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:19: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:19: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:19: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:19: La connexion à la base de données est établie.
+2024-09-15 22:38:19: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:19: Session ID: ug16o3fta5sr2j8368bsguk1d3
+2024-09-15 22:38:19: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-15 22:38:19: Route actuelle : mes-locations
+2024-09-15 22:38:19: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:19: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:19: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:19: Classe RentalController chargée depuis /var/www/html/e-motion/controller/RentalController.php
+2024-09-15 22:38:19: Script ended
+2024-09-15 22:38:21: Script started
+2024-09-15 22:38:21: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:21: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:21: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:21: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:21: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:21: La connexion à la base de données est établie.
+2024-09-15 22:38:21: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:21: Session ID: ug16o3fta5sr2j8368bsguk1d3
+2024-09-15 22:38:21: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-15 22:38:21: Route actuelle : vehicules
+2024-09-15 22:38:21: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:21: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:21: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:21: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-15 22:38:21: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-15 22:38:21: Script ended
+2024-09-15 22:38:24: Script started
+2024-09-15 22:38:24: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:24: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:24: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:24: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:24: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:24: La connexion à la base de données est établie.
+2024-09-15 22:38:24: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:24: Session ID: ug16o3fta5sr2j8368bsguk1d3
+2024-09-15 22:38:24: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-15 22:38:24: Route actuelle : home
+2024-09-15 22:38:24: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:24: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:24: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:24: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-15 22:38:24: Script ended
+2024-09-15 22:38:27: Script started
+2024-09-15 22:38:27: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:27: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:27: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:27: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:27: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:27: La connexion à la base de données est établie.
+2024-09-15 22:38:27: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:27: Session ID: ug16o3fta5sr2j8368bsguk1d3
+2024-09-15 22:38:27: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-15 22:38:27: Route actuelle : vehicules
+2024-09-15 22:38:27: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:27: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:27: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:27: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-15 22:38:27: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-15 22:38:27: Script ended
+2024-09-15 22:38:28: Script started
+2024-09-15 22:38:28: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:28: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:28: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:28: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:28: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:28: La connexion à la base de données est établie.
+2024-09-15 22:38:28: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:28: Session ID: ug16o3fta5sr2j8368bsguk1d3
+2024-09-15 22:38:28: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-15 22:38:28: Route actuelle : vehicules
+2024-09-15 22:38:28: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:28: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:28: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:28: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-15 22:38:28: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-15 22:38:28: Classe RentalOffer chargée depuis /var/www/html/e-motion/models/RentalOffer.php
+2024-09-15 22:38:28: Script ended
+2024-09-15 22:38:33: Script started
+2024-09-15 22:38:33: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:33: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:33: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:33: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:33: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:33: La connexion à la base de données est établie.
+2024-09-15 22:38:33: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:33: Session ID: ug16o3fta5sr2j8368bsguk1d3
+2024-09-15 22:38:33: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-15 22:38:33: Route actuelle : rentals
+2024-09-15 22:38:33: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:33: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:33: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:33: Classe RentalController chargée depuis /var/www/html/e-motion/controller/RentalController.php
+2024-09-15 22:38:33: Script started
+2024-09-15 22:38:33: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:33: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:33: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:33: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:33: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:33: La connexion à la base de données est établie.
+2024-09-15 22:38:33: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:33: Session ID: ug16o3fta5sr2j8368bsguk1d3
+2024-09-15 22:38:33: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-15 22:38:33: Route actuelle : rental_offers
+2024-09-15 22:38:33: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:33: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:33: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:33: Script ended
+2024-09-15 22:38:34: Script started
+2024-09-15 22:38:34: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-15 22:38:34: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-15 22:38:34: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-15 22:38:34: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-15 22:38:34: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-15 22:38:34: La connexion à la base de données est établie.
+2024-09-15 22:38:34: La connexion à la base de données est établie pour Vehicule
+2024-09-15 22:38:34: Session ID: ug16o3fta5sr2j8368bsguk1d3
+2024-09-15 22:38:34: Session Data: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-15 22:38:34: Route actuelle : vehicules
+2024-09-15 22:38:34: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-15 22:38:34: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-15 22:38:34: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-15 22:38:34: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-15 22:38:34: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-15 22:38:34: Classe RentalOffer chargée depuis /var/www/html/e-motion/models/RentalOffer.php
+2024-09-15 22:38:34: Script ended
+2024-09-16 12:22:54: Script started
+2024-09-16 12:22:54: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:22:54: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:22:54: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:22:54: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:22:54: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:22:54: La connexion à la base de données est établie.
+2024-09-16 12:22:54: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:22:54: Session ID: kj261g4tbh004ilnbpb8bhn82t
+2024-09-16 12:22:54: Session Data: []
+2024-09-16 12:22:54: Route actuelle : home
+2024-09-16 12:22:54: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:22:54: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:22:54: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:22:54: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-16 12:22:54: Script ended
+2024-09-16 12:23:15: Script started
+2024-09-16 12:23:15: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:23:15: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:23:15: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:23:15: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:23:15: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:23:15: La connexion à la base de données est établie.
+2024-09-16 12:23:15: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:23:15: Session ID: kj261g4tbh004ilnbpb8bhn82t
+2024-09-16 12:23:15: Session Data: []
+2024-09-16 12:23:15: Route actuelle : vehicules
+2024-09-16 12:23:15: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:23:15: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:23:15: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:23:15: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:23:15: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:23:15: Script ended
+2024-09-16 12:23:16: Script started
+2024-09-16 12:23:16: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:23:16: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:23:16: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:23:16: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:23:16: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:23:16: La connexion à la base de données est établie.
+2024-09-16 12:23:16: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:23:16: Session ID: kj261g4tbh004ilnbpb8bhn82t
+2024-09-16 12:23:16: Session Data: []
+2024-09-16 12:23:16: Route actuelle : home
+2024-09-16 12:23:16: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:23:16: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:23:16: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:23:16: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-16 12:23:16: Script ended
+2024-09-16 12:23:19: Script started
+2024-09-16 12:23:19: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:23:19: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:23:19: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:23:19: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:23:19: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:23:19: La connexion à la base de données est établie.
+2024-09-16 12:23:19: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:23:19: Session ID: kj261g4tbh004ilnbpb8bhn82t
+2024-09-16 12:23:19: Session Data: []
+2024-09-16 12:23:19: Route actuelle : vehicules
+2024-09-16 12:23:19: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:23:19: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:23:19: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:23:19: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:23:19: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:23:19: Script ended
+2024-09-16 12:23:21: Script started
+2024-09-16 12:23:21: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:23:21: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:23:21: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:23:21: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:23:21: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:23:21: La connexion à la base de données est établie.
+2024-09-16 12:23:21: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:23:21: Session ID: kj261g4tbh004ilnbpb8bhn82t
+2024-09-16 12:23:21: Session Data: []
+2024-09-16 12:23:21: Route actuelle : vehicules
+2024-09-16 12:23:21: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:23:21: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:23:21: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:23:21: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:23:21: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:23:21: Classe RentalOffer chargée depuis /var/www/html/e-motion/models/RentalOffer.php
+2024-09-16 12:23:21: Script ended
+2024-09-16 12:23:24: Script started
+2024-09-16 12:23:24: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:23:24: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:23:24: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:23:24: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:23:24: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:23:24: La connexion à la base de données est établie.
+2024-09-16 12:23:24: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:23:24: Session ID: kj261g4tbh004ilnbpb8bhn82t
+2024-09-16 12:23:24: Session Data: []
+2024-09-16 12:23:24: Route actuelle : home
+2024-09-16 12:23:24: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:23:24: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:23:24: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:23:24: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-16 12:23:24: Script ended
+2024-09-16 12:23:25: Script started
+2024-09-16 12:23:25: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:23:25: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:23:25: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:23:25: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:23:25: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:23:25: La connexion à la base de données est établie.
+2024-09-16 12:23:25: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:23:25: Session ID: kj261g4tbh004ilnbpb8bhn82t
+2024-09-16 12:23:25: Session Data: []
+2024-09-16 12:23:25: Route actuelle : login
+2024-09-16 12:23:25: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:23:25: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:23:25: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:23:25: Script ended
+2024-09-16 12:24:06: Script started
+2024-09-16 12:24:06: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:06: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:06: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:06: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:06: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:06: La connexion à la base de données est établie.
+2024-09-16 12:24:06: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:06: Session ID: kj261g4tbh004ilnbpb8bhn82t
+2024-09-16 12:24:06: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949"}
+2024-09-16 12:24:06: Route actuelle : login
+2024-09-16 12:24:06: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:06: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:06: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:06: Script ended
+2024-09-16 12:24:18: Script started
+2024-09-16 12:24:18: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:18: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:18: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:18: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:18: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:18: La connexion à la base de données est établie.
+2024-09-16 12:24:18: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:18: Session ID: kj261g4tbh004ilnbpb8bhn82t
+2024-09-16 12:24:18: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949"}
+2024-09-16 12:24:18: Route actuelle : login
+2024-09-16 12:24:18: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:18: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:18: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:18: Script started
+2024-09-16 12:24:18: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:18: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:18: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:18: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:18: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:18: La connexion à la base de données est établie.
+2024-09-16 12:24:18: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:18: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:18: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:18: Route actuelle : home
+2024-09-16 12:24:18: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:18: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:18: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:18: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-16 12:24:18: Script ended
+2024-09-16 12:24:23: Script started
+2024-09-16 12:24:23: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:23: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:23: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:23: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:23: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:23: La connexion à la base de données est établie.
+2024-09-16 12:24:23: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:23: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:23: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:23: Route actuelle : mes-locations
+2024-09-16 12:24:23: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:23: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:23: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:23: Classe RentalController chargée depuis /var/www/html/e-motion/controller/RentalController.php
+2024-09-16 12:24:23: Script ended
+2024-09-16 12:24:28: Script started
+2024-09-16 12:24:28: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:28: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:28: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:28: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:28: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:28: La connexion à la base de données est établie.
+2024-09-16 12:24:28: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:28: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:28: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:28: Route actuelle : admin
+2024-09-16 12:24:28: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:28: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:28: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:28: Classe AdminController chargée depuis /var/www/html/e-motion/controller/AdminController.php
+2024-09-16 12:24:28: Action admin demandée : index
+2024-09-16 12:24:28: Script ended
+2024-09-16 12:24:35: Script started
+2024-09-16 12:24:35: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:35: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:35: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:35: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:35: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:35: La connexion à la base de données est établie.
+2024-09-16 12:24:35: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:35: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:35: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:35: Route actuelle : admin
+2024-09-16 12:24:35: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:35: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:35: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:35: Classe AdminController chargée depuis /var/www/html/e-motion/controller/AdminController.php
+2024-09-16 12:24:35: Action admin demandée : manageUsers
+2024-09-16 12:24:35: Script ended
+2024-09-16 12:24:39: Script started
+2024-09-16 12:24:39: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:39: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:39: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:39: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:39: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:39: La connexion à la base de données est établie.
+2024-09-16 12:24:39: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:39: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:39: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:39: Route actuelle : admin
+2024-09-16 12:24:39: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:39: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:39: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:39: Classe AdminController chargée depuis /var/www/html/e-motion/controller/AdminController.php
+2024-09-16 12:24:39: Action admin demandée : index
+2024-09-16 12:24:39: Script ended
+2024-09-16 12:24:40: Script started
+2024-09-16 12:24:40: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:40: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:40: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:40: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:40: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:40: La connexion à la base de données est établie.
+2024-09-16 12:24:40: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:40: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:40: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:40: Route actuelle : admin
+2024-09-16 12:24:40: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:40: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:40: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:40: Classe AdminController chargée depuis /var/www/html/e-motion/controller/AdminController.php
+2024-09-16 12:24:40: Action admin demandée : createOffer
+2024-09-16 12:24:40: Script ended
+2024-09-16 12:24:44: Script started
+2024-09-16 12:24:44: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:44: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:44: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:44: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:44: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:44: La connexion à la base de données est établie.
+2024-09-16 12:24:44: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:44: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:44: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:44: Route actuelle : admin
+2024-09-16 12:24:44: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:44: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:44: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:44: Classe AdminController chargée depuis /var/www/html/e-motion/controller/AdminController.php
+2024-09-16 12:24:44: Action admin demandée : index
+2024-09-16 12:24:44: Script ended
+2024-09-16 12:24:46: Script started
+2024-09-16 12:24:46: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:46: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:46: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:46: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:46: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:46: La connexion à la base de données est établie.
+2024-09-16 12:24:46: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:46: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:46: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:46: Route actuelle : admin
+2024-09-16 12:24:46: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:46: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:46: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:46: Classe AdminController chargée depuis /var/www/html/e-motion/controller/AdminController.php
+2024-09-16 12:24:46: Action admin demandée : addVehicule
+2024-09-16 12:24:46: Script ended
+2024-09-16 12:24:48: Script started
+2024-09-16 12:24:48: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:48: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:48: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:48: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:48: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:48: La connexion à la base de données est établie.
+2024-09-16 12:24:48: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:48: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:48: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:48: Route actuelle : mes-locations
+2024-09-16 12:24:48: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:48: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:48: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:48: Classe RentalController chargée depuis /var/www/html/e-motion/controller/RentalController.php
+2024-09-16 12:24:48: Script ended
+2024-09-16 12:24:49: Script started
+2024-09-16 12:24:49: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:49: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:49: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:49: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:49: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:49: La connexion à la base de données est établie.
+2024-09-16 12:24:49: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:49: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:49: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:49: Route actuelle : vehicules
+2024-09-16 12:24:49: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:49: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:49: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:49: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:24:49: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:24:49: Script ended
+2024-09-16 12:24:50: Script started
+2024-09-16 12:24:50: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:50: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:50: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:50: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:50: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:50: La connexion à la base de données est établie.
+2024-09-16 12:24:50: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:50: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:50: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:50: Route actuelle : vehicules
+2024-09-16 12:24:50: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:50: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:50: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:50: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:24:50: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:24:50: Classe RentalOffer chargée depuis /var/www/html/e-motion/models/RentalOffer.php
+2024-09-16 12:24:50: Script ended
+2024-09-16 12:24:51: Script started
+2024-09-16 12:24:51: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:51: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:51: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:51: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:51: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:51: La connexion à la base de données est établie.
+2024-09-16 12:24:51: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:51: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:51: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:51: Route actuelle : rentals
+2024-09-16 12:24:51: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:51: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:51: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:51: Classe RentalController chargée depuis /var/www/html/e-motion/controller/RentalController.php
+2024-09-16 12:24:52: Script started
+2024-09-16 12:24:52: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:52: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:52: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:52: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:52: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:52: La connexion à la base de données est établie.
+2024-09-16 12:24:52: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:52: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:52: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:52: Route actuelle : rental_offers
+2024-09-16 12:24:52: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:52: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:52: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:52: Script ended
+2024-09-16 12:24:54: Script started
+2024-09-16 12:24:54: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:54: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:54: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:54: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:54: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:54: La connexion à la base de données est établie.
+2024-09-16 12:24:54: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:54: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:54: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:54: Route actuelle : vehicules
+2024-09-16 12:24:54: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:54: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:54: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:54: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:24:54: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:24:54: Classe RentalOffer chargée depuis /var/www/html/e-motion/models/RentalOffer.php
+2024-09-16 12:24:54: Script ended
+2024-09-16 12:24:56: Script started
+2024-09-16 12:24:56: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:24:56: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:24:56: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:24:56: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:24:56: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:24:56: La connexion à la base de données est établie.
+2024-09-16 12:24:56: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:24:56: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:24:56: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:24:56: Route actuelle : home
+2024-09-16 12:24:56: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:24:56: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:24:56: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:24:56: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-16 12:24:56: Script ended
+2024-09-16 12:25:00: Script started
+2024-09-16 12:25:00: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:00: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:00: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:00: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:00: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:00: La connexion à la base de données est établie.
+2024-09-16 12:25:00: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:00: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:00: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:00: Route actuelle : vehicules
+2024-09-16 12:25:00: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:00: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:00: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:00: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:25:00: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:25:00: Script ended
+2024-09-16 12:25:01: Script started
+2024-09-16 12:25:01: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:01: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:01: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:01: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:01: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:01: La connexion à la base de données est établie.
+2024-09-16 12:25:01: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:01: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:01: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:01: Route actuelle : vehicules
+2024-09-16 12:25:01: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:01: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:01: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:01: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:25:01: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:25:01: Classe RentalOffer chargée depuis /var/www/html/e-motion/models/RentalOffer.php
+2024-09-16 12:25:01: Script ended
+2024-09-16 12:25:04: Script started
+2024-09-16 12:25:04: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:04: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:04: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:04: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:04: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:04: La connexion à la base de données est établie.
+2024-09-16 12:25:04: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:04: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:04: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:04: Route actuelle : vehicules
+2024-09-16 12:25:04: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:04: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:04: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:04: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:25:04: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:25:04: Script ended
+2024-09-16 12:25:07: Script started
+2024-09-16 12:25:07: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:07: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:07: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:07: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:07: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:07: La connexion à la base de données est établie.
+2024-09-16 12:25:07: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:07: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:07: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:07: Route actuelle : vehicules
+2024-09-16 12:25:07: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:07: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:07: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:07: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:25:07: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:25:07: Classe RentalOffer chargée depuis /var/www/html/e-motion/models/RentalOffer.php
+2024-09-16 12:25:07: Script ended
+2024-09-16 12:25:18: Script started
+2024-09-16 12:25:18: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:18: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:18: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:18: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:18: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:18: La connexion à la base de données est établie.
+2024-09-16 12:25:18: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:18: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:18: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:18: Route actuelle : home
+2024-09-16 12:25:18: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:18: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:18: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:18: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-16 12:25:18: Script ended
+2024-09-16 12:25:23: Script started
+2024-09-16 12:25:23: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:23: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:23: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:23: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:23: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:23: La connexion à la base de données est établie.
+2024-09-16 12:25:23: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:23: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:23: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:23: Route actuelle : home
+2024-09-16 12:25:23: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:23: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:23: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:23: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-16 12:25:23: Script ended
+2024-09-16 12:25:26: Script started
+2024-09-16 12:25:26: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:26: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:26: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:26: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:26: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:26: La connexion à la base de données est établie.
+2024-09-16 12:25:26: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:26: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:26: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:26: Route actuelle : vehicules
+2024-09-16 12:25:26: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:26: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:26: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:26: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:25:26: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:25:26: Script ended
+2024-09-16 12:25:27: Script started
+2024-09-16 12:25:27: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:27: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:27: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:27: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:27: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:27: La connexion à la base de données est établie.
+2024-09-16 12:25:27: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:27: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:27: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:27: Route actuelle : mes-locations
+2024-09-16 12:25:27: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:27: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:27: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:27: Classe RentalController chargée depuis /var/www/html/e-motion/controller/RentalController.php
+2024-09-16 12:25:27: Script ended
+2024-09-16 12:25:28: Script started
+2024-09-16 12:25:28: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:28: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:28: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:28: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:28: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:28: La connexion à la base de données est établie.
+2024-09-16 12:25:28: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:28: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:28: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:28: Route actuelle : admin
+2024-09-16 12:25:28: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:28: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:28: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:28: Classe AdminController chargée depuis /var/www/html/e-motion/controller/AdminController.php
+2024-09-16 12:25:28: Action admin demandée : index
+2024-09-16 12:25:28: Script ended
+2024-09-16 12:25:29: Script started
+2024-09-16 12:25:29: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:29: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:29: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:29: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:29: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:29: La connexion à la base de données est établie.
+2024-09-16 12:25:29: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:29: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:29: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:29: Route actuelle : home
+2024-09-16 12:25:29: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:29: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:29: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:29: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-16 12:25:29: Script ended
+2024-09-16 12:25:34: Script started
+2024-09-16 12:25:34: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:34: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:34: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:34: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:34: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:34: La connexion à la base de données est établie.
+2024-09-16 12:25:34: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:34: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:34: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:34: Route actuelle : vehicules
+2024-09-16 12:25:34: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:34: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:34: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:34: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-16 12:25:34: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-16 12:25:34: Script ended
+2024-09-16 12:25:36: Script started
+2024-09-16 12:25:36: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:36: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:36: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:36: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:36: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:36: La connexion à la base de données est établie.
+2024-09-16 12:25:36: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:36: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:36: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:36: Route actuelle : mes-locations
+2024-09-16 12:25:36: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:36: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:36: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:36: Classe RentalController chargée depuis /var/www/html/e-motion/controller/RentalController.php
+2024-09-16 12:25:36: Script ended
+2024-09-16 12:25:37: Script started
+2024-09-16 12:25:37: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-16 12:25:37: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-16 12:25:37: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-16 12:25:37: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-16 12:25:37: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-16 12:25:37: La connexion à la base de données est établie.
+2024-09-16 12:25:37: La connexion à la base de données est établie pour Vehicule
+2024-09-16 12:25:37: Session ID: tqndbcrguos9gtbpn4vmc5cank
+2024-09-16 12:25:37: Session Data: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-16 12:25:37: Route actuelle : home
+2024-09-16 12:25:37: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-16 12:25:37: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-16 12:25:37: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-16 12:25:37: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-16 12:25:37: Script ended
+2024-09-19 15:55:48: Script started
+2024-09-19 15:55:48: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-19 15:55:48: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-19 15:55:48: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-19 15:55:48: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-19 15:55:48: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-19 15:55:48: La connexion à la base de données est établie.
+2024-09-19 15:55:48: La connexion à la base de données est établie pour Vehicule
+2024-09-19 15:55:48: Session ID: 9bvkqen9sh0no36s4nfg8tih5g
+2024-09-19 15:55:48: Session Data: []
+2024-09-19 15:55:49: Route actuelle : home
+2024-09-19 15:55:49: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-19 15:55:49: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-19 15:55:49: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-19 15:55:49: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-19 15:55:49: Script ended
+2024-09-19 15:56:28: Script started
+2024-09-19 15:56:28: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-19 15:56:28: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-19 15:56:28: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-19 15:56:28: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-19 15:56:28: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-19 15:56:28: La connexion à la base de données est établie.
+2024-09-19 15:56:28: La connexion à la base de données est établie pour Vehicule
+2024-09-19 15:56:28: Session ID: 9bvkqen9sh0no36s4nfg8tih5g
+2024-09-19 15:56:28: Session Data: []
+2024-09-19 15:56:28: Route actuelle : login
+2024-09-19 15:56:28: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-19 15:56:28: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-19 15:56:28: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-19 15:56:28: Script ended
+2024-09-19 15:57:05: Script started
+2024-09-19 15:57:05: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-19 15:57:05: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-19 15:57:05: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-19 15:57:05: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-19 15:57:05: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-19 15:57:05: La connexion à la base de données est établie.
+2024-09-19 15:57:05: La connexion à la base de données est établie pour Vehicule
+2024-09-19 15:57:05: Session ID: 9bvkqen9sh0no36s4nfg8tih5g
+2024-09-19 15:57:05: Session Data: {"csrf_token":"917cd12bb6561fa365ff64a4686424cd92f0691aaaf32c0856ac37bbf7b1b3de"}
+2024-09-19 15:57:05: Route actuelle : login
+2024-09-19 15:57:05: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-19 15:57:05: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-19 15:57:05: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-19 15:57:05: Script started
+2024-09-19 15:57:05: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-19 15:57:05: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-19 15:57:05: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-19 15:57:05: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-19 15:57:05: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-19 15:57:05: La connexion à la base de données est établie.
+2024-09-19 15:57:05: La connexion à la base de données est établie pour Vehicule
+2024-09-19 15:57:05: Session ID: l2tahh75b19qvkh1n4eb8ic55l
+2024-09-19 15:57:05: Session Data: {"csrf_token":"917cd12bb6561fa365ff64a4686424cd92f0691aaaf32c0856ac37bbf7b1b3de","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-19 15:57:05: Route actuelle : home
+2024-09-19 15:57:05: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-19 15:57:05: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-19 15:57:05: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-19 15:57:05: Classe HomeController chargée depuis /var/www/html/e-motion/controller/HomeController.php
+2024-09-19 15:57:05: Script ended
+2024-09-19 15:57:07: Script started
+2024-09-19 15:57:07: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-19 15:57:07: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-19 15:57:07: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-19 15:57:07: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-19 15:57:07: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-19 15:57:07: La connexion à la base de données est établie.
+2024-09-19 15:57:07: La connexion à la base de données est établie pour Vehicule
+2024-09-19 15:57:07: Session ID: l2tahh75b19qvkh1n4eb8ic55l
+2024-09-19 15:57:07: Session Data: {"csrf_token":"917cd12bb6561fa365ff64a4686424cd92f0691aaaf32c0856ac37bbf7b1b3de","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-19 15:57:07: Route actuelle : vehicules
+2024-09-19 15:57:07: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-19 15:57:07: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-19 15:57:07: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-19 15:57:07: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-19 15:57:07: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-19 15:57:07: Script ended
+2024-09-19 15:57:36: Script started
+2024-09-19 15:57:36: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-19 15:57:36: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-19 15:57:36: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-19 15:57:36: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-19 15:57:36: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-19 15:57:36: La connexion à la base de données est établie.
+2024-09-19 15:57:36: La connexion à la base de données est établie pour Vehicule
+2024-09-19 15:57:36: Session ID: l2tahh75b19qvkh1n4eb8ic55l
+2024-09-19 15:57:36: Session Data: {"csrf_token":"917cd12bb6561fa365ff64a4686424cd92f0691aaaf32c0856ac37bbf7b1b3de","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-19 15:57:36: Route actuelle : vehicules
+2024-09-19 15:57:36: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-19 15:57:36: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-19 15:57:36: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-19 15:57:36: Vérification de la connexion à la base de données avant d'instancier VehiculeController: Connecté
+2024-09-19 15:57:36: Classe VehiculeController chargée depuis /var/www/html/e-motion/controller/VehiculeController.php
+2024-09-19 15:57:36: Classe RentalOffer chargée depuis /var/www/html/e-motion/models/RentalOffer.php
+2024-09-19 15:57:36: Script ended
+2024-09-19 15:57:54: Script started
+2024-09-19 15:57:54: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-19 15:57:54: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-19 15:57:54: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-19 15:57:54: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-19 15:57:54: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-19 15:57:54: La connexion à la base de données est établie.
+2024-09-19 15:57:54: La connexion à la base de données est établie pour Vehicule
+2024-09-19 15:57:54: Session ID: l2tahh75b19qvkh1n4eb8ic55l
+2024-09-19 15:57:54: Session Data: {"csrf_token":"917cd12bb6561fa365ff64a4686424cd92f0691aaaf32c0856ac37bbf7b1b3de","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-19 15:57:54: Route actuelle : mes-locations
+2024-09-19 15:57:54: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-19 15:57:54: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-19 15:57:54: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-19 15:57:54: Classe RentalController chargée depuis /var/www/html/e-motion/controller/RentalController.php
+2024-09-19 15:57:54: Script ended
+2024-09-19 15:58:16: Script started
+2024-09-19 15:58:16: Fichier chargé : /var/www/html/e-motion/database.php
+2024-09-19 15:58:16: Fichier chargé : /var/www/html/e-motion/config.php
+2024-09-19 15:58:16: Fichier chargé : /var/www/html/e-motion/helpers.php
+2024-09-19 15:58:16: Fichier chargé : /var/www/html/e-motion/vendor/autoload.php
+2024-09-19 15:58:16: Fichier chargé : /var/www/html/e-motion/models/Vehicule.php
+2024-09-19 15:58:16: La connexion à la base de données est établie.
+2024-09-19 15:58:16: La connexion à la base de données est établie pour Vehicule
+2024-09-19 15:58:16: Session ID: l2tahh75b19qvkh1n4eb8ic55l
+2024-09-19 15:58:16: Session Data: {"csrf_token":"917cd12bb6561fa365ff64a4686424cd92f0691aaaf32c0856ac37bbf7b1b3de","user_id":1,"user_role":"Administrateur","is_admin":true}
+2024-09-19 15:58:16: Route actuelle : admin
+2024-09-19 15:58:16: Classe BaseController chargée depuis /var/www/html/e-motion/controller/BaseController.php
+2024-09-19 15:58:16: Classe AuthController chargée depuis /var/www/html/e-motion/controller/AuthController.php
+2024-09-19 15:58:16: Classe User chargée depuis /var/www/html/e-motion/models/User.php
+2024-09-19 15:58:16: Classe AdminController chargée depuis /var/www/html/e-motion/controller/AdminController.php
+2024-09-19 15:58:16: Action admin demandée : index
+2024-09-19 15:58:16: Script ended

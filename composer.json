@@ -1,0 +1,16 @@
+{
+    "name": "user/e-motion",
+    "autoload": {
+        "psr-4": {
+            "User\\EMotion\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "leo"
+        }
+    ],
+    "require": {
+        "monolog/monolog": "^3.7"
+    }
+}

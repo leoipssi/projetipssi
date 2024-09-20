@@ -1,0 +1,176 @@
+[15-Sep-2024 22:11:16 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:11:16 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[15-Sep-2024 22:11:16 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[15-Sep-2024 22:11:16 Europe/Berlin] Erreur lors de la récupération des offres actives : SQLSTATE[42S22]: Column not found: 1054 Unknown column 'is_available' in 'where clause'
+[15-Sep-2024 22:13:57 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:13:57 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[15-Sep-2024 22:13:57 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[15-Sep-2024 22:14:02 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:14:02 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[15-Sep-2024 22:14:02 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[15-Sep-2024 22:14:05 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:14:05 Europe/Berlin] Début de la méthode login
+[15-Sep-2024 22:14:05 Europe/Berlin] Generated CSRF Token for login: 3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c
+[15-Sep-2024 22:14:05 Europe/Berlin] Rendering login view with CSRF token: 3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c
+[15-Sep-2024 22:15:07 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:15:07 Europe/Berlin] Début de la méthode login
+[15-Sep-2024 22:15:07 Europe/Berlin] Generated CSRF Token for login: 3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c
+[15-Sep-2024 22:15:07 Europe/Berlin] POST request detected for login
+[15-Sep-2024 22:15:07 Europe/Berlin] POST data received for login: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","username":"admin_username","password":"mot_de_passe_tr\u00e8s_s\u00e9curis\u00e9"}
+[15-Sep-2024 22:15:07 Europe/Berlin] CSRF verification passed for login
+[15-Sep-2024 22:15:07 Europe/Berlin] Attempting authentication for user: admin_username
+[15-Sep-2024 22:15:07 Europe/Berlin] Tentative de connexion échouée pour l'utilisateur: admin_username
+[15-Sep-2024 22:15:07 Europe/Berlin] Rendering login view with CSRF token: 3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c
+[15-Sep-2024 22:38:12 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:12 Europe/Berlin] Début de la méthode login
+[15-Sep-2024 22:38:12 Europe/Berlin] Generated CSRF Token for login: 3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c
+[15-Sep-2024 22:38:12 Europe/Berlin] POST request detected for login
+[15-Sep-2024 22:38:12 Europe/Berlin] POST data received for login: {"csrf_token":"3fa9458ef54481c955dfcc0b1f650dced5c9c417f823e9e13a7c7e69bbda9a6c","username":"admin_username","password":"mot_de_passe_tr\u00e8s_s\u00e9curis\u00e9"}
+[15-Sep-2024 22:38:12 Europe/Berlin] CSRF verification passed for login
+[15-Sep-2024 22:38:12 Europe/Berlin] Attempting authentication for user: admin_username
+[15-Sep-2024 22:38:13 Europe/Berlin] User session initialized. User ID: 1, Role: Administrateur, Is Admin: Yes
+[15-Sep-2024 22:38:13 Europe/Berlin] Connexion réussie: admin_username
+[15-Sep-2024 22:38:13 Europe/Berlin] Redirecting to home page after successful login
+[15-Sep-2024 22:38:13 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:13 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[15-Sep-2024 22:38:13 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[15-Sep-2024 22:38:16 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:16 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des 5 véhicules les plus loués
+[15-Sep-2024 22:38:19 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:21 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:21 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des véhicules. Page: 1, PerPage: 9
+[15-Sep-2024 22:38:24 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:24 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[15-Sep-2024 22:38:24 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[15-Sep-2024 22:38:27 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:27 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des véhicules. Page: 1, PerPage: 9
+[15-Sep-2024 22:38:28 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:28 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération du véhicule avec l'ID : 1
+[15-Sep-2024 22:38:33 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:33 Europe/Berlin] PHP Warning:  Array to string conversion in /var/www/html/e-motion/models/RentalOffer.php on line 131
+[15-Sep-2024 22:38:33 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:34 Europe/Berlin] Connexion à la base de données réussie
+[15-Sep-2024 22:38:34 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération du véhicule avec l'ID : 1
+[16-Sep-2024 12:22:54 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:22:54 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[16-Sep-2024 12:22:54 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[16-Sep-2024 12:23:15 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:23:15 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des véhicules. Page: 1, PerPage: 9
+[16-Sep-2024 12:23:16 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:23:16 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[16-Sep-2024 12:23:16 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[16-Sep-2024 12:23:19 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:23:19 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des véhicules. Page: 1, PerPage: 9
+[16-Sep-2024 12:23:21 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:23:21 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération du véhicule avec l'ID : 1
+[16-Sep-2024 12:23:24 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:23:24 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[16-Sep-2024 12:23:24 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[16-Sep-2024 12:23:25 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:23:25 Europe/Berlin] Début de la méthode login
+[16-Sep-2024 12:23:25 Europe/Berlin] Generated CSRF Token for login: 4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949
+[16-Sep-2024 12:23:25 Europe/Berlin] Rendering login view with CSRF token: 4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949
+[16-Sep-2024 12:24:06 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:06 Europe/Berlin] Début de la méthode login
+[16-Sep-2024 12:24:06 Europe/Berlin] Generated CSRF Token for login: 4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949
+[16-Sep-2024 12:24:06 Europe/Berlin] POST request detected for login
+[16-Sep-2024 12:24:06 Europe/Berlin] POST data received for login: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","username":"username_admin","password":"mot_de_passe_tr\u00e8s_s\u00e9curis\u00e9"}
+[16-Sep-2024 12:24:06 Europe/Berlin] CSRF verification passed for login
+[16-Sep-2024 12:24:06 Europe/Berlin] Attempting authentication for user: username_admin
+[16-Sep-2024 12:24:06 Europe/Berlin] Tentative de connexion échouée pour l'utilisateur: username_admin
+[16-Sep-2024 12:24:06 Europe/Berlin] Rendering login view with CSRF token: 4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949
+[16-Sep-2024 12:24:18 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:18 Europe/Berlin] Début de la méthode login
+[16-Sep-2024 12:24:18 Europe/Berlin] Generated CSRF Token for login: 4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949
+[16-Sep-2024 12:24:18 Europe/Berlin] POST request detected for login
+[16-Sep-2024 12:24:18 Europe/Berlin] POST data received for login: {"csrf_token":"4552b3379662ce765490543869ff200924fc21871c2a82baea7b46ebeb491949","username":"admin_username","password":"mot_de_passe_tr\u00e8s_s\u00e9curis\u00e9"}
+[16-Sep-2024 12:24:18 Europe/Berlin] CSRF verification passed for login
+[16-Sep-2024 12:24:18 Europe/Berlin] Attempting authentication for user: admin_username
+[16-Sep-2024 12:24:18 Europe/Berlin] User session initialized. User ID: 1, Role: Administrateur, Is Admin: Yes
+[16-Sep-2024 12:24:18 Europe/Berlin] Connexion réussie: admin_username
+[16-Sep-2024 12:24:18 Europe/Berlin] Redirecting to home page after successful login
+[16-Sep-2024 12:24:18 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:18 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[16-Sep-2024 12:24:18 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[16-Sep-2024 12:24:23 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:28 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:28 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des 5 véhicules les plus loués
+[16-Sep-2024 12:24:35 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:39 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:39 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des 5 véhicules les plus loués
+[16-Sep-2024 12:24:40 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:44 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:44 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des 5 véhicules les plus loués
+[16-Sep-2024 12:24:46 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:48 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:49 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:49 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des véhicules. Page: 1, PerPage: 9
+[16-Sep-2024 12:24:50 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:50 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération du véhicule avec l'ID : 1
+[16-Sep-2024 12:24:51 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:51 Europe/Berlin] PHP Warning:  Array to string conversion in /var/www/html/e-motion/models/RentalOffer.php on line 131
+[16-Sep-2024 12:24:52 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:54 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:54 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération du véhicule avec l'ID : 1
+[16-Sep-2024 12:24:56 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:24:56 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[16-Sep-2024 12:24:56 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[16-Sep-2024 12:25:00 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:00 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des véhicules. Page: 1, PerPage: 9
+[16-Sep-2024 12:25:01 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:01 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération du véhicule avec l'ID : 1
+[16-Sep-2024 12:25:04 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:04 Europe/Berlin] PHP Warning:  Array to string conversion in /var/www/html/e-motion/models/Vehicule.php on line 208
+[16-Sep-2024 12:25:04 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération du véhicule avec l'ID : Array
+[16-Sep-2024 12:25:04 Europe/Berlin] PHP Warning:  Array to string conversion in /var/www/html/e-motion/models/Vehicule.php on line 211
+[16-Sep-2024 12:25:04 Europe/Berlin] PHP Warning:  Array to string conversion in /var/www/html/e-motion/models/Vehicule.php on line 238
+[16-Sep-2024 12:25:04 Europe/Berlin] [Vehicule] [WARNING] Aucun véhicule trouvé avec l'ID : Array
+[16-Sep-2024 12:25:07 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:07 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération du véhicule avec l'ID : 1
+[16-Sep-2024 12:25:18 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:18 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[16-Sep-2024 12:25:18 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[16-Sep-2024 12:25:23 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:23 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[16-Sep-2024 12:25:23 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[16-Sep-2024 12:25:26 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:26 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des véhicules. Page: 1, PerPage: 9
+[16-Sep-2024 12:25:27 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:28 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:28 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des 5 véhicules les plus loués
+[16-Sep-2024 12:25:29 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:29 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[16-Sep-2024 12:25:29 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[16-Sep-2024 12:25:34 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:34 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des véhicules. Page: 1, PerPage: 9
+[16-Sep-2024 12:25:36 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:37 Europe/Berlin] Connexion à la base de données réussie
+[16-Sep-2024 12:25:37 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[16-Sep-2024 12:25:37 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[19-Sep-2024 15:55:48 Europe/Berlin] Connexion à la base de données réussie
+[19-Sep-2024 15:55:49 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[19-Sep-2024 15:55:49 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[19-Sep-2024 15:56:28 Europe/Berlin] Connexion à la base de données réussie
+[19-Sep-2024 15:56:28 Europe/Berlin] Début de la méthode login
+[19-Sep-2024 15:56:28 Europe/Berlin] Generated CSRF Token for login: 917cd12bb6561fa365ff64a4686424cd92f0691aaaf32c0856ac37bbf7b1b3de
+[19-Sep-2024 15:56:28 Europe/Berlin] Rendering login view with CSRF token: 917cd12bb6561fa365ff64a4686424cd92f0691aaaf32c0856ac37bbf7b1b3de
+[19-Sep-2024 15:57:05 Europe/Berlin] Connexion à la base de données réussie
+[19-Sep-2024 15:57:05 Europe/Berlin] Début de la méthode login
+[19-Sep-2024 15:57:05 Europe/Berlin] Generated CSRF Token for login: 917cd12bb6561fa365ff64a4686424cd92f0691aaaf32c0856ac37bbf7b1b3de
+[19-Sep-2024 15:57:05 Europe/Berlin] POST request detected for login
+[19-Sep-2024 15:57:05 Europe/Berlin] POST data received for login: {"csrf_token":"917cd12bb6561fa365ff64a4686424cd92f0691aaaf32c0856ac37bbf7b1b3de","username":"admin_username","password":"mot_de_passe_tr\u00e8s_s\u00e9curis\u00e9"}
+[19-Sep-2024 15:57:05 Europe/Berlin] CSRF verification passed for login
+[19-Sep-2024 15:57:05 Europe/Berlin] Attempting authentication for user: admin_username
+[19-Sep-2024 15:57:05 Europe/Berlin] User session initialized. User ID: 1, Role: Administrateur, Is Admin: Yes
+[19-Sep-2024 15:57:05 Europe/Berlin] Connexion réussie: admin_username
+[19-Sep-2024 15:57:05 Europe/Berlin] Redirecting to home page after successful login
+[19-Sep-2024 15:57:05 Europe/Berlin] Connexion à la base de données réussie
+[19-Sep-2024 15:57:05 Europe/Berlin] [Vehicule] [DEBUG] Création d'un objet Vehicule avec ID: 1
+[19-Sep-2024 15:57:05 Europe/Berlin] [Vehicule] [DEBUG] Nombre de véhicules récents récupérés : 1
+[19-Sep-2024 15:57:07 Europe/Berlin] Connexion à la base de données réussie
+[19-Sep-2024 15:57:07 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des véhicules. Page: 1, PerPage: 9
+[19-Sep-2024 15:57:36 Europe/Berlin] Connexion à la base de données réussie
+[19-Sep-2024 15:57:36 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération du véhicule avec l'ID : 1
+[19-Sep-2024 15:57:54 Europe/Berlin] Connexion à la base de données réussie
+[19-Sep-2024 15:58:16 Europe/Berlin] Connexion à la base de données réussie
+[19-Sep-2024 15:58:16 Europe/Berlin] [Vehicule] [DEBUG] Tentative de récupération des 5 véhicules les plus loués
